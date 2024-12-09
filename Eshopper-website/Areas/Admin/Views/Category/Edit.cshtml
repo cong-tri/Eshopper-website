@@ -1,0 +1,113 @@
+﻿@model Eshopper_website.Models.Category
+
+@{
+    ViewData["Title"] = "Category - Edit";
+}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Category</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Edit Category</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <form asp-action="Edit">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="CAT_ID" />
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Name" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Name" class="form-control" />
+                                                <span asp-validation-for="CAT_Name" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Description" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Description" class="form-control" />
+                                                <span asp-validation-for="CAT_Description" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Slug" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Slug" class="form-control" />
+                                                <span asp-validation-for="CAT_Slug" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Status" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Status" class="form-control" />
+                                                <span asp-validation-for="CAT_Status" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_DisplayOrder" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_DisplayOrder" class="form-control" />
+                                                <span asp-validation-for="CAT_DisplayOrder" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Edit" class="btn btn-primary w-100" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

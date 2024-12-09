@@ -1,4 +1,4 @@
-using Eshopper_website.Models;
+using Eshopper_website.Models.DataContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace Eshopper_website
@@ -17,6 +17,8 @@ namespace Eshopper_website
 
             var app = builder.Build();
 
+            //app.UseSession();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -31,6 +33,10 @@ namespace Eshopper_website
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",

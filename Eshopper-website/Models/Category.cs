@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Eshopper_website.Utils.Enum;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,7 +25,7 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter category status!")]
 		[DisplayName("Status")]
-		public required int CAT_Status { get; set; }
+		public required CategoryStatusEnum CAT_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter category display order!")]
 		[DisplayName("Display Order")]

@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Eshopper_website.Models.DataContext;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Eshopper_website.Models.Components
 {
-	public class CategoriesViewComponent : ViewComponent
+    public class CategoriesViewComponent : ViewComponent
 	{
 		private readonly EShopperContext _context;
 
