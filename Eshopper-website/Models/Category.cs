@@ -32,5 +32,5 @@ namespace Eshopper_website.Models
 		public required int CAT_DisplayOrder { get; set; }
 
 		public virtual ICollection<Product>? Products { get; set; }
-	}
+    }
 }
