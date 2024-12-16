@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<Product>
 
 @{
-	var detail = ViewData["productsById"] as Product;
+    ViewData["Title"] = "Detail Product";
+
+    var detail = ViewData["productsById"] as Product;
 
 	var products = ViewData["products"] as List<Product>;
 }
@@ -47,11 +49,11 @@
                         <span>
                             <span> @detail?.PRO_Price $</span>
                             <label>Quantity: 1</label>
-                            <input type="text" value="3" />
-                            <button type="button" class="btn btn-fefault cart">
+                            <input type="text" value="1" />
+                            <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@detail?.PRO_ID">
                                 <i class="fa fa-shopping-cart"></i>
                                 Add to cart
-                            </button>
+                            </a>
                         </span>
                         <p><b>Availability:</b> In Stock</p>
                         <p><b>Condition:</b> New</p>
@@ -232,7 +234,7 @@
                                                 <img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name" />
                                                 <h2>@item.PRO_Price $</h2>
                                                 <p>@item.PRO_Name</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                                <button asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
                                             </div>
                                         </div>
                                     </div>

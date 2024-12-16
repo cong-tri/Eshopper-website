@@ -1,6 +1,8 @@
-﻿@*
+﻿@using Eshopper_website.Models.ViewModels
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model CartItemView
 @{
 	ViewData["Title"] = "Cart";
 }
@@ -26,82 +28,53 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class="cart_product">
-							<a href=""><img src="~/images/cart/one.png" alt=""></a>
-						</td>
-						<td class="cart_description">
-							<h4><a href="">Colorblock Scuba</a></h4>
-							<p>Web ID: 1089772</p>
-						</td>
-						<td class="cart_price">
-							<p>$59</p>
-						</td>
-						<td class="cart_quantity">
-							<div class="cart_quantity_button">
-								<a class="cart_quantity_up" href=""> + </a>
-								<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-								<a class="cart_quantity_down" href=""> - </a>
-							</div>
-						</td>
-						<td class="cart_total">
-							<p class="cart_total_price">$59</p>
-						</td>
-						<td class="cart_delete">
-							<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-						</td>
-					</tr>
+					@if(Model?.CartItems?.Count > 0)
+					{
+						@foreach(var item in Model.CartItems)
+						{
+							<tr>
+								<td class="cart_product">
+									<a href=""><img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name"></a>
+								</td>
+								<td class="cart_description">
+									<h4><a href="">@item.PRO_Name</a></h4>
+								</td>
+								<td class="cart_price">
+									<p>$@item.PRO_Price</p>
+								</td>
+								<td class="cart_quantity">
+									<div class="">
+										<a class="btn" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.PRO_ID"> + </a>
+										<input class="" type="text" name="quantity" value="@item.PRO_Quantity" autocomplete="off" size="2">
+										<a class="btn" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.PRO_ID"> - </a>
+										<a class="btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.PRO_ID"> Remove </a>
 
-					<tr>
-						<td class="cart_product">
-							<a href=""><img src="~/images/cart/two.png" alt=""></a>
-						</td>
-						<td class="cart_description">
-							<h4><a href="">Colorblock Scuba</a></h4>
-							<p>Web ID: 1089772</p>
-						</td>
-						<td class="cart_price">
-							<p>$59</p>
-						</td>
-						<td class="cart_quantity">
-							<div class="cart_quantity_button">
-								<a class="cart_quantity_up" href=""> + </a>
-								<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-								<a class="cart_quantity_down" href=""> - </a>
-							</div>
-						</td>
-						<td class="cart_total">
-							<p class="cart_total_price">$59</p>
-						</td>
-						<td class="cart_delete">
-							<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-						</td>
-					</tr>
-					<tr>
-						<td class="cart_product">
-							<a href=""><img src="~/images/cart/three.png" alt=""></a>
-						</td>
-						<td class="cart_description">
-							<h4><a href="">Colorblock Scuba</a></h4>
-							<p>Web ID: 1089772</p>
-						</td>
-						<td class="cart_price">
-							<p>$59</p>
-						</td>
-						<td class="cart_quantity">
-							<div class="cart_quantity_button">
-								<a class="cart_quantity_up" href=""> + </a>
-								<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-								<a class="cart_quantity_down" href=""> - </a>
-							</div>
-						</td>
-						<td class="cart_total">
-							<p class="cart_total_price">$59</p>
-						</td>
-						<td class="cart_delete">
-							<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-						</td>
-					</tr>
+									</div>
+								</td>
+								<td class="cart_total">
+									<p class="cart_total_price">
+										$@Model.CartItems.Where(x => x.PRO_ID == item.PRO_ID).Sum(x => x.PRO_Quantity * x.PRO_Price).ToString()
+									</p>
+								</td>
+								<td class="cart_delete">
+									<a class="cart_quantity_delete" asp-action="Remove" asp-controller="Cart" asp-route-id="@item.PRO_ID"><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						}
+						<tr>
+							<td colspan="6">
+								<p>Grand Total: $@Model.GrandTotal</p>
+							</td>
+						</tr>
+					}
+					else
+					{
+						<tr>
+							<td colspan="5">
+								<h1>Your cart is empty!</h1>
+							</td>
+						</tr>
+					}
 				</tbody>
 			</table>
 		</div>

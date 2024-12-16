@@ -10,13 +10,9 @@ namespace Eshopper_website.Models
 		[Key]
 		public int ORDE_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter username!"), MinLength(5), MaxLength(50)]
-		[DisplayName("UserName")]
-		public required string USER_UserName { get; set; }
-
-		[Required(ErrorMessage = "Please enter order code!"), MinLength(5), MaxLength(50)]
-		[DisplayName("Order Code")]
-		public required string ORD_OrderCode { get; set; }
+		[Required(ErrorMessage = "Please enter order id!"), MinLength(5), MaxLength(50)]
+		[DisplayName("Order ID")]
+		public required int ORD_ID { get; set; }
 
 		[Required(ErrorMessage = "Please enter product id!")]
 		[DisplayName("Product ID")]
@@ -32,5 +28,8 @@ namespace Eshopper_website.Models
 
 		[ForeignKey("PRO_ID")]
 		public virtual Product? Product { get; set; }
-	}
+
+        [ForeignKey("ORD_ID")]
+        public virtual Order? Order { get; set; }
+    }
 }

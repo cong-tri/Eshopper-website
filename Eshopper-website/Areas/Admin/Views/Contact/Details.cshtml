@@ -1,0 +1,95 @@
+﻿@model Eshopper_website.Models.Contact
+
+@{
+    ViewData["Title"] = "Contact - Detail";
+}
+
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Contact</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md"><h3 class="card-title">Edit Contact</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Name" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_Name" class="form-control" readonly/>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Description" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <textarea asp-for="CONT_Description" class="form-control h-100" rows="5" readonly></textarea>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Phone" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_Phone" type="tel" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Email" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_Email" type="email" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_LogoImg" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <img src="~/images/home/@Model.CONT_LogoImg" width="200px" id="imgReview" alt="Alternate Text" />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Map" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <textarea asp-for="CONT_Map" class="form-control h-100" rows="5" readonly></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->

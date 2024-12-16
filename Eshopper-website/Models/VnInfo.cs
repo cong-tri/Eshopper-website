@@ -30,10 +30,13 @@ namespace Eshopper_website.Models
 		[DisplayName("Payment ID")]
 		public required int PAY_ID { get; set; }
 
-		[ForeignKey("PAY_ID")]
-		public virtual Payment? Payment { get; set; }
+		[ForeignKey("ORD_ID")]
+		public virtual Order? Order { get; set; }
 
-		[ForeignKey("TRANS_ID")]
-		public virtual Transaction? Transaction { get; set; }
+		//[ForeignKey("PAY_ID")]
+		//public virtual Payment? Payment { get; set; }
+
+		//[ForeignKey("TRANS_ID")]
+		//public virtual Transaction? Transaction { get; set; }
 	}
 }

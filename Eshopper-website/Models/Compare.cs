@@ -14,11 +14,14 @@ namespace Eshopper_website.Models
 		[DisplayName("Product ID")]
 		public required int PRO_ID { get; set; }
 
-		[Required(ErrorMessage = " Please enter user id!"), MaxLength(450)]
-		[DisplayName("User ID")]
-		public required string USER_ID { get; set; }
+		[Required(ErrorMessage = " Please enter member id!")]
+		[DisplayName("Member ID")]
+		public required int MEM_ID { get; set; }
 
 		[ForeignKey("PRO_ID")]
 		public virtual Product? Product { get; set; }
-	}
+
+        [ForeignKey("MEM_ID")]
+        public virtual Member? Member { get; set; }
+    }
 }

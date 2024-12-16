@@ -20,10 +20,7 @@ namespace Eshopper_website.Controllers
 
             var productsByBrand = _context.Products.Include(x => x.Category)
                 .Where(p => p.BRA_ID == brand.BRA_ID);
-            //return View(
-            //    await _context.Products.AsNoTracking().OrderBy(x => x.PRO_Price)
-            //    .Where(x => x.CAT_ID == category.CAT_ID).ToListAsync()
-            //);
+
             return View(await productsByBrand.OrderByDescending(p => p.BRA_ID).ToListAsync());
         }
     }
