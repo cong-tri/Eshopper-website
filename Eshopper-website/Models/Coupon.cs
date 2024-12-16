@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using Eshopper_website.Utils.Enum;
 
 namespace Eshopper_website.Models
 {
@@ -19,8 +20,8 @@ namespace Eshopper_website.Models
 		public required string COUP_Description { get; set; }
 
 		[Required(ErrorMessage = "Please enter coupon status!")]
-		[DisplayName("Status")]
-		public required int COUP_Status { get; set; }
+		[DisplayName("Status"), Column(TypeName = "INT")]
+		public required CouponStatusEnum COUP_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter coupon quantity!")]
 		[DisplayName("Quantity")]
