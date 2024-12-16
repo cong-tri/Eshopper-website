@@ -1,4 +1,4 @@
-    using System.Diagnostics;
+using System.Diagnostics;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,8 @@ namespace Eshopper_website.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var products = _context.Products.Include("Category").Include("Brand").ToList();
+            return View(products);
         }
 
         public IActionResult Privacy()

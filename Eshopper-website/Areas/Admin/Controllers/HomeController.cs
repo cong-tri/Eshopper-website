@@ -2,7 +2,7 @@
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
-    [Area("admin")]
+    [Area("Admin")]
     public class HomeController : Controller
     {
         public IActionResult Index()

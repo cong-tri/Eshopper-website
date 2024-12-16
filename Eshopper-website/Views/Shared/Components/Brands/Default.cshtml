@@ -2,5 +2,10 @@
 
 @foreach (var item in Model)
 {
-    <li><a href="#"> <span class="pull-right">(50)</span>@item.BRA_Name</a></li>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a asp-action="Index" asp-controller="Brand" asp-route-slug="@item.BRA_Slug">@item.BRA_Name</a></h4>
+        </div>
+    </div>
+   
 }
