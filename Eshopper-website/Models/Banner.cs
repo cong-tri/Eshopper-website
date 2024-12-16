@@ -14,9 +14,8 @@ namespace Eshopper_website.Models
 		[DisplayName("Title")]
 		public required string BAN_Title { get; set; }
 
-		[Required(ErrorMessage = "Please enter banner image"), MinLength(5), MaxLength(255)]
 		[DisplayName("Image")]
-		public required string BAN_Image { get; set; }
+		public string? BAN_Image { get; set; }
 
 		[MaxLength(255)]
 		[DisplayName("URL")]

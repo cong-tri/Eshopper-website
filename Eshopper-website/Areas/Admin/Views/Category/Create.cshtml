@@ -19,101 +19,101 @@
 </div>
 <!--end::App Content Header-->
 <!--begin::App Content-->
-<div class="app-content">
-    <!--begin::Container-->
-    <div class="container-fluid">
-        <!--begin::Row-->
-        <div class="row">
-            <div class="col-12">
-                <!-- Default box -->
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">Create Category</h3></div>
+    <div class="app-content">
+        <!--begin::Container-->
+        <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+                <div class="col-12">
+                    <!-- Default box -->
+                    <div class="card card-success card-outline">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col-md"><h3 class="card-title">Create Category</h3></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                         <form asp-action="Create">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="form-group mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-sm-3">
-                                                <label asp-for="CAT_Name" class="control-label"></label>
-                                            </div>
-                                            <div class="col-sm">
-                                                <input asp-for="CAT_Name" class="form-control w-100" />
-                                                <span asp-validation-for="CAT_Name" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-sm-3">
-                                                <label asp-for="CAT_Description" class="control-label"></label>
-                                            </div>
-                                            <div class="col-sm">
-                                                <input asp-for="CAT_Description" class="form-control" />
-                                                <span asp-validation-for="CAT_Description" class="text-danger"></span>
+                        <div class="card-body">
+                             <form asp-action="Create">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="form-group mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-sm-3">
+                                                    <label asp-for="CAT_Name" class="control-label"></label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <input asp-for="CAT_Name" class="form-control w-100" />
+                                                    <span asp-validation-for="CAT_Name" class="text-danger"></span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-sm-3">
-                                                <label asp-for="CAT_Slug" class="control-label"></label>
-                                            </div>
-                                            <div class="col-sm">
-                                                <input asp-for="CAT_Slug" class="form-control" />
-                                                <span asp-validation-for="CAT_Slug" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-sm-3">
-                                                <label asp-for="CAT_Status" class="control-label"></label>
-                                            </div>
-                                            <div class="col-sm">
-                                                @* <input asp-for="CAT_Status" class="form-control" /> *@
-                                                <span asp-validation-for="CAT_Status" class="text-danger"></span>
-                                                <select asp-for="CAT_Status">
-                                                    <option value="1">Active</option>
-                                                    <option value="2">Inactive</option>
-                                                </select>
-                                                @* @Html.DropDownListFor(
-                                                    model => model.CAT_Status,
-                                                    new SelectList(Enum.GetValues(typeof(CategoryStatusEnum))),
-                                                    "Select Status",
-                                                    new { @class = "form-control" }) *@
+                                        <div class="form-group mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-sm-3">
+                                                    <label asp-for="CAT_Description" class="control-label"></label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <input asp-for="CAT_Description" class="form-control" />
+                                                    <span asp-validation-for="CAT_Description" class="text-danger"></span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="form-group mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-sm-3">
+                                                    <label asp-for="CAT_Slug" class="control-label"></label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <input asp-for="CAT_Slug" class="form-control" />
+                                                    <span asp-validation-for="CAT_Slug" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-sm-3">
+                                                    <label asp-for="CAT_Status" class="control-label"></label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    @* <input asp-for="CAT_Status" class="form-control" /> *@
+                                                    <span asp-validation-for="CAT_Status" class="text-danger"></span>
+                                                    <select asp-for="CAT_Status">
+                                                        <option value="1">Active</option>
+                                                        <option value="2">Inactive</option>
+                                                    </select>
+                                                    @* @Html.DropDownListFor(
+                                                        model => model.CAT_Status,
+                                                        new SelectList(Enum.GetValues(typeof(CategoryStatusEnum))),
+                                                        "Select Status",
+                                                        new { @class = "form-control" }) *@
+                                                </div>
+                                            </div>
+                                        </div>
                                     
-                                    <div class="form-group mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-sm-3">
-                                                <label asp-for="CAT_DisplayOrder" class="control-label"></label>
-                                            </div>
-                                            <div class="col-sm">
-                                                <input asp-for="CAT_DisplayOrder" class="form-control" />
-                                                <span asp-validation-for="CAT_DisplayOrder" class="text-danger"></span>
+                                        <div class="form-group mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-sm-3">
+                                                    <label asp-for="CAT_DisplayOrder" class="control-label"></label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <input asp-for="CAT_DisplayOrder" class="form-control" />
+                                                    <span asp-validation-for="CAT_DisplayOrder" class="text-danger"></span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="submit" value="Create" class="btn btn-primary w-100" />
-                                    </div>
-                                </form>
-                    </div> <!-- /.card-body -->
-                    <div class="card-footer">
-                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
-                    </div>
-                </div> <!-- /.card -->
-            </div>
-        </div> <!--end::Row-->
-    </div> <!--end::Container-->
-</div>
-<!--end::App Content-->
+                                        <div class="form-group">
+                                            <input type="submit" value="Create" class="btn btn-primary w-100" />
+                                        </div>
+                                    </form>
+                        </div> <!-- /.card-body -->
+                        <div class="card-footer">
+                            <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                        </div>
+                    </div> <!-- /.card -->
+                </div>
+            </div> <!--end::Row-->
+        </div> <!--end::Container-->
+    </div>
+    <!--end::App Content-->
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
