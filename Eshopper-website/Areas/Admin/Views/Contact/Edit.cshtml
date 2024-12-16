@@ -1,0 +1,175 @@
+﻿@model Eshopper_website.Models.Contact
+
+@{
+    ViewData["Title"] = "Contact - Edit";
+}
+
+@section Headers {
+    <link rel="stylesheet" href="~/lib/ckeditor5/ckeditor5.css" />
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Contact</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md"><h3 class="card-title">Edit Contact</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="CONT_ID" />
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Name" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_Name" class="form-control" />
+                                    <span asp-validation-for="CONT_Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Description" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <textarea asp-for="CONT_Description" class="form-control" rows="5"></textarea>
+                                    <span asp-validation-for="CONT_Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Phone" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_Phone" type="tel" class="form-control" />
+                                    <span asp-validation-for="CONT_Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Email" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_Email" type="email" class="form-control" />
+                                    <span asp-validation-for="CONT_Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_LogoImg" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="CONT_LogoImg" class="form-control" type="file" accept="image/*" />
+                                    <span asp-validation-for="CONT_LogoImg" class="text-danger"></span>
+                                    <div class="w-100 mt-3">
+                                        <img src="~/images/home/@Model.CONT_LogoImg" width="200px" id="imgReview" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CONT_Map" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <textarea asp-for="CONT_Map" type="text" class="form-control h-100" rows="5"></textarea>
+                                    <span asp-validation-for="CONT_Map" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "/lib/ckeditor5/ckeditor5.js",
+                "ckeditor5/": "/lib/ckeditor5/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font,
+            Underline,
+            Alignment
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create(document.querySelector('#CONT_Description'), {
+                plugins: [Essentials, Paragraph, Bold, Italic, Font, Underline, Alignment],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'underline', 'alignment'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+    <script>
+        window.onload = () => {
+            document.getElementById("CONT_LogoImg").onchange = (e) => {
+                var preview = document.getElementById("imgReview");
+                var file = e.target.files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = '';
+                }
+            }
+        }
+    </script>
+}

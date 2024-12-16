@@ -25,6 +25,7 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter category status!")]
 		[DisplayName("Status")]
+		[Column(TypeName = "INT")]
 		public required CategoryStatusEnum CAT_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter category display order!")]

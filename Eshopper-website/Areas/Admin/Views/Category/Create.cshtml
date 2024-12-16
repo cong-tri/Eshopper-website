@@ -5,6 +5,10 @@
     ViewData["Title"] = "Category - Create";
 }
 
+@section Headers {
+    <link rel="stylesheet" href="~/lib/ckeditor5/ckeditor5.css" />
+}
+
 <!--begin::App Content Header-->
 <div class="app-content-header">
     <!--begin::Container-->
@@ -52,7 +56,7 @@
                                                 <label asp-for="CAT_Description" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                                <input asp-for="CAT_Description" class="form-control" />
+                                                <textarea asp-for="CAT_Description" rows="5" class="form-control"></textarea>
                                                 <span asp-validation-for="CAT_Description" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -76,19 +80,13 @@
                                             <div class="col-sm">
                                                 @* <input asp-for="CAT_Status" class="form-control" /> *@
                                                 <span asp-validation-for="CAT_Status" class="text-danger"></span>
-                                                <select asp-for="CAT_Status">
+                                                <select asp-for="CAT_Status" class="form-select">
                                                     <option value="1">Active</option>
                                                     <option value="2">Inactive</option>
                                                 </select>
-                                                @* @Html.DropDownListFor(
-                                                    model => model.CAT_Status,
-                                                    new SelectList(Enum.GetValues(typeof(CategoryStatusEnum))),
-                                                    "Select Status",
-                                                    new { @class = "form-control" }) *@
                                             </div>
                                         </div>
                                     </div>
-                                    
                                     <div class="form-group mb-3">
                                         <div class="row align-items-center">
                                             <div class="col-sm-3">
@@ -117,4 +115,42 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "/lib/ckeditor5/ckeditor5.js",
+                "ckeditor5/": "/lib/ckeditor5/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font,
+            Underline,
+            Alignment
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create(document.querySelector('#CAT_Description'), {
+                plugins: [Essentials, Paragraph, Bold, Italic, Font, Underline, Alignment],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'underline', 'alignment'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
 }

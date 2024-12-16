@@ -51,48 +51,6 @@ namespace Eshopper_website.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
-            //migrationBuilder.CreateTable(
-            //    name: "Brands",
-            //    columns: table => new
-            //    {
-            //        BRA_ID = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        BRA_Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        BRA_Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        BRA_Slug = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-            //        BRA_Status = table.Column<int>(type: "int", nullable: false),
-            //        BRA_DisplayOrder = table.Column<int>(type: "int", nullable: false),
-            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-            //        UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_Brands", x => x.BRA_ID);
-            //    });
-
-            //migrationBuilder.CreateTable(
-            //    name: "Categories",
-            //    columns: table => new
-            //    {
-            //        CAT_ID = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        CAT_Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        CAT_Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        CAT_Slug = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-            //        CAT_Status = table.Column<int>(type: "int", nullable: false),
-            //        CAT_DisplayOrder = table.Column<int>(type: "int", nullable: false),
-            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-            //        UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_Categories", x => x.CAT_ID);
-            //    });
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
@@ -199,122 +157,6 @@ namespace Eshopper_website.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            //migrationBuilder.CreateTable(
-            //    name: "Products",
-            //    columns: table => new
-            //    {
-            //        PRO_ID = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        CAT_ID = table.Column<int>(type: "int", nullable: false),
-            //        BRA_ID = table.Column<int>(type: "int", nullable: false),
-            //        PRO_Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        PRO_Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        PRO_Slug = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-            //        PRO_Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-            //        PRO_Image = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-            //        PRO_Quantity = table.Column<int>(type: "int", nullable: false),
-            //        PRO_Status = table.Column<int>(type: "int", nullable: false),
-            //        PRO_CapitalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-            //        UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_Products", x => x.PRO_ID);
-            //        table.ForeignKey(
-            //            name: "FK_Products_Brands_BRA_ID",
-            //            column: x => x.BRA_ID,
-            //            principalTable: "Brands",
-            //            principalColumn: "BRA_ID",
-            //            onDelete: ReferentialAction.Cascade);
-            //        table.ForeignKey(
-            //            name: "FK_Products_Categories_CAT_ID",
-            //            column: x => x.CAT_ID,
-            //            principalTable: "Categories",
-            //            principalColumn: "CAT_ID",
-            //            onDelete: ReferentialAction.Cascade);
-            //    });
-
-            //migrationBuilder.CreateTable(
-            //    name: "OrderDetails",
-            //    columns: table => new
-            //    {
-            //        ORDE_ID = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        USER_UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-            //        ORD_OrderCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-            //        PRO_ID = table.Column<int>(type: "int", nullable: false),
-            //        ORDE_Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-            //        ORDE_Quantity = table.Column<int>(type: "int", nullable: false),
-            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-            //        UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_OrderDetails", x => x.ORDE_ID);
-            //        table.ForeignKey(
-            //            name: "FK_OrderDetails_Products_PRO_ID",
-            //            column: x => x.PRO_ID,
-            //            principalTable: "Products",
-            //            principalColumn: "PRO_ID",
-            //            onDelete: ReferentialAction.Cascade);
-            //    });
-
-            //migrationBuilder.CreateTable(
-            //    name: "ProductQuantities",
-            //    columns: table => new
-            //    {
-            //        PROQ_ID = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        PRO_ID = table.Column<int>(type: "int", nullable: false),
-            //        PROQ_Quantity = table.Column<int>(type: "int", nullable: false),
-            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-            //        UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_ProductQuantities", x => x.PROQ_ID);
-            //        table.ForeignKey(
-            //            name: "FK_ProductQuantities_Products_PRO_ID",
-            //            column: x => x.PRO_ID,
-            //            principalTable: "Products",
-            //            principalColumn: "PRO_ID",
-            //            onDelete: ReferentialAction.Cascade);
-            //    });
-
-            //migrationBuilder.CreateTable(
-            //    name: "Ratings",
-            //    columns: table => new
-            //    {
-            //        RAT_ID = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        PRO_ID = table.Column<int>(type: "int", nullable: false),
-            //        RAT_Comment = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-            //        RAT_Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        RAT_Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-            //        RAT_Star = table.Column<int>(type: "int", nullable: false),
-            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-            //        UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-            //        UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_Ratings", x => x.RAT_ID);
-            //        table.ForeignKey(
-            //            name: "FK_Ratings_Products_PRO_ID",
-            //            column: x => x.PRO_ID,
-            //            principalTable: "Products",
-            //            principalColumn: "PRO_ID",
-            //            onDelete: ReferentialAction.Cascade);
-            //    });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -353,31 +195,6 @@ namespace Eshopper_website.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_OrderDetails_PRO_ID",
-            //    table: "OrderDetails",
-            //    column: "PRO_ID");
-
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_ProductQuantities_PRO_ID",
-            //    table: "ProductQuantities",
-            //    column: "PRO_ID");
-
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Products_BRA_ID",
-            //    table: "Products",
-            //    column: "BRA_ID");
-
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Products_CAT_ID",
-            //    table: "Products",
-            //    column: "CAT_ID");
-
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Ratings_PRO_ID",
-            //    table: "Ratings",
-            //    column: "PRO_ID");
         }
 
         /// <inheritdoc />
@@ -398,29 +215,11 @@ namespace Eshopper_website.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
 
-            //migrationBuilder.DropTable(
-            //    name: "OrderDetails");
-
-            //migrationBuilder.DropTable(
-            //    name: "ProductQuantities");
-
-            //migrationBuilder.DropTable(
-            //    name: "Ratings");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            //migrationBuilder.DropTable(
-            //    name: "Products");
-
-            //migrationBuilder.DropTable(
-            //    name: "Brands");
-
-            //migrationBuilder.DropTable(
-            //    name: "Categories");
         }
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,19 +8,260 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <Content Remove="Views\Shared\_FooterPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\DTOs\response\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Shared\_FooterPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Shared\_FooterPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Shared\_FooterPartial.cshtml" />
+    <None Include="wwwroot\lib\ckeditor5\ckeditor5.css.map" />
+    <None Include="wwwroot\lib\ckeditor5\ckeditor5.js" />
+    <None Include="wwwroot\lib\ckeditor5\ckeditor5.js.map" />
+    <None Include="wwwroot\lib\ckeditor5\ckeditor5.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\ckeditor5.umd.js.map" />
+    <None Include="wwwroot\lib\ckeditor5\translations\af.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\af.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ar.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ar.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ast.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ast.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\az.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\az.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\bg.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\bg.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\bn.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\bn.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\bs.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\bs.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ca.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ca.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\cs.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\cs.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\da.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\da.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\de-ch.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\de-ch.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\de.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\de.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\el.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\el.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\en-au.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\en-au.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\en-gb.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\en-gb.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\en.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\en.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\eo.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\eo.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\es-co.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\es-co.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\es.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\es.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\et.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\et.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\eu.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\eu.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\fa.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\fa.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\fi.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\fi.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\fr.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\fr.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\gl.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\gl.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\gu.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\gu.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\he.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\he.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hi.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hi.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hr.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hr.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hu.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hu.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hy.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\hy.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\id.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\id.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\it.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\it.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ja.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ja.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\jv.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\jv.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\kk.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\kk.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\km.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\km.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\kn.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\kn.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ko.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ko.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ku.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ku.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\lt.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\lt.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\lv.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\lv.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ms.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ms.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\nb.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\nb.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ne.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ne.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\nl.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\nl.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\no.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\no.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\oc.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\oc.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\pl.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\pl.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\pt-br.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\pt-br.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\pt.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\pt.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ro.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ro.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ru.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ru.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\si.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\si.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sk.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sk.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sl.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sl.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sq.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sq.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sr-latn.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sr-latn.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sr.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sr.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sv.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\sv.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\th.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\th.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ti.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ti.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\tk.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\tk.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\tr.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\tr.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\tt.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\tt.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ug.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ug.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\uk.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\uk.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ur.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\ur.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\uz.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\uz.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\vi.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\vi.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\zh-cn.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\zh-cn.umd.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\zh.js" />
+    <None Include="wwwroot\lib\ckeditor5\translations\zh.umd.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\af.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ar.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ast.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\az.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\bg.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\bn.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\bs.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ca.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\cs.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\da.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\de-ch.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\de.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\el.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\en-au.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\en-gb.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\en.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\eo.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\es-co.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\es.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\et.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\eu.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\fa.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\fi.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\fr.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\gl.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\gu.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\he.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\hi.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\hr.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\hu.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\hy.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\id.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\it.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ja.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\jv.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\kk.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\km.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\kn.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ko.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ku.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\lt.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\lv.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ms.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\nb.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ne.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\nl.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\no.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\oc.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\pl.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\pt-br.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\pt.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ro.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ru.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\si.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\sk.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\sl.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\sq.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\sr-latn.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\sr.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\sv.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\th.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ti.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\tk.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\tr.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\tt.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ug.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\uk.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\ur.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\uz.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\vi.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\zh-cn.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ckeditor5\translations\zh.d.ts" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Eshopper_website.Utils.Enum;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +19,7 @@ namespace Eshopper_website.Models
 		[DisplayName("Brand ID")]
 		public required int BRA_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter product name!"), MinLength(20), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter product name!"), MinLength(5), MaxLength(255)]
 		[DisplayName("Name")]
 		public required string PRO_Name { get; set; }
 
@@ -44,7 +45,8 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter product status!")]
 		[DisplayName("Status")]
-		public required int PRO_Status { get; set; }
+		[Column(TypeName = "INT")]
+		public required ProductStatusEnum PRO_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter product capital price!")]
 		[DisplayName("Capital Price")]
