@@ -1,0 +1,94 @@
+﻿@model Eshopper_website.Models.Brand
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Detail</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Brand</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Name" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Name" class="form-control w-100" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Description" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Description" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Slug" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Slug" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Status" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Status" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_DisplayOrder" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_DisplayOrder" class="form-control" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->

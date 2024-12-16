@@ -1,0 +1,63 @@
+﻿@model Eshopper_website.Models.Banner
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-danger">Delete Banner</h1>
+
+<h3>Bạn có chắc chắn muốn xóa không?</h3>
+<div class="border p-4 rounded shadow-sm">
+    <h4>Detail Banner</h4>
+    <hr />
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_Title)</th>
+                    <td>@Html.DisplayFor(model => model.BAN_Title)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_Image)</th>
+                    <td>
+                        <img src="~/images/home/@Model.BAN_Image" width="400px" alt="@Model.BAN_Title" class="" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_Url)</th>
+                    <td>@Html.DisplayFor(model => model.BAN_Url)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_DisplayOrder)</th>
+                    <td>@Html.DisplayFor(model => model.BAN_DisplayOrder)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+                    <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.CreatedBy)</th>
+                    <td>@Html.DisplayFor(model => model.CreatedBy)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.UpdatedDate)</th>
+                    <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.UpdatedBy)</th>
+                    <td>@Html.DisplayFor(model => model.UpdatedBy)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <form asp-action="Delete" class="mt-3">
+        <input type="hidden" asp-for="BAN_ID" />
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back To List
+        </a>
+    </form>
+</div>
