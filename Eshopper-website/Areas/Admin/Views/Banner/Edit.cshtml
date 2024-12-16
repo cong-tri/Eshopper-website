@@ -1,0 +1,122 @@
+﻿@model Eshopper_website.Models.Banner
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Edit</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Edit Banner</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="BAN_ID" />
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BAN_Title" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BAN_Title" class="form-control w-100" />
+                                        <span asp-validation-for="BAN_Title" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BAN_Image" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BAN_Image" class="form-control" type="file" accept="image/*" />
+                                        <span asp-validation-for="BAN_Image" class="text-danger"></span>
+                                        <div class="w-100 mt-2">
+                                            <img src="~/images/home/@Model.BAN_Image" id="imgPreview" alt="Avatar" class="img-fluid" width="200px" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BAN_Url" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BAN_Url" class="form-control" />
+                                        <span asp-validation-for="BAN_Url" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BAN_DisplayOrder" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BAN_DisplayOrder" class="form-control" />
+                                        <span asp-validation-for="BAN_DisplayOrder" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary w-100" />
+                            </div>
+                        </form>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        window.onload = () => {
+            document.getElementById("BAN_Image").onchange = (e) => {
+                var preview = document.getElementById('imgPreview');
+                var file = e.target.files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = '';
+                }
+            };
+        }
+    </script>
+}
+

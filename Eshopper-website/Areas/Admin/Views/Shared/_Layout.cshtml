@@ -12,10 +12,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Admin | EShopper">
+    <meta name="title" content="AdminLTE 4 | Sidebar Mini">
     <meta name="author" content="ColorlibHQ">
-    <meta name="description" content="Admin EShopper is a Free website for clients buy online the electronics device!">
-    <meta name="keywords" content="electronics device, eshopper"><!--end::Primary Meta Tags-->
+    <meta name="description" content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS.">
+    <meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"><!--end::Primary Meta Tags-->
     
     <title>Admin::@ViewData["Title"]</title>
     
@@ -63,7 +63,7 @@
                     </li> <!--end::Notifications Dropdown Menu--> <!--begin::Fullscreen Toggle-->
                     <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="~/admin/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Admin EShopper</span> </a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="~/admin/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Admin</span> </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
@@ -91,7 +91,7 @@
 
         <aside class="app-sidebar shadow" data-bs-theme="light">
             <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand"> <!--begin::Brand Link--> <a asp-action="Index" asp-controller="Home" class="brand-link"> <!--begin::Brand Image--> <img src="~/admin/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">Admin EShopper</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
+            <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="../index.html" class="brand-link"> <!--begin::Brand Image--> <img src="~/admin/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">AdminLTE 4</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
                     <!--begin::Sidebar Menu-->
@@ -106,8 +106,7 @@
                         </li>
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="Product" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
+                                <i class="fa-brands fa-product-hunt"></i>                                <p>
                                     Product
                                 </p>
                             </a>
@@ -122,57 +121,33 @@
                         </li>
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="Brand" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
+                                <i class="fa-solid fa-copyright"></i>                                <p>
                                     Brand
                                 </p>
                             </a>
                         </li>
+
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Blog" class="nav-link">
+                                <i class="fa-solid fa-blog"></i>                               <p>
+                                    Blog
+                                </p>
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="Banner" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
+                                <i class="fa-solid fa-sliders"></i>                                <p>
                                     Banner
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Contact" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
-                                    Contact
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Blog" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
-                                    Blog
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a asp-action="Index" asp-controller="Coupon" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
+                                <i class="fa-duotone fa-light fa-tickets-perforated"></i>
                                 <p>
                                     Coupon
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Menu" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
-                                    Menu
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Order" class="nav-link">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
-                                    Order
                                 </p>
                             </a>
                         </li>
@@ -192,7 +167,7 @@
             <!--begin::To the end-->
             <div class="float-end d-none d-sm-inline">Anything you want</div> <!--end::To the end--> <!--begin::Copyright--> <strong>
                 Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none">EShopper</a>.
+                <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
             </strong>
             All rights reserved.
             <!--end::Copyright-->

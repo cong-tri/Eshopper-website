@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using Eshopper_website.Utils.Enum;
 
 namespace Eshopper_website.Models
 {
@@ -24,7 +25,7 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter brand status")]
 		[DisplayName("Status")]
-		public required int BRA_Status { get; set; }
+		public required BrandStatusEnum BRA_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter brand display order!")]
 		[DisplayName("Display Order")]

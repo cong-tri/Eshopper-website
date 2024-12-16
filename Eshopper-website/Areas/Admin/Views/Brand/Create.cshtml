@@ -1,0 +1,109 @@
+﻿@model Eshopper_website.Models.Brand
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Brand</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Create Brand</h3></div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Name" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Name" class="form-control w-100" />
+                                        <span asp-validation-for="BRA_Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Description" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Description" class="form-control" />
+                                        <span asp-validation-for="BRA_Description" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Slug" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_Slug" class="form-control" />
+                                        <span asp-validation-for="BRA_Slug" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_Status" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <select asp-for="BRA_Status" class="form-select">
+                                            <option value="1">Active</option>
+                                            <option value="2">Inactive</option>
+                                        </select>
+                                        <span asp-validation-for="BRA_Status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="BRA_DisplayOrder" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="BRA_DisplayOrder" class="form-control" />
+                                        <span asp-validation-for="BRA_DisplayOrder" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary w-100" />
+                            </div>
+                        </form>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content--> 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

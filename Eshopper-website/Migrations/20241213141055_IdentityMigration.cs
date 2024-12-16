@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -12,18 +11,18 @@ namespace Eshopper_website.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
+    name: "AspNetRoles",
+    columns: table => new
+    {
+        Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+        Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+        NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+        ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+    },
+    constraints: table =>
+    {
+        table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+    });
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
@@ -73,8 +72,7 @@ namespace Eshopper_website.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
+                name: "AspNetUserClaims",columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
@@ -148,13 +146,14 @@ namespace Eshopper_website.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name }); 
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                 });
 
             migrationBuilder.CreateIndex(
