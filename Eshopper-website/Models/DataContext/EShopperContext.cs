@@ -1,6 +1,7 @@
 ﻿using Eshopper_website.Models.Identity;
 using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
+using System.Reflection.Metadata;
 
 namespace Eshopper_website.Models.DataContext
 {
@@ -14,5 +15,10 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Banner> Banners { get; set; }
+        public DbSet<Blog>? Blogs { get; set; }
+        public DbSet<Coupon>? Coupons { get; set; }
+        public DbSet<Menu>? Menus { get; set; }
+
     }
 }
