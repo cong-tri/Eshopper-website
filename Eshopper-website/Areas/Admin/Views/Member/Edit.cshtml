@@ -1,0 +1,134 @@
+﻿@model Eshopper_website.Models.Member
+
+@{
+    ViewData["Title"] = "Member";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Member</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card card-success card-outline">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-md"><h3 class="card-title">Edit Member</h3></div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="MEM_ID" />
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="ACC_ID" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <select asp-for="ACC_ID" class="form-select" asp-items="ViewBag.ACC_ID"></select>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="ACR_ID" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <select asp-for="ACR_ID" class="form-select" asp-items="ViewBag.ACR_ID"></select>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_LastName" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_LastName" class="form-control" />
+                            <span asp-validation-for="MEM_LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_FirstName" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_FirstName" class="form-control" />
+                            <span asp-validation-for="MEM_FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Gender" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <select asp-for="MEM_Gender" class="form-select">
+                                <option value="1">Other</option>
+                                <option value="2">Male</option>
+                                <option value="3">Female</option>
+                            </select>
+                            <span asp-validation-for="MEM_Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Phone" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Phone" type="tel" class="form-control" />
+                            <span asp-validation-for="MEM_Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Email" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Email" type="email" class="form-control" />
+                            <span asp-validation-for="MEM_Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Address" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Address" class="form-control" />
+                            <span asp-validation-for="MEM_Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Status" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <select asp-for="MEM_Status" class="form-select">
+                                <option value="1">Active</option>
+                                <option value="2">In Active</option>
+                            </select>
+                            <span asp-validation-for="MEM_Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-footer">
+                <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
