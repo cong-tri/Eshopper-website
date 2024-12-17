@@ -29,10 +29,10 @@ namespace Eshopper_website.Models
 
         [Column(TypeName = "INT")]
         [DisplayName("Gender")]
-        public MemberGenderEnum MEM_Gender { get; set; } = MemberGenderEnum.Orther;
+        public MemberGenderEnum MEM_Gender { get; set; } = MemberGenderEnum.Other;
 
         [Required(ErrorMessage = "Please enter phone number!"), MinLength(10), MaxLength(20), DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
+        //[RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
         [DisplayName("Phone")]
         public required string MEM_Phone { get; set; }
 
@@ -52,12 +52,10 @@ namespace Eshopper_website.Models
         public Account? Account { get; set; }
 
         [ForeignKey("ACR_ID")]
-        public AccountRole? AcountRole { get; set; }
+        public AccountRole? AccountRole { get; set; }
 
         public virtual ICollection<Wishlist>? Wishlists { get; set; }
         public virtual ICollection<Compare>? Compares { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
-
-
     }
 }

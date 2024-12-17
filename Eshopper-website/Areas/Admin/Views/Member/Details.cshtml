@@ -1,0 +1,113 @@
+﻿@model Eshopper_website.Models.Member
+
+@{
+    ViewData["Title"] = "Member";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Member</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card card-success card-outline">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-md"><h3 class="card-title">Detail Member</h3></div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="ACC_ID" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="ACC_ID" class="form-control" readonly/>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="ACR_ID" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="ACR_ID" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_LastName" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_LastName" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_FirstName" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_FirstName" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Gender" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Gender" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Phone" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Phone" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Email" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Email" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Address" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Address" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-3">
+                            <label asp-for="MEM_Status" class="control-label"></label>
+                        </div>
+                        <div class="col-sm">
+                            <input asp-for="MEM_Status" class="form-control" readonly />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-footer">
+                <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
