@@ -29,6 +29,12 @@ namespace Eshopper_website.Controllers
             return View();
         }
 
+        public IActionResult Contact()
+        {
+            ViewData["Contact"] = _context.Contacts.AsNoTracking().ToList();
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -18,5 +18,6 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Blog>? Blogs { get; set; }
         public DbSet<Coupon>? Coupons { get; set; }
         public DbSet<Menu>? Menus { get; set; }
+        public DbSet<Member> Members { get; set; }
     }
 }

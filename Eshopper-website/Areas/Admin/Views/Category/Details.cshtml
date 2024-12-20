@@ -1,72 +1,101 @@
 ﻿@model Eshopper_website.Models.Category
 
 @{
-    ViewData["Title"] = "Category - Details";
+    ViewData["Title"] = "Category";
 }
 
-<h1>Details</h1>
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Category</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Detail Category</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <form>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Name" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Name" class="form-control" readonly/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Description" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <textarea asp-for="CAT_Description" class="form-control" readonly></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Slug" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Slug" class="form-control" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_Status" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_Status" class="form-control" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-3">
+                                                <label asp-for="CAT_DisplayOrder" class="control-label"></label>
+                                            </div>
+                                            <div class="col-sm">
+                                                <input asp-for="CAT_DisplayOrder" class="form-control" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
 
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CAT_Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CAT_Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CAT_Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CAT_Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CAT_Slug)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CAT_Slug)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CAT_Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CAT_Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CAT_DisplayOrder)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CAT_DisplayOrder)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedBy)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.CAT_ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>

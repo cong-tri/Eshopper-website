@@ -26,12 +26,16 @@ namespace Eshopper_website.Models
 		[DisplayName("Email")]
 		public required string CONT_Email { get; set; }
 
-		[Required(ErrorMessage = "Please enter the map"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter the map"), MinLength(5)]
 		[DisplayName("Map")]
 		public required string CONT_Map { get; set; }
 
 		[MaxLength(255)]
 		[DisplayName("Logo Img")]
 		public string? CONT_LogoImg { get; set; } = string.Empty;
+
+		[Required(ErrorMessage = "Please enter the address"), MinLength(5), MaxLength(255)]
+		[DisplayName("Address")]
+		public required string CONT_Address { get; set; }
 	}
 }

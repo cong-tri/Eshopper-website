@@ -1,0 +1,133 @@
+﻿@model Eshopper_website.Models.Product
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+@section Headers {
+    <link rel="stylesheet" href="~/lib/ckeditor5/ckeditor5.css" />
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Product</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md"><h3 class="card-title">Detail Product</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="PRO_ID" />
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="CAT_ID" class="form-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input value="@Model?.Category?.CAT_Name" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="BRA_ID" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input value="@Model?.Brand?.BRA_Name" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Name" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="PRO_Name" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Description" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <textarea asp-for="PRO_Description" class="form-control h-100" readonly rows="6"></textarea>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Slug" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="PRO_Slug" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Price" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="PRO_Price" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Image" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <img src="~/images/product-details/@Model?.PRO_Image" width="200px" id="imgReview" alt="Alternate Text" />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Quantity" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="PRO_Quantity" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_Status" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="PRO_Status" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-3">
+                                    <label asp-for="PRO_CapitalPrice" class="control-label"></label>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="PRO_CapitalPrice" class="form-control" readonly/>
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
+

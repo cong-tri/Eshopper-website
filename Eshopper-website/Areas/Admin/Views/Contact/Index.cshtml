@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Eshopper_website.Models.Contact>
+
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Contact</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">List Contact</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CONT_LogoImg)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CONT_Map)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CONT_Name)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CONT_Description)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CONT_Phone)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CONT_Email)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <img src="~/images/home/@item.CONT_LogoImg" alt="@item.CONT_Name" />
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.CONT_Map)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CONT_Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CONT_Description)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CONT_Phone)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CONT_Email)
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CONT_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CONT_ID"><i class="fa-regular fa-circle-info"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->

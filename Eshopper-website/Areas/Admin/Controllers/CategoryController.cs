@@ -60,7 +60,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //category.CAT_Status = (CategoryStatusEnum)Enum.Parse(typeof(CategoryStatusEnum), formValue["CAT_Status"]);
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

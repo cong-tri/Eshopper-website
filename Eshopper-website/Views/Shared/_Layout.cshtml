@@ -13,7 +13,7 @@
 	<link href="~/css/animate.css" rel="stylesheet">
 	<link href="~/css/main.css" rel="stylesheet">
 	<link href="~/css/responsive.css" rel="stylesheet">
-	<link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+	@* <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"> *@
 	<!--[if lt IE 9]>
 	<script src="js/html5shiv.js"></script>
 	<script src="js/respond.min.js"></script>
@@ -138,7 +138,7 @@
 										<li><a asp-controller="Product" asp-action="Index">Iphone</a></li>
 									</ul>
 								</li>
-								<li><a asp-action="Product" asp-controller="Index">Product</a></li>
+								<li><a asp-action="Index" asp-controller="Product">Product</a></li>
 								<li><a asp-action="Index" asp-controller="Blog">Blog</a></li>
 							</ul>
 						</div>
@@ -221,6 +221,7 @@
 
 	<section>
 		<div class="container">
+			@Html.Partial("_NotificationPartial")
 			@RenderBody()
 		</div>
 	</section>
