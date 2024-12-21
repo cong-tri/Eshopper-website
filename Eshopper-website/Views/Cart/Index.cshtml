@@ -16,15 +16,15 @@
 			</ol>
 		</div>
 		<div class="table-responsive cart_info">
-			<table class="table table-condensed">
+			<table class="table table-bordered table-striped table-hovered table-condensed">
 				<thead>
 					<tr class="cart_menu">
 						<td class="image">Item</td>
-						<td class="description"></td>
+						<td class="description">Name</td>
 						<td class="price">Price</td>
 						<td class="quantity">Quantity</td>
 						<td class="total">Total</td>
-						<td></td>
+						<td>Action</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -33,38 +33,42 @@
 						@foreach(var item in Model.CartItems)
 						{
 							<tr>
-								<td class="cart_product">
-									<a href=""><img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name"></a>
+								<td>
+									<img src="~/images/product-details/@item.PRO_Image" width="200px" alt="@item.PRO_Name">
 								</td>
 								<td class="cart_description">
-									<h4><a href="">@item.PRO_Name</a></h4>
+									<h4 class="mt-0"><a class="text-black" asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">@item.PRO_Name</a></h4>
 								</td>
 								<td class="cart_price">
-									<p>$@item.PRO_Price</p>
+									<p>$@item?.PRO_Price</p>
 								</td>
 								<td class="cart_quantity">
-									<div class="">
-										<a class="btn" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.PRO_ID"> + </a>
-										<input class="" type="text" name="quantity" value="@item.PRO_Quantity" autocomplete="off" size="2">
-										<a class="btn" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.PRO_ID"> - </a>
-										<a class="btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.PRO_ID"> Remove </a>
+									<div class="text-center">
+										<a class="btn btn-success" asp-controller="Cart" asp-action="Increase" asp-route-id="@item?.PRO_ID"> + </a>
+										<input class="w-25" type="text" name="quantity" value="@item?.PRO_Quantity" autocomplete="off" size="2">
+										<a class="btn btn-success" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item?.PRO_ID"> - </a>
+										<a class="btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item?.PRO_ID"> Remove </a>
 
 									</div>
 								</td>
 								<td class="cart_total">
 									<p class="cart_total_price">
-										$@Model.CartItems.Where(x => x.PRO_ID == item.PRO_ID).Sum(x => x.PRO_Quantity * x.PRO_Price).ToString()
+										$@Model.CartItems.Where(x => x.PRO_ID == item?.PRO_ID).Sum(x => x.PRO_Quantity * x.PRO_Price).ToString()
 									</p>
 								</td>
-								<td class="cart_delete">
-									<a class="cart_quantity_delete" asp-action="Remove" asp-controller="Cart" asp-route-id="@item.PRO_ID"><i class="fa fa-times"></i></a>
+								<td class="text-center">
+									<a class="btn btn-danger" asp-action="Remove" asp-controller="Cart" asp-route-id="@item?.PRO_ID"><i class="fa fa-times"></i></a>
 								</td>
 							</tr>
 						}
 						<tr>
-							<td colspan="6">
+							<td colspan="5">
 								<p>Grand Total: $@Model.GrandTotal</p>
 							</td>
+							<td class="text-center">
+								<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
+								<a asp-action="Checkout" asp-controller="Cart" class="btn btn-success">Checkout</a>
+                            </td>
 						</tr>
 					}
 					else

@@ -1,8 +1,10 @@
 ﻿using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Eshopper_website.Controllers
 {
@@ -24,12 +26,59 @@ namespace Eshopper_website.Controllers
             return View(cartItemView);
         }
 
-        public IActionResult Checkout()
-        {
-            return View(); 
-        }
+		public async Task<ActionResult> Checkout()
+		{
+            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+            CartItemView cartItemView = new()
+            {
+                GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price)
+            };
+            //var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            //if (userEmail == null)
+            //{
+            //	//return RedirectToAction("Login", "Account");
+            //}
 
-        public async Task<ActionResult> Add(int Id)
+            var ordercode = Guid.NewGuid().ToString();
+			var orderItem = new Order()
+			{
+				MEM_ID = 1,
+				ORD_OrderCode = ordercode,
+				ORD_Description = "This order is created by admin in order to testing.",
+				ORD_Status = OrderStatusEnum.Pending,
+				ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
+				ORD_ShippingCost = 100,
+				CreatedBy = "admin",
+				ORD_TotalPrice = cartItemView.GrandTotal,
+                CreatedDate = DateTime.Now,
+			};
+
+			_context.Add(orderItem);
+			await _context.SaveChangesAsync();
+
+			foreach (var item in cartItems)
+			{
+				var orderDetails = new OrderDetail()
+				{
+					ORD_ID = orderItem.ORD_ID,
+					PRO_ID = item.PRO_ID,
+					ORDE_Price = item.PRO_Price,
+					ORDE_Quantity = item.PRO_Quantity,
+					CreatedDate = DateTime.Now,
+					CreatedBy = "admin"
+				};
+
+                _context.Add(orderDetails);
+                await _context.SaveChangesAsync();
+
+            }
+            HttpContext.Session.Remove("Cart");
+
+            TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
+			return RedirectToAction("Index", "Cart");
+		}
+
+		public async Task<ActionResult> Add(int Id)
         {
             Product? product = await _context.Products.FindAsync(Id);
 

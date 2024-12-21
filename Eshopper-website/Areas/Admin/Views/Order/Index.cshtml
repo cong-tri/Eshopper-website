@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Eshopper_website.Models.Order>
+
+@{
+    ViewData["Title"] = "Order";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Order</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">List Orders</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_ID)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_OrderCode)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_Description)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_TotalPrice)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_Status)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_ShippingCost)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_CouponCode)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_PaymentMethod)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedDate)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_ID)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_OrderCode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_Description)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_TotalPrice)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_Status)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_ShippingCost)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_CouponCode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_PaymentMethod)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
