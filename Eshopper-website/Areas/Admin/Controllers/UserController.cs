@@ -1,6 +1,7 @@
 ﻿using Eshopper_website.Areas.Admin.DTOs.request;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var result = await _context.Accounts.AsNoTracking()
                                 .FirstOrDefaultAsync(x => x.ACC_Username == login.UserName &&
                                     x.ACC_Password == login.Password);
-            if (result != null)
+            if (result != null && result.ACC_Status == AccountStatusEnum.Active)
             {
                 if (login.RememberMe)
                 {
