@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Eshopper_website.Models.Coupon>
+﻿@model IEnumerable<Eshopper_website.Models.Menu>
 
 @{
-    ViewData["Title"] = "Coupon";
+    ViewData["Title"] = "Index";
 }
 
 <!--begin::App Content Header-->
@@ -11,7 +11,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Coupon</h3>
+                <h3 class="mb-0">Menus</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -28,7 +28,7 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Coupon </h3></div>
+                            <div class="col-md"><h3 class="card-title">List menu</h3></div>
                             <div class="searchBox">
                                 <input class="searchInput" type="text" name="" placeholder="Search here">
                                 <button class="searchButton" href="#">
@@ -65,65 +65,57 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tbl" class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                        <tr>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.MEN_Title)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.MEN_Url)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.MEN_DisplayOrder)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Parent)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.MEN_Icon)
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                    @foreach (var item in Model) {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.MEN_Title)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.MEN_Url)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.MEN_DisplayOrder)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Parent.MEN_Title)
+                                                </td>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Name)
+                                                @Html.DisplayNameFor(model => model.MEN_Icon)
                                             </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Description)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Status)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Quantity)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.COUP_DateStart)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.COUP_DateExpire)
-                                            </th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model) {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Name)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Description)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Status)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Quantity)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_DateStart)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_DateExpire)
-                                                    </td>
-                                                    <td class="text-nowrap">
-                                                        <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.COUP_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                        <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.COUP_ID"><i class="fa-regular fa-circle-info"></i></a> |
-                                                        <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.COUP_ID"><i class="fa-regular fa-trash-xmark"></i></a>
-                                                    </td>
-                                                </tr>
-                                        }
-                                    </tbody>
-                                
-                                </table>
+                                                <td class="text-nowrap">
+                                                    <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.MEN_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.MEN_ID"><i class="fa-regular fa-circle-info"></i></a> |
+                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.MEN_ID"><i class="fa-regular fa-trash-xmark"></i></a>
+                                                </td>
+                                            </tr>
+                                    }
+                                        </tbody>
+                                    </table>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
- 
+ </div>

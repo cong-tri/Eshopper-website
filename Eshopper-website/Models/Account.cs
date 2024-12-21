@@ -28,12 +28,13 @@ namespace Eshopper_website.Models
         public required string ACC_Email { get; set; }
 
         [Required(ErrorMessage = "Please enter phone number!"), MinLength(10), MaxLength(255), DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
+        //[RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
         [DisplayName("Phone")]
         public required string ACC_Phone { get; set; }
 
+        [Required(ErrorMessage = "Please enter status!")]
         [DisplayName("Status")]
-        public AccountStatusEnum ACC_Status { get; set; } = AccountStatusEnum.Inactive;
+        public required AccountStatusEnum ACC_Status { get; set; } = AccountStatusEnum.Inactive;
 
         public virtual ICollection<Member>? Members { get; set; }
         public virtual ICollection<AccountStatusLogin>? AccountStatusLogins { get; set; }

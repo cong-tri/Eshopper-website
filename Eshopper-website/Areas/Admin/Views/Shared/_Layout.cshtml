@@ -1,4 +1,11 @@
-﻿
+@using Eshopper_website.Utils.Extension
+@{
+    var userInfo = Context.Session.Get<Account>("userInfo");
+    if (userInfo == null)
+    {
+        Context.Response.Redirect("/Admin/User/Login");
+    }
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -158,6 +165,22 @@
                                 <p>
                                     Coupon
                                 </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Menu" class="nav-link @(ViewData["Title"] == "Memu" ? "active" : "")">
+                                <i class="fa-sharp-duotone fa-regular fa-list-dropdown"></i>
+                                <p>
+                                    Menu
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Account" class="nav-link @(ViewData["Title"] == "Account" ? "active" : "")">
+                                <i class="fa-duotone fa-light fa-users"></i>
+                                <p>
+                                    Account
+                                </p>  
                             </a>
                         </li>
                         <li class="nav-item">
