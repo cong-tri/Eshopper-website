@@ -1,11 +1,11 @@
-﻿@* @using FruitShop.Utils
+﻿@using Eshopper_website.Utils.Extension
 @{
-    var userInfo = Context.Session.Get<AdminUser>("userInfo");
+    var userInfo = Context.Session.Get<Account>("userInfo");
     if (userInfo == null)
     {
         Context.Response.Redirect("/Admin/User/Login");
     }
-} *@
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -148,6 +148,22 @@
                                 <i class="fa-duotone fa-light fa-tickets-perforated"></i>
                                 <p>
                                     Coupon
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Menu" class="nav-link">
+                                <i class="fa-sharp-duotone fa-regular fa-list-dropdown"></i>
+                                <p>
+                                    Menu
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Account" class="nav-link">
+                                <i class="fa-duotone fa-light fa-users"></i>
+                                <p>
+                                    Account
                                 </p>
                             </a>
                         </li>
