@@ -40,5 +40,12 @@ namespace Eshopper_website.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("/Login")]
+        public IActionResult Login() 
+        {
+            return RedirectToAction("Login", "User", new {Area = "Admin"});
+        }
+
     }
 }

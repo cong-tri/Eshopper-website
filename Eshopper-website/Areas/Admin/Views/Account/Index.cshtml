@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Eshopper_website.Models.Coupon>
+﻿@model IEnumerable<Eshopper_website.Models.Account>
 
 @{
-    ViewData["Title"] = "Coupon";
+    ViewData["Title"] = "Index";
 }
 
 <!--begin::App Content Header-->
@@ -11,7 +11,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Coupon</h3>
+                <h3 class="mb-0">Account</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -28,7 +28,7 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Coupon </h3></div>
+                            <div class="col-md"><h3 class="card-title">List Account</h3></div>
                             <div class="searchBox">
                                 <input class="searchInput" type="text" name="" placeholder="Search here">
                                 <button class="searchButton" href="#">
@@ -68,62 +68,60 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Name)
+                                                @Html.DisplayNameFor(model => model.ACC_Username)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Description)
+                                                @Html.DisplayNameFor(model => model.ACC_Password)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Status)
+                                                @Html.DisplayNameFor(model => model.ACC_DisplayName)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_Quantity)
+                                                @Html.DisplayNameFor(model => model.ACC_Email)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_DateStart)
+                                                @Html.DisplayNameFor(model => model.ACC_Phone)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.COUP_DateExpire)
+                                                @Html.DisplayNameFor(model => model.ACC_Status)
                                             </th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model) {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Name)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Description)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Status)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_Quantity)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_DateStart)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.COUP_DateExpire)
-                                                    </td>
-                                                    <td class="text-nowrap">
-                                                        <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.COUP_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                        <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.COUP_ID"><i class="fa-regular fa-circle-info"></i></a> |
-                                                        <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.COUP_ID"><i class="fa-regular fa-trash-xmark"></i></a>
-                                                    </td>
-                                                </tr>
-                                        }
+                                @foreach (var item in Model) {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ACC_Username)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ACC_Password)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ACC_DisplayName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ACC_Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ACC_Phone)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ACC_Status)
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.ACC_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.ACC_ID"><i class="fa-regular fa-circle-info"></i></a> |
+                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.ACC_ID"><i class="fa-regular fa-trash-xmark"></i></a>
+                                            </td>
+                                        </tr>
+                                }
                                     </tbody>
-                                
-                                </table>
-                            </div>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
- 
+</div>
