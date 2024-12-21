@@ -1,4 +1,4 @@
-﻿@using Eshopper_website.Utils.Extension
+@using Eshopper_website.Utils.Extension
 @{
     var userInfo = Context.Session.Get<Account>("userInfo");
     if (userInfo == null)
@@ -6,7 +6,6 @@
         Context.Response.Redirect("/Admin/User/Login");
     }
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,6 +188,22 @@
                                 <i class="nav-icon bi bi-people"></i>
                                 <p>
                                     Member
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Order" class="nav-link @(ViewData["Title"] == "Order" ? "active" : "")">
+                                <i class="nav-icon bi bi-cart2"></i>
+                                <p>
+                                    Order
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="OrderDetail" class="nav-link @(ViewData["Title"] == "Order Detail" ? "active" : "")">
+                                <i class="nav-icon bi bi-cart2"></i>
+                                <p>
+                                    Order Detail
                                 </p>
                             </a>
                         </li>

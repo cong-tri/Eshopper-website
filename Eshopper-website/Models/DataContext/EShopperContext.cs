@@ -19,5 +19,7 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Member> Members { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
     }
 }
