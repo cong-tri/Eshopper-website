@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Eshopper_website.Models.Member>
+
+@{
+    ViewData["Title"] = "Member";
+}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Member</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">List Members</h3></div>
+                            <div class="col-md-auto">
+                                <a asp-action="Create" id="btnAdd" role="button" class="btn btn-success"><i class="fa-light fa-add me-1"></i>Add new</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_LastName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_FirstName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_Gender)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_Phone)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_Email)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_Address)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MEM_Status)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Account)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.AccountRole)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_LastName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_Gender)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_Phone)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_Address)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MEM_Status)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Account.ACC_DisplayName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.AccountRole.ACR_Name)
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.MEM_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.MEM_ID"><i class="fa-regular fa-circle-info"></i></a> |
+                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.MEM_ID"><i class="fa-regular fa-trash-xmark"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
