@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Eshopper_website.Models.Contact>
+﻿@model IEnumerable<Eshopper_website.Models.Order>
 
 @{
-    ViewData["Title"] = "Contact";
+    ViewData["Title"] = "Order";
 }
 
 <!--begin::App Content Header-->
@@ -11,7 +11,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Contact</h3>
+                <h3 class="mb-0">Order</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -28,7 +28,7 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Contact</h3></div>
+                            <div class="col-md"><h3 class="card-title">List Orders</h3></div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -37,22 +37,31 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CONT_LogoImg)
+                                            @Html.DisplayNameFor(model => model.MEM_ID)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CONT_Map)
+                                            @Html.DisplayNameFor(model => model.ORD_OrderCode)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CONT_Name)
+                                            @Html.DisplayNameFor(model => model.ORD_Description)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CONT_Description)
+                                            @Html.DisplayNameFor(model => model.ORD_TotalPrice)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CONT_Phone)
+                                            @Html.DisplayNameFor(model => model.ORD_Status)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CONT_Email)
+                                            @Html.DisplayNameFor(model => model.ORD_ShippingCost)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_CouponCode)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ORD_PaymentMethod)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedDate)
                                         </th>
                                     </tr>
                                 </thead>
@@ -61,26 +70,31 @@
                                     {
                                         <tr>
                                             <td>
-                                                <img src="~/images/home/@item.CONT_LogoImg" alt="@item.CONT_Name" />
+                                                @Html.DisplayFor(modelItem => item.MEM_ID)
                                             </td>
                                             <td>
-                                                @Html.Raw(item.CONT_Map)
+                                                @Html.DisplayFor(modelItem => item.ORD_OrderCode)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.CONT_Name)
+                                                @Html.DisplayFor(modelItem => item.ORD_Description)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.CONT_Description)
+                                                @Html.DisplayFor(modelItem => item.ORD_TotalPrice)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.CONT_Phone)
+                                                @Html.DisplayFor(modelItem => item.ORD_Status)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.CONT_Email)
+                                                @Html.DisplayFor(modelItem => item.ORD_ShippingCost)
                                             </td>
-                                            <td class="text-nowrap">
-                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CONT_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CONT_ID"><i class="fa-regular fa-circle-info"></i></a>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_CouponCode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORD_PaymentMethod)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedDate)
                                             </td>
                                         </tr>
                                     }

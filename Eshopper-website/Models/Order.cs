@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Eshopper_website.Utils.Enum.Order;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,9 +25,9 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter order status!")]
 		[DisplayName("Status")]
-		public required int ORD_Status {  get; set; }
+		public required OrderStatusEnum ORD_Status { get; set; } = OrderStatusEnum.Pending;
 
-		[Required(ErrorMessage = "Please enter order shipping cost!")]
+        [Required(ErrorMessage = "Please enter order shipping cost!")]
 		[DisplayName("Shipping Cost")]
 		public required decimal ORD_ShippingCost { get; set; }
 
@@ -36,9 +37,13 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter payment method!")]
 		[DisplayName("Payment Method")]
-		public required int ORD_PaymentMethod { get; set; }
+		public required OrderPaymentMethodEnum ORD_PaymentMethod { get; set; } = OrderPaymentMethodEnum.Cash;
 
-		[ForeignKey("MEM_ID")]
+        [Required(ErrorMessage = "Please enter order total price!")]
+		[DisplayName("Total Price")]
+        public required decimal ORD_TotalPrice { get; set; }
+
+        [ForeignKey("MEM_ID")]
 		public virtual Member? Member { get; set; }
 
 		public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
