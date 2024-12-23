@@ -62,15 +62,14 @@
                     </li> <!--end::Notifications Dropdown Menu--> <!--begin::Fullscreen Toggle-->
                     <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="~/admin/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Admin</span> </a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="~/admin/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Admin : @userInfo?.ACC_DisplayName</span> </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
                                 <img src="~/admin/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image">
                                 <p>
-                                    @* @userInfo?.DisplayName - Web Developer *@
-                                    Admin
-                                    @* <small>@userInfo?.CreatedDate.ToString("MMMM. yyyy")</small> *@
+                                    @userInfo?.ACC_DisplayName
+                                    <small>Member since @userInfo?.CreatedDate.ToString("MMM. yyyy")</small>
                                 </p>
                             </li> <!--end::User Image--> <!--begin::Menu Body-->
                             <li class="user-body">
@@ -181,6 +180,14 @@
                                 <p>
                                     Account
                                 </p>  
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="AccountRole" class="nav-link @(ViewData["Title"] == "AccountRole" ? "active" : "")">
+                                <i class="fa-regular fa-address-book"></i>
+                                <p>
+                                    Account Role 
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">

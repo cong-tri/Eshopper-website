@@ -17,13 +17,10 @@ namespace Eshopper_website.Models
 		[DisplayName("Title")]
 		public required string MEN_Title { get; set; }
 
-		[MaxLength(255)]
-		[DisplayName("URL")]
-		public string? MEN_Url { get; set; } = string.Empty;
-
 		[Required(ErrorMessage = "Please enter menu display order")]
 		[DisplayName("Display Order")]
-		public required int MEN_DisplayOrder { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Menu quantity must be a positive number!")]
+        public required int MEN_DisplayOrder { get; set; }
 
         [Required(ErrorMessage = "Please enter menu icon"),MaxLength(255)]
         [DisplayName("Icon")]
