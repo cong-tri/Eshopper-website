@@ -28,6 +28,7 @@ namespace Eshopper_website.Models
 		public required BrandStatusEnum BRA_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter brand display order!")]
+		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
 		[DisplayName("Display Order")]
 		public required int BRA_DisplayOrder { get; set; }
 

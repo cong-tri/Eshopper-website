@@ -32,7 +32,6 @@ namespace Eshopper_website.Models
         public MemberGenderEnum MEM_Gender { get; set; } = MemberGenderEnum.Other;
 
         [Required(ErrorMessage = "Please enter phone number!"), MinLength(10), MaxLength(20), DataType(DataType.PhoneNumber)]
-        //[RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
         [DisplayName("Phone")]
         public required string MEM_Phone { get; set; }
 

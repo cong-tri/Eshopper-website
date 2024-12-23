@@ -9,6 +9,7 @@ using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum;
 using FruitShop.Areas.Admin.DTOs.request;
+using Eshopper_website.Utils.Extension;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -80,6 +81,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] ProductDTO request)
         {
+            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            var username = userInfo != null ? userInfo.ACC_Username : "";
+
             var product = new Product
             {
                 CAT_ID = request.CAT_ID,
@@ -91,7 +95,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 PRO_Quantity = request.PRO_Quantity,
                 PRO_CapitalPrice = request.PRO_CapitalPrice,
                 PRO_Status = request.PRO_Status,
-                CreatedBy = ""
+                CreatedBy = username,
+                CreatedDate = DateTime.Now
             };
             if (ModelState.IsValid)
             {
@@ -157,6 +162,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 try
                 {
+                    var userInfo = HttpContext.Session.Get<Account>("userInfo");
+                    var username = userInfo != null ? userInfo.ACC_Username : "";
+
                     var existingProduct = await _context.Products.FindAsync(id);
                     if (existingProduct == null)
                     {
@@ -172,6 +180,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     existingProduct.PRO_Quantity = request.PRO_Quantity;
                     existingProduct.PRO_CapitalPrice = request.PRO_CapitalPrice;
                     existingProduct.PRO_Description = request.PRO_Description;
+                    existingProduct.CreatedBy = username;
+                    existingProduct.UpdatedDate = DateTime.Now;
+                    existingProduct.UpdatedBy = username;
 
                     if (request.PRO_Image != null)
                     {

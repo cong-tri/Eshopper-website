@@ -26,8 +26,14 @@ namespace Eshopper_website.Controllers
             return View(cartItemView);
         }
 
-		public async Task<ActionResult> Checkout()
-		{
+        public async Task<ActionResult> Checkout()
+        {
+            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
             List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
             CartItemView cartItemView = new()
             {
@@ -80,6 +86,12 @@ namespace Eshopper_website.Controllers
 
 		public async Task<ActionResult> Add(int Id)
         {
+            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
             Product? product = await _context.Products.FindAsync(Id);
 
             List<CartItem> carts = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();

@@ -16,25 +16,27 @@ namespace Eshopper_website.Areas.Admin.Controllers
 		// GET: Admin/Category
 		public async Task<IActionResult> Index()
 		{
-			return View(await _context.Orders.Include(x => x.OrderDetails).ToListAsync());
+			return View(await _context.Orders.AsNoTracking().ToListAsync());
 		}
 
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
-            var orderdetails = await _context.Orders
+            var order = await _context.Orders
                 .Include(x => x.OrderDetails)
                 .FirstOrDefaultAsync(m => m.ORD_ID == id);
-            if (orderdetails == null)
+
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(orderdetails);
+            return View(order);
         }
     }
 }

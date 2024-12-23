@@ -19,6 +19,7 @@ namespace Eshopper_website.Models
 		public required int PRO_ID { get; set; }
 
 		[Required(ErrorMessage = "Please enter order details price!")]
+		[Range(1, double.MaxValue, ErrorMessage = "Product price must be a positive number!")]
 		[DisplayName("Price")]
 		public required decimal ORDE_Price { get; set; }
 

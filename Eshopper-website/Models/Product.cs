@@ -32,6 +32,7 @@ namespace Eshopper_website.Models
 		public string? PRO_Slug { get; set; } = string.Empty;
 
 		[Required(ErrorMessage = "Please enter product price!")]
+		[Range(1, double.MaxValue, ErrorMessage = "Product price must be a positive number!")]
 		[DisplayName("Price")]
 		public required decimal PRO_Price { get; set; }
 
@@ -40,6 +41,7 @@ namespace Eshopper_website.Models
 		public string? PRO_Image { get; set; } = string.Empty;
 
 		[Required(ErrorMessage = "Please enter product quantity!")]
+		[Range(1, int.MaxValue, ErrorMessage = "Product quantity must be a positive number!")]
 		[DisplayName("Quantity")]
 		public required int PRO_Quantity { get; set; }
 
@@ -49,6 +51,7 @@ namespace Eshopper_website.Models
 		public required ProductStatusEnum PRO_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter product capital price!")]
+		[Range(1, double.MaxValue, ErrorMessage = "Product captital price must be a positive number!")]
 		[DisplayName("Capital Price")]
 		public required decimal PRO_CapitalPrice { get; set; }
 
@@ -58,8 +61,8 @@ namespace Eshopper_website.Models
 		[ForeignKey("BRA_ID")]
 		public virtual Brand? Brand { get; set; }
 
-		//public virtual ICollection<Wishlist>? Wishlists { get; set; }
-		//public virtual ICollection<Compare>? Compares { get; set; }
+		public virtual ICollection<Wishlist>? Wishlists { get; set; }
+		public virtual ICollection<Compare>? Compares { get; set; }
 		public virtual ICollection<Rating>? Ratings { get; set; }
 		public virtual ICollection<ProductQuantity>? ProductQuantities { get; set; }
 		public virtual ICollection<OrderDetail>? OrderDetails { get; set; }

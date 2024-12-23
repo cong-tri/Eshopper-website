@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Eshopper_website.Utils.Extension
+@{
+	var userInfo = Context.Session.Get<Account>("userInfo");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -92,11 +97,17 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
-								<li><a asp-action="Index" asp-controller="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-								<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
+								@if(userInfo != null)
+								{
+									<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+									<li><a asp-action="Index" asp-controller="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
+									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+									<li><a href="#">Account</a></li>
+								}
+								else
+								{
+									<li><a asp-action="Login" asp-controller="User" asp-area="Admin"><i class="fa fa-lock"></i> Login</a></li>	
+								}
 							</ul>
 						</div>
 					</div>

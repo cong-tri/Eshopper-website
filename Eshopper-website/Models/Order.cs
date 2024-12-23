@@ -28,6 +28,7 @@ namespace Eshopper_website.Models
 		public required OrderStatusEnum ORD_Status { get; set; } = OrderStatusEnum.Pending;
 
         [Required(ErrorMessage = "Please enter order shipping cost!")]
+		[Range(1, double.MaxValue, ErrorMessage = "Shipping price must be a positive number!")]
 		[DisplayName("Shipping Cost")]
 		public required decimal ORD_ShippingCost { get; set; }
 
@@ -40,6 +41,7 @@ namespace Eshopper_website.Models
 		public required OrderPaymentMethodEnum ORD_PaymentMethod { get; set; } = OrderPaymentMethodEnum.Cash;
 
         [Required(ErrorMessage = "Please enter order total price!")]
+		[Range(1, double.MaxValue, ErrorMessage = "Total price must be a positive number!")]
 		[DisplayName("Total Price")]
         public required decimal ORD_TotalPrice { get; set; }
 
