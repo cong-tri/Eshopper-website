@@ -18,26 +18,26 @@ namespace Eshopper_website
 
             builder.Services.Configure<Appsettings>(builder.Configuration.GetSection("JwtSettings"));
 
-            //builder.Services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //    .AddJwtBearer(options =>
-            //    {
-            //        var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-            //        options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            ValidateIssuer = true,
-            //            ValidateAudience = true,
-            //            ValidateLifetime = true,
-            //            ValidateIssuerSigningKey = true,
-            //            ValidIssuer = jwtSettings["Issuer"],
-            //            ValidAudience = jwtSettings["Audience"],
-            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-            //        };
-            //    });
-            //builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings["Issuer"],
+                        ValidAudience = jwtSettings["Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+                    };
+                });
+            builder.Services.AddAuthorization();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddDistributedMemoryCache();
@@ -67,6 +67,8 @@ namespace Eshopper_website
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseMiddleware<JwtCookieToHeaderMiddleware>();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
