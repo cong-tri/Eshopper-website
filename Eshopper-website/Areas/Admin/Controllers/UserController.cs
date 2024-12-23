@@ -1,7 +1,7 @@
 ﻿using Eshopper_website.Areas.Admin.DTOs.request;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
-using Eshopper_website.Utils.Enum.Member;
+using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;

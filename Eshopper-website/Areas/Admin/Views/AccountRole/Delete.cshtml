@@ -1,4 +1,4 @@
-﻿@model Eshopper_website.Models.Menu
+﻿@model Eshopper_website.Models.AccountRole
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,32 +8,20 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Menu</h4>
+    <h4>AccountRole</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MEN_Title)
+            @Html.DisplayNameFor(model => model.ACR_Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MEN_Title)
+            @Html.DisplayFor(model => model.ACR_Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MEN_DisplayOrder)
+            @Html.DisplayNameFor(model => model.ACR_Status)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MEN_DisplayOrder)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MEN_Icon)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MEN_Icon)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Parent)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Parent.MEN_Title)
+            @Html.DisplayFor(model => model.ACR_Status)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedDate)
@@ -62,7 +50,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="MEN_ID" />
+        <input type="hidden" asp-for="ACR_ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

@@ -21,5 +21,6 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Member> Members { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Eshopper_website.Models.AccountRole> AccountRole { get; set; } = default!;
     }
 }
