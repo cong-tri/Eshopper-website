@@ -252,5 +252,40 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             return _context.Products.Any(e => e.PRO_ID == id);
         }
+        public async Task<ActionResult> AddQuantity(int Id)
+        {
+            var productQuantity = await _context.ProductQuantities.Where(pq => pq.PRO_ID == Id).ToListAsync();
+            //ViewBag.ProductQuantity = await productQuantity;
+            ViewData["productQuantities"] = productQuantity;
+            ViewBag.Id = Id;
+            return View();
+        }
+
+        //public async Task<ActionResult>
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StoreProductQuantity(ProductQuantity productQuantity)
+        {
+            var product = await _context.Products.FindAsync(productQuantity.PRO_ID);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.PRO_Quantity += productQuantity.PROQ_Quantity;
+
+            productQuantity.PROQ_Quantity = productQuantity.PROQ_Quantity;
+            productQuantity.PRO_ID = productQuantity.PRO_ID;
+            productQuantity.CreatedDate = DateTime.Now;
+
+
+            _context.Add(productQuantity);
+            await _context.SaveChangesAsync();
+
+            TempData["success"] = "Add Success Quantity";
+
+            return RedirectToAction("AddQuantity", "Product", new { Id = productQuantity.PRO_ID});
+            }
     }
 }
