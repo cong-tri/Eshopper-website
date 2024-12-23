@@ -1,21 +1,23 @@
-﻿@model IEnumerable<Eshopper_website.Models.Banner>
+﻿@model IEnumerable<Eshopper_website.Models.AccountRole>
 
 @{
-    ViewData["Title"] = "Banner";
+    ViewData["Title"] = "Index";
 }
 
+<!--begin::App Content Header-->
 <div class="app-content-header">
     <!--begin::Container-->
     <div class="container-fluid">
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Banner</h3>
+                <h3 class="mb-0">Account Role</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
 </div>
-
+<!--end::App Content Header-->
+<!--begin::App Content-->
 <div class="app-content">
     <!--begin::Container-->
     <div class="container-fluid">
@@ -26,7 +28,7 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Banner</h3></div>
+                            <div class="col-md"><h3 class="card-title">List Account Role</h3></div>
                             <div class="searchBox">
                                 <input class="searchInput" type="text" name="" placeholder="Search here">
                                 <button class="searchButton" href="#">
@@ -55,9 +57,9 @@
 
                                 </button>
                             </div>
-                            <div class="col-md-auto">
-                                <a asp-action="Create" id="btnAdd" role="button" class="btn btn-success"><i class="fa-light fa-add me-1"></i>Create New</a>
-                            </div>
+                            @* <div class="col-md-auto">
+                                <a asp-action="Create" id="btnAdd" role="button" class="btn btn-success"><i class="fa-light fa-add me-1"></i>Add new</a>
+                            </div> *@
                         </div>
                     </div>
                     <div class="card-body">
@@ -66,73 +68,36 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.BAN_Title)
+                                            @Html.DisplayNameFor(model => model.ACR_Name)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.BAN_Image)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.BAN_Url)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.BAN_DisplayOrder)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.CreatedDate)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.CreatedBy)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.UpdatedDate)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.UpdatedBy)
+                                            @Html.DisplayNameFor(model => model.ACR_Status)
                                         </th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model) 
-                                    {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.BAN_Title)
-                                            </td>
-                                            <td>
-                                                <img src="~/images/home/@item.BAN_Image" width="200px" alt="@item.BAN_Title" />
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.BAN_Url)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.BAN_DisplayOrder)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedBy)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.UpdatedDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.UpdatedBy)
-                                            </td>
+                            @foreach (var item in Model) {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ACR_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ACR_Status)
+                                        </td>
                                             <td class="text-nowrap">
-                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.BAN_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.BAN_ID"><i class="fa-regular fa-circle-info"></i></a> |
-                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.BAN_ID"><i class="fa-regular fa-trash-xmark"></i></a>
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.ACR_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.ACR_ID"><i class="fa-regular fa-circle-info"></i></a> |
+                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.ACR_ID"><i class="fa-regular fa-trash-xmark"></i></a>
                                             </td>
-                                        </tr>
-                                    }
+                                    </tr>
+                            }
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div> <!-- /.card -->
+            </div>
         </div>
-    </div> <!--end::Row-->
-</div> <!--end::Container-->
+    </div>
+</div>

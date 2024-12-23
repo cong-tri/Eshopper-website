@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Eshopper_website.Models.Product>
+﻿@model IEnumerable<Eshopper_website.Models.OrderDetail>
 
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "Order Detail";
 }
 
 <!--begin::App Content Header-->
@@ -11,7 +11,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Product</h3>
+                <h3 class="mb-0">Order Detail</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -28,7 +28,7 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Product</h3></div>
+                            <div class="col-md"><h3 class="card-title">List Orders Details</h3></div>
                             <div class="searchBox">
                                 <input class="searchInput" type="text" name="" placeholder="Search here">
                                 <button class="searchButton" href="#">
@@ -57,9 +57,6 @@
 
                                 </button>
                             </div>
-                            <div class="col-md-auto">
-                                <a asp-action="Create" id="btnAdd" role="button" class="btn btn-success"><i class="fa-light fa-add me-1"></i>Add new</a>
-                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -67,50 +64,24 @@
                             <table id="tbl" class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                   
                                         <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Image)
+                                            @Html.DisplayNameFor(model => model.ORD_ID)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Name)
+                                            @Html.DisplayNameFor(model => model.PRO_ID)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Quantity)
+                                            @Html.DisplayNameFor(model => model.ORDE_Quantity)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Category)
+                                            @Html.DisplayNameFor(model => model.ORDE_Price)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Brand)
-                                        </th>
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Description)
-                                        </th> *@
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Slug)
-                                        </th> *@
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Status)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Price)
-                                        </th>
-                                         <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Sold)
-                                        </th> *
-                                        @* <th>
                                             @Html.DisplayNameFor(model => model.CreatedDate)
-                                        </th> *@
+                                        </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.CreatedBy)
                                         </th>
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.UpdatedDate)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.UpdatedBy)
-                                        </th> *@
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,53 +89,22 @@
                                     {
                                         <tr>
                                             <td>
-                                                <img src="~/images/product-details/@item.PRO_Image" width="150px" alt="@item.PRO_Name" />
+                                                @Html.DisplayFor(modelItem => item.ORD_ID)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Name)
+                                                @Html.DisplayFor(modelItem => item.PRO_ID)
                                             </td>
                                             <td>
-                                              <b>@item.PRO_Quantity</b><br/><a asp-controller="Product" asp-action="AddQuantity" asp-route-id="@item.PRO_ID">Add Quantity</a>
-                                            </td>
-                                            <td><b>@item.PRO_Sold</b></td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Category.CAT_Name)
+                                                @Html.DisplayFor(modelItem => item.ORDE_Quantity)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Brand.BRA_Name)
-                                            </td>
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Description)
-                                            </td> *@
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Slug)
-                                            </td> *@
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Status)
+                                                @Html.DisplayFor(modelItem => item.ORDE_Price)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Price)
-                                            </td>
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_CapitalPrice)
-                                            </td> *@
-                                            
-                                            @* <td>
                                                 @Html.DisplayFor(modelItem => item.CreatedDate)
-                                            </td> *@
+                                            </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.CreatedBy)
-                                            </td>
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.UpdatedDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.UpdatedBy)
-                                            </td> *@
-                                            <td class="text-nowrap">
-                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.PRO_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.PRO_ID"><i class="fa-regular fa-circle-info"></i></a> |
-                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.PRO_ID"><i class="fa-regular fa-trash-xmark"></i></a>
                                             </td>
                                         </tr>
                                     }

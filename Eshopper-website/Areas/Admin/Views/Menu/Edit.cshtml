@@ -1,7 +1,7 @@
-﻿@model Eshopper_website.Models.Coupon
+﻿@model Eshopper_website.Models.Menu
 
 @{
-    ViewData["Title"] = "Coupon";
+    ViewData["Title"] = "Create";
 }
 <!--begin::App Content Header-->
 <div class="app-content-header">
@@ -10,7 +10,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Coupons</h3>
+                <h3 class="mb-0">Menu</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -27,92 +27,63 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">Edit Coupons</h3></div>
+                            <div class="col-md"><h3 class="card-title">Edit Menu</h3></div>
                         </div>
                     </div>
                     <div class="card-body">
                         <form asp-action="Create" asp-controller="Coupon" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="MEN_ID" />
                             <div class="form-group mb-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-3">
-                                        <label asp-for="COUP_Name" class="control-label"></label>
+                                        <label asp-for="PARENT_ID" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="COUP_Name" class="form-control w-100" />
-                                        <span asp-validation-for="COUP_Name" class="text-danger"></span>
+                                        <input asp-for="PARENT_ID" class="form-control w-100" />
+                                        <span asp-validation-for="PARENT_ID" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group mb-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-3">
-                                        <label asp-for="COUP_Description" class="control-label"></label>
+                                        <label asp-for="MEN_Title" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="COUP_Description" class="form-control" />
-                                        <span asp-validation-for="COUP_Description" class="text-danger"></span>
+                                        <input asp-for="MEN_Title" class="form-control" />
+                                        <span asp-validation-for="MEN_Title" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group mb-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-3">
-                                        <label asp-for="COUP_Quantity" class="control-label"></label>
+                                        <label asp-for="MEN_DisplayOrder" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="COUP_Quantity" class="form-control" />
-                                        <span asp-validation-for="COUP_Quantity" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-3">
-                                        <label asp-for="COUP_Status" class="control-label"></label>
-                                    </div>
-                                    <div class="col-sm border-4">
-                                        @* <input asp-for="CAT_Status" class="form-control" /> *@
-                                        <span asp-validation-for="COUP_Status" class="text-danger"></span>
-                                        @Html.DropDownListFor(
-                                                 model => model.COUP_Status, (IEnumerable<SelectListItem>)ViewData["CouponStatus"],
-                                                 "Select Status",
-                                                 new { @class = "form-select" }
-                                                 )
+                                        <input asp-for="MEN_DisplayOrder" class="form-control" />
+                                        <span asp-validation-for="MEN_DisplayOrder" class=" text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group mb-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-3">
-                                        <label asp-for="COUP_DateStart" class="control-label"></label>
+                                        <label asp-for="MEN_Icon" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="COUP_DateStart" class="form-control" />
-                                        <span asp-validation-for="COUP_DateStart" class="text-danger"></span>
+                                        <input asp-for="MEN_Icon" class="form-control" />
+                                        <span asp-validation-for="MEN_Icon" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group mb-3">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-3">
-                                        <label asp-for="COUP_DateExpire" class="control-label"></label>
-                                    </div>
-                                    <div class="col-sm">
-                                        <input asp-for="COUP_DateExpire" class="form-control" />
-                                        <span asp-validation-for="COUP_DateExpire" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <input type="submit" value="Save" class="btn btn-primary w-100" />
                             </div>
                             <div class="card-footer">
                                 <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
                             </div>
-
                         </form>
                     </div> <!-- /.card-body -->
                 </div>

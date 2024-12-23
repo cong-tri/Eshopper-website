@@ -24,8 +24,9 @@ namespace Eshopper_website.Models
 		public required CouponStatusEnum COUP_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter coupon quantity!")]
-		[DisplayName("Quantity")]
-		public required int COUP_Quantity { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Coupon quantity must be a positive number!")]
+        [DisplayName("Quantity")]
+		public required int COUP_Quantity { get; set; }	
 
 		[Required(ErrorMessage = "Please enter the date start for coupon!")]
 		[DisplayName("Date Start")]

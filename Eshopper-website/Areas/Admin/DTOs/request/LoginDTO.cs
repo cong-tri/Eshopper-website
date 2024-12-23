@@ -1,4 +1,4 @@
-﻿namespace FruitShop.Areas.Admin.DTOs.request
+﻿namespace Eshopper_website.Areas.Admin.DTOs.request
 {
     public class LoginDTO
     {

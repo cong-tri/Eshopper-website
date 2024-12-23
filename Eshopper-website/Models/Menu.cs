@@ -11,22 +11,23 @@ namespace Eshopper_website.Models
 		public int MEN_ID { get; set; }
 
 		[DisplayName("Parent ID")]
-		public int PARENT_ID { get; set; }
+		public int? PARENT_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter menu title"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter menu title"), MinLength(2), MaxLength(255)]
 		[DisplayName("Title")]
 		public required string MEN_Title { get; set; }
 
-		[MaxLength(255)]
-		[DisplayName("URL")]
-		public string? MEN_Url { get; set; } = string.Empty;
-
 		[Required(ErrorMessage = "Please enter menu display order")]
-		[DisplayName("Title")]
-		public required int MEN_DisplayOrder { get; set; }
+		[DisplayName("Display Order")]
+        [Range(1, int.MaxValue, ErrorMessage = "Menu quantity must be a positive number!")]
+        public required int MEN_DisplayOrder { get; set; }
 
-		[ForeignKey("PARENT_ID")]
-		public virtual Menu? Parent { get; set; }
+        [Required(ErrorMessage = "Please enter menu icon"),MaxLength(255)]
+        [DisplayName("Icon")]
+        public required string MEN_Icon { get; set; }
+
+        [ForeignKey("PARENT_ID")]  
+        public virtual Menu? Parent { get; set; }
 		public virtual ICollection<Menu>? Childrens { get; set; }
 	}
 }

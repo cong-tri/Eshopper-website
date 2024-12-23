@@ -1,0 +1,161 @@
+﻿@model Eshopper_website.Models.Account
+
+@{
+    ViewData["Title"] = "Account";
+}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Account</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Edit Account</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="ACC_ID" />
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="ACC_Username" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="ACC_Username" class="form-control w-100" />
+                                        <span asp-validation-for="ACC_Username" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="form-group mb-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-3">
+                                            <label asp-for="ACC_Password" class="control-label"></label>
+                                        </div>
+                                        <div class="col-sm">
+                                            <div class="input-group">
+                                                <input asp-for="ACC_Password" class="form-control" id="password-field" readonly />
+                                                <button type="button" class="btn btn-outline-secondary" id="edit-button" onclick="toggleEdit()">Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group mb-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-3">
+                                            <label asp-for="ACC_Password" class="control-label"></label>
+                                        </div>
+                                        <div class="col-sm">
+                                            <div class="input-group">
+                                                <input asp-for="ACC_Password" class="form-control" id="password-field" value="*******" readonly />
+                                                <button type="button" class="btn btn-outline-secondary" id="edit-button" onclick="toggleEdit()">Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="ACC_DisplayName" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="ACC_DisplayName" class="form-control" />
+                                        <span asp-validation-for="ACC_DisplayName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="ACC_Email" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="ACC_Email" class="form-control" />
+                                        <span asp-validation-for="ACC_Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="ACC_Phone" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="ACC_Phone" class="form-control" />
+                                        <span asp-validation-for="ACC_Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="ACC_Status" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm border-4">
+                                        <select asp-for="ACC_Status" class="form-select">
+                                            <option value="1">Active</option>
+                                            <option value="2">InActive</option>
+                                        </select>
+                                        <span asp-validation-for="ACC_Status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary w-100" />
+                            </div>
+                            <div class="card-footer">
+                                <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                            </div>
+
+                        </form>
+                    </div> <!-- /.card-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    function toggleEdit() {
+        const passwordField = document.getElementById('password-field');
+        const editButton = document.getElementById('edit-button');
+
+        if (passwordField.readOnly) {
+            passwordField.readOnly = false;
+            passwordField.focus(); 
+            editButton.innerText = 'Save';
+        } else {
+            passwordField.readOnly = true;
+            editButton.innerText = 'Edit';
+            console.log('New password:', passwordField.value);
+        }
+    }
+</script>
