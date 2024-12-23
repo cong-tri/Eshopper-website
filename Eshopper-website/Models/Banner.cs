@@ -23,6 +23,8 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter banner display order")]
 		[DisplayName("Display Order")]
+		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
 		public required int BAN_DisplayOrder { get; set; }
+
 	}
 }

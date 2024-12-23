@@ -67,11 +67,15 @@
                             <table id="tbl" class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                   
                                         <th>
                                             @Html.DisplayNameFor(model => model.PRO_Image)
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.PRO_Name)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PRO_Quantity)
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.Category)
@@ -91,12 +95,9 @@
                                         <th>
                                             @Html.DisplayNameFor(model => model.PRO_Price)
                                         </th>
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.PRO_CapitalPrice)
-                                        </th> *@
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Quantity)
-                                        </th>
+                                         <th>
+                                            @Html.DisplayNameFor(model => model.PRO_Sold)
+                                        </th> *
                                         @* <th>
                                             @Html.DisplayNameFor(model => model.CreatedDate)
                                         </th> *@
@@ -123,6 +124,10 @@
                                                 @Html.DisplayFor(modelItem => item.PRO_Name)
                                             </td>
                                             <td>
+                                              <b>@item.PRO_Quantity</b><br/><a asp-controller="Product" asp-action="AddQuantity" asp-route-id="@item.PRO_ID">Add Quantity</a>
+                                            </td>
+                                            <td><b>@item.PRO_Sold</b></td>
+                                            <td>
                                                 @Html.DisplayFor(modelItem => item.Category.CAT_Name)
                                             </td>
                                             <td>
@@ -143,9 +148,7 @@
                                             @* <td>
                                                 @Html.DisplayFor(modelItem => item.PRO_CapitalPrice)
                                             </td> *@
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Quantity)
-                                            </td>
+                                            
                                             @* <td>
                                                 @Html.DisplayFor(modelItem => item.CreatedDate)
                                             </td> *@

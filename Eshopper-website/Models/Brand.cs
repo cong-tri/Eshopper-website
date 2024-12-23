@@ -30,6 +30,7 @@ namespace Eshopper_website.Models
 		[Required(ErrorMessage = "Please enter brand display order!")]
 		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
 		[DisplayName("Display Order")]
+		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
 		public required int BRA_DisplayOrder { get; set; }
 
 		public virtual ICollection<Product>? Products { get; set; }

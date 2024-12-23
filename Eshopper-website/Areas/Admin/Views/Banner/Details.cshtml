@@ -3,57 +3,56 @@
 @{
     ViewData["Title"] = "Banner";
 }
+<div class="border p-4 rounded shadow-sm">
+    <h4>Article Information</h4>
+    <hr />
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_Title)</th>
+                    <td>@Html.DisplayFor(model => model.BAN_Title)</td>
+                </tr>
 
-                    <h1>Article Details</h1>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_Image)</th>
+                    <td>
+                        <img src="~/images/home/@Model.BAN_Image" width="400px" alt="@Model.BAN_Title" class="" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_Url)</th>
+                    <td>@Html.DisplayFor(model => model.BAN_Url)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BAN_DisplayOrder)</th>
+                    <td>@Html.DisplayFor(model => model.BAN_DisplayOrder)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+                    <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.CreatedBy)</th>
+                    <td>@Html.DisplayFor(model => model.CreatedBy)</td>
+                </tr>
 
-                    <div class="border p-4 rounded shadow-sm">
-                        <h4>Article Information</h4>
-                        <hr />
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.BAN_Title)</th>
-                                        <td>@Html.DisplayFor(model => model.BAN_Title)</td>
-                                    </tr>
-                                 
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.BAN_Image)</th>
-                                        <td>
-                                            <img src="~/images/home/@Model.BAN_Image" width="400px" alt="@Model.BAN_Title" class="" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.BAN_Url)</th>
-                                        <td>@Html.DisplayFor(model => model.BAN_Url)</td>
-                                    </tr>
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.BAN_DisplayOrder)</th>
-                                        <td>@Html.DisplayFor(model => model.BAN_DisplayOrder)</td>
-                                    </tr>
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
-                                        <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-                                    </tr>
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.CreatedBy)</th>
-                                        <td>@Html.DisplayFor(model => model.CreatedBy)</td>
-                                    </tr>
-                                 
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.UpdatedDate)</th>
-                                        <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
-                                    </tr>
-                                    <tr>
-                                        <th>@Html.DisplayNameFor(model => model.UpdatedBy)</th>
-                                        <td>@Html.DisplayFor(model => model.UpdatedBy)</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.UpdatedDate)</th>
+                    <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.UpdatedBy)</th>
+                    <td>@Html.DisplayFor(model => model.UpdatedBy)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                    <div class="mt-3">
-                        <a asp-action="Edit" asp-route-id="@Model?.BAN_ID" class="btn btn-primary">Edit</a>
-                        <a asp-action="Index" class="btn btn-secondary">Back To List</a>
-                    </div>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.BAN_ID" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back To List</a>
+</div>
+
+
