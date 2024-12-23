@@ -1,0 +1,86 @@
+﻿@model Eshopper_website.Models.ProductQuantity
+
+@{
+    ViewData["Title"] = "Create Quantity";
+    var total_quantities = 0;
+    var key = 1;
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0"> Quantity </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Create Quantity</h3></div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <form asp-action="StoreProductQuantity" asp-controller="Product">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" name="PRO_ID" value="@ViewBag.Id"/>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label class="control-label">Quantity</label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="PROQ_Quantity" min="1" value="1" max="100" class="form-control w-100" />
+                                        <span asp-validation-for="PROQ_Quantity" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary w-100" />
+                            </div>
+                        </form>
+                        <h3>Existing Product Quantities:</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Quantity added</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var productQuantity in ViewData["productQuantities"] as List<ProductQuantity> ?? [])
+                                {
+                                total_quantities += productQuantity.PROQ_Quantity;
+                                    <tr>
+                                        <td>@key</td>
+                                        <td>@productQuantity.PROQ_Quantity</td>
+                                        <td>@productQuantity.CreatedDate</td> 
+                                    </tr>
+                                    key++;
+                                }
+                                <tr>
+                                    <td colspan="3">Total_Quantities : @total_quantities</td>
+                                </tr> 
+                            </tbody>
+                        </table>
+
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index" asp-controller="Product"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List Product</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
+
+}

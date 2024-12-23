@@ -67,7 +67,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 BAN_Url = request.BAN_Url,
             };
 
-            if (ModelState.IsValid)
+			if (ModelState.IsValid)
             {
                 string? newImageFileName = null;
                 if (request.BAN_Image != null)
@@ -109,6 +109,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [FromForm] BannerDTO request)
         {
+
             if (id != request.BAN_ID)
             {
                 return NotFound();

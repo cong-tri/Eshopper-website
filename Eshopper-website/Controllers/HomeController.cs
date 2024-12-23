@@ -21,6 +21,8 @@ namespace Eshopper_website.Controllers
         public IActionResult Index()
         {
             var products = _context.Products.Include("Category").Include("Brand").ToList();
+            var banners = _context.Banners.OrderBy(x => x.BAN_DisplayOrder).ToList();
+            ViewData["Banner"] = banners;
             return View(products);
         }
 

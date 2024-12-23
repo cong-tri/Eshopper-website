@@ -39,6 +39,8 @@ namespace Eshopper_website.Models
 		[DisplayName("Image")]
 		public string? PRO_Image { get; set; } = string.Empty;
 
+		public int PRO_Sold { get; set; }
+
 		[Required(ErrorMessage = "Please enter product quantity!")]
 		[DisplayName("Quantity")]
 		public required int PRO_Quantity { get; set; }

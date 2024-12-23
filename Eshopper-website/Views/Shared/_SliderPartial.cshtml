@@ -1,0 +1,109 @@
+﻿@{
+	int index = 0;
+	var banners = ViewData["Banner"] as List<Banner> ?? [];
+}
+<section id="slider">
+    <!--slider-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="slider-carousel"
+                     class="carousel slide"
+                     data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        @foreach (var banner in banners)
+                        {
+                            <li data-target="#slider-carousel" data-slide-to="@index" class="@(index == 0 ? "active" : "")"></li>
+                            index++;
+                        }
+                    </ol>
+                    @{index = 0;}
+                    <div class="carousel-inner">
+                        @foreach (var banner in banners)
+                        {
+                            <div class="item @(index == 0 ? "active" : "")">
+                                <div class="col-sm-6">
+                                    <h1><span>E</span>-SHOPPER</h1>
+                                    <h2>Free E-Commerce Template</h2>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna
+                                        aliqua.
+                                    </p>
+                                    <button type="button" class="btn btn-default get">
+                                        Get it now
+                                    </button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="~/images/home/@banner.BAN_Image"
+                                         class="girl img-responsive"
+                                         alt="" />
+                                    <img src="images/home/pricing.png" class="pricing" alt="" />
+                                </div>
+                            </div>
+
+                            index++;
+                        }                                    
+                    </div>
+
+                    <a href="#slider-carousel"
+                       class="left control-carousel hidden-xs"
+                       data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a href="#slider-carousel"
+                       class="right control-carousel hidden-xs"
+                       data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@* <section id="slider">
+	<!--slider-->
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="slider-carousel" class="carousel slide" data-ride="carousel">
+					<ol class="carousel-indicators">
+						@foreach (var banner in banners)
+						{
+							<li data-target="#slider-carousel" data-slide-to="@index" class="@(index == 0 ? "active" : "")"></li>
+							index++;
+						}
+					</ol>
+
+					<div class="carousel-inner">
+						@foreach (var banner in banners)
+						{
+							<div class="item @(index == 0 ? "active" : "")">
+								<div class="col-sm-6">
+									<h1><span>E</span>-SHOPPER</h1>
+									<h2>@banner.BAN_Title</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+									<button type="button" class="btn btn-default get">Get it now</button>
+								</div>
+								<div class="col-sm-6">
+									<img src="~/images/home/@banner.BAN_Image" class="girl img-responsive" alt="@banner.BAN_Title" />
+									<img src="images/home/pricing.png" class="pricing" alt="" />
+								</div>
+							</div>
+							index++;
+						}
+					</div>
+
+					<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+						<i class="fa fa-angle-left"></i>
+					</a>
+					<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+						<i class="fa fa-angle-right"></i>
+					</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section><!--/slider-->
+ *@

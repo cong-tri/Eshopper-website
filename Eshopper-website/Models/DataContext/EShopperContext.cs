@@ -19,5 +19,6 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Coupon>? Coupons { get; set; }
         public DbSet<Menu>? Menus { get; set; }
         public DbSet<Member> Members { get; set; }
+        public DbSet<ProductQuantity>? ProductQuantities { get; set; }
     }
 }
