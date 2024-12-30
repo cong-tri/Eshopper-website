@@ -33,11 +33,6 @@ namespace Eshopper_website.Controllers
             {
                 GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price)
             };
-            //var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            //if (userEmail == null)
-            //{
-            //	//return RedirectToAction("Login", "Account");
-            //}
 
             var ordercode = Guid.NewGuid().ToString();
 			var orderItem = new Order()
@@ -80,6 +75,12 @@ namespace Eshopper_website.Controllers
 
 		public async Task<ActionResult> Add(int Id)
         {
+            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
             Product? product = await _context.Products.FindAsync(Id);
 
             List<CartItem> carts = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();

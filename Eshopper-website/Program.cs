@@ -1,3 +1,4 @@
+using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models.DataContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,14 @@ namespace Eshopper_website
 
 			// Add services to the container.
 			builder.Services.AddDbContext<EShopperContext>(opt =>
-			opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 			builder.Services.AddControllersWithViews();
+
             builder.Services.AddDistributedMemoryCache();
+
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromHours(24);
@@ -24,7 +29,7 @@ namespace Eshopper_website
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
-            var app = builder.Build();
+            WebApplication app = builder.Build();
 
             app.UseSession();
 
@@ -37,6 +42,7 @@ namespace Eshopper_website
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
