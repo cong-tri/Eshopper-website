@@ -84,6 +84,7 @@ namespace Eshopper_website.Controllers
 		public async Task<ActionResult> Add(int Id)
         {
             var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
             if (userInfo == null)
             {
                 return RedirectToAction("Login", "User", new { Area = "Admin" });

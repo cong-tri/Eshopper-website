@@ -29,7 +29,7 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-md"><h3 class="card-title">List menu</h3></div>
-                            <div class="searchBox">
+                            <div class="col-md-auto searchBox">
                                 <input class="searchInput" type="text" name="" placeholder="Search here">
                                 <button class="searchButton" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
@@ -79,6 +79,12 @@
                                                 <th>
                                                     @Html.DisplayNameFor(model => model.MEN_Icon)
                                                 </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.MEN_Status)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.MEN_Controller)
+                                                </th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -94,9 +100,15 @@
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Parent.MEN_Title)
                                                 </td>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.MEN_Icon)
-                                            </th>
+                                                <th>
+                                                    <i class="@item.MEN_Icon"></i>
+                                                </th>
+                                                <th>
+                                                     @Html.DisplayFor(modelItem => item.MEN_Status)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.MEN_Controller)
+                                                </th>
                                                 <td class="text-nowrap">
                                                     <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.MEN_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
                                                 <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.MEN_ID"><i class="fa-regular fa-circle-info"></i></a> |
