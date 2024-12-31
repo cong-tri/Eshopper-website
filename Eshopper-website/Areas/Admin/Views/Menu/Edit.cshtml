@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form asp-action="Create" asp-controller="Coupon" enctype="multipart/form-data">
+                        <form asp-action="Edit" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <input type="hidden" asp-for="MEN_ID" />
                             <div class="form-group mb-3">
@@ -40,7 +40,9 @@
                                         <label asp-for="PARENT_ID" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="PARENT_ID" class="form-control w-100" />
+                                        <select asp-for="PARENT_ID" class="form-select" asp-items="ViewBag.PARENT_ID">
+                                            <option value="">--- TOP MENU ---</option>
+                                        </select>
                                         <span asp-validation-for="PARENT_ID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -73,8 +75,33 @@
                                         <label asp-for="MEN_Icon" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="MEN_Icon" class="form-control" />
+                                        <input asp-for="MEN_Icon" class="form-control" maxlength="50" />
                                         <span asp-validation-for="MEN_Icon" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="MEN_Status" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <select asp-for="MEN_Status" class="form-select">
+                                            <option value="1">User</option>
+                                            <option value="2">Admin</option>
+                                        </select>
+                                        <span asp-validation-for="MEN_Status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="MEN_Controller" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="MEN_Controller" class="form-control" />
+                                        <span asp-validation-for="MEN_Controller" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
