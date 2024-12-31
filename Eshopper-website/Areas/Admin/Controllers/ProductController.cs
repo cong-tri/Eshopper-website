@@ -96,6 +96,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 PRO_CapitalPrice = request.PRO_CapitalPrice,
                 PRO_Status = request.PRO_Status,
                 CreatedBy = username,
+                PRO_Sold = 0,
                 CreatedDate = DateTime.Now
             };
             if (ModelState.IsValid)
@@ -183,6 +184,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     existingProduct.CreatedBy = username;
                     existingProduct.UpdatedDate = DateTime.Now;
                     existingProduct.UpdatedBy = username;
+                    existingProduct.PRO_Sold = 0;
 
                     if (request.PRO_Image != null)
                     {
@@ -252,6 +254,11 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
+                if (await HasAssociatedOrderDetail(id))
+                {
+                    TempData["Error"] = "Cannot delete product as it has associated order details.";
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Products.Remove(product);
             }
 
@@ -262,6 +269,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.PRO_ID == id);
+        }
+        private async Task<bool> HasAssociatedOrderDetail(int PRO_ID)
+        {
+            return await _context.OrderDetails.AnyAsync(p => p.PRO_ID == PRO_ID);
         }
         public async Task<ActionResult> AddQuantity(int Id)
         {

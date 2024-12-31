@@ -19,28 +19,34 @@ namespace Eshopper_website.Models
         [DisplayName("Role ID")]
         public required int ACR_ID { get; set; } = 1;
 
-        [MaxLength(255)]
-        [DisplayName("Lastname")]
+		[MaxLength(255, ErrorMessage = "Lastname cannot exceed 255 characters!")]
+		[DisplayName("Lastname")]
         public string? MEM_LastName { get; set; } = string.Empty;
 
-        [MaxLength(255)]
-        [DisplayName("Firstname")]
+		[MaxLength(255, ErrorMessage = "Firstname cannot exceed 255 characters!")]
+		[DisplayName("Firstname")]
         public string? MEM_FirstName {  get; set; } = string.Empty;
 
         [Column(TypeName = "INT")]
         [DisplayName("Gender")]
         public MemberGenderEnum MEM_Gender { get; set; } = MemberGenderEnum.Other;
 
-        [Required(ErrorMessage = "Please enter phone number!"), MinLength(10), MaxLength(20), DataType(DataType.PhoneNumber)]
-        [DisplayName("Phone")]
+        [Required(ErrorMessage = "Please enter phone number!")]
+		[DataType(DataType.PhoneNumber, ErrorMessage = "Please enter the correct format phone number!")]
+		[MinLength(10, ErrorMessage = "Phone must be at least 10 characters long!")]
+		[MaxLength(11, ErrorMessage = "Phone cannot exceed 11 characters!")]
+		[DisplayName("Phone")]
         public required string MEM_Phone { get; set; }
 
-        [Required(ErrorMessage = "Please enter email!"), MinLength(10), MaxLength(255), DataType(DataType.EmailAddress)]
-        [DisplayName("Email")]
+        [Required(ErrorMessage = "Please enter email!")]
+		[DataType(DataType.EmailAddress, ErrorMessage = "Please enter the correct format email!")]
+		[MinLength(10, ErrorMessage = "Email must be at least 10 characters long!")]
+		[MaxLength(255, ErrorMessage = "Email cannot exceed 255 characters!")]
+		[DisplayName("Email")]
         public required string MEM_Email {  get; set; }
 
-        [MaxLength(255)]
-        [DisplayName("Address")]
+		[MaxLength(255, ErrorMessage = "Address cannot exceed 255 characters!")]
+		[DisplayName("Address")]
         public string? MEM_Address {  get; set; } = string.Empty;
 
         [Column(TypeName = "INT")]

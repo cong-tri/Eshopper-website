@@ -15,11 +15,15 @@ namespace Eshopper_website.Models
 		[DisplayName("Member ID")]
 		public required int MEM_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter order code!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter order code!")]
+		[MinLength(5, ErrorMessage = "Order code cannot exceed 5 characters!")]
+		[MaxLength(255, ErrorMessage = "Order code cannot exceed 255 characters!")]
 		[DisplayName("Code")]
 		public required string ORD_OrderCode { get; set; }
 
-		[Required(ErrorMessage = "Please enter order description!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter order description!")]
+		[MinLength(5, ErrorMessage = "Order description cannot exceed 5 characters!")]
+		[MaxLength(255, ErrorMessage = "Order description cannot exceed 255 characters!")]
 		[DisplayName("Description")]
 		public required string ORD_Description { get; set; }
 
@@ -28,11 +32,11 @@ namespace Eshopper_website.Models
 		public required OrderStatusEnum ORD_Status { get; set; } = OrderStatusEnum.Pending;
 
         [Required(ErrorMessage = "Please enter order shipping cost!")]
-		[Range(1, double.MaxValue, ErrorMessage = "Shipping price must be a positive number!")]
+		[Range(1, 1000000, ErrorMessage = "Shipping price must be a positive number!")]
 		[DisplayName("Shipping Cost")]
 		public required decimal ORD_ShippingCost { get; set; }
 
-		[MaxLength(255)]
+		[MaxLength(255, ErrorMessage = "Coupon code cannot exceed 255 characters!")]
 		[DisplayName("Coupon Code")]
 		public string? ORD_CouponCode { get; set; } = string.Empty;
 
@@ -41,7 +45,7 @@ namespace Eshopper_website.Models
 		public required OrderPaymentMethodEnum ORD_PaymentMethod { get; set; } = OrderPaymentMethodEnum.Cash;
 
         [Required(ErrorMessage = "Please enter order total price!")]
-		[Range(1, double.MaxValue, ErrorMessage = "Total price must be a positive number!")]
+		[Range(1, 100000000, ErrorMessage = "Total price must be a positive number!")]
 		[DisplayName("Total Price")]
         public required decimal ORD_TotalPrice { get; set; }
 

@@ -15226,13 +15226,16 @@ html.maximized-card {
   min-height: 100vh;
 }
 
-.login-box,
-.register-box {
+.login-box {
   width: 360px;
 }
+
+.register-box {
+  width: 800px;
+}
+
 @media (max-width: 576px) {
-  .login-box,
-  .register-box {
+   .login-box, .register-box {
     width: 90%;
     margin-top: 0.5rem;
   }

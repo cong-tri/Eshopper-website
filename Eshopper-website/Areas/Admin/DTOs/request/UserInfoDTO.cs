@@ -3,7 +3,7 @@ using Eshopper_website.Utils.Enum;
 
 namespace Eshopper_website.Areas.Admin.DTOs.request
 {
-	public class AccountDTO
+	public class UserInfoDTO
 	{
 		public int ACC_ID { get; set; }
 		public int ACR_ID { get; set; }
@@ -13,9 +13,9 @@ namespace Eshopper_website.Areas.Admin.DTOs.request
 		public string? ACC_Phone { get; set; }
 		public AccountStatusEnum ACC_Status { get; set; } = AccountStatusEnum.Inactive;
 
-		public AccountDTO() { }
+		public UserInfoDTO() { }
 
-		public AccountDTO(Account account, int acr_id) 
+		public UserInfoDTO(Account account, int acr_id) 
 		{
 			ACC_ID = account.ACC_ID;
 			ACR_ID = acr_id;

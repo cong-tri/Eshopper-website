@@ -38,8 +38,8 @@
                                                 <label asp-for="BAN_Title" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                        <input asp-for="BAN_Title" class="form-control w-100" />
-                                        <span asp-validation-for="BAN_Title" class="text-danger"></span>
+                                                <input asp-for="BAN_Title" class="form-control w-100" maxlength="100"/>
+                                                <span asp-validation-for="BAN_Title" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -63,8 +63,8 @@
                                                 <label asp-for="BAN_Url" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                        <input asp-for="BAN_Url" class="form-control" />
-                                        <span asp-validation-for="BAN_Url" class="text-danger"></span>
+                                                <input asp-for="BAN_Url" class="form-control" type="url"/>
+                                                <span asp-validation-for="BAN_Url" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -74,8 +74,8 @@
                                                 <label asp-for="BAN_DisplayOrder" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                        <input asp-for="BAN_DisplayOrder" class="form-control" />
-                                        <span asp-validation-for="BAN_DisplayOrder" class="text-danger"></span>
+                                                <input asp-for="BAN_DisplayOrder" class="form-control" max="6"/>
+                                                <span asp-validation-for="BAN_DisplayOrder" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>

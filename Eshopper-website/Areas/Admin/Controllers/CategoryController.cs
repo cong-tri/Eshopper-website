@@ -24,7 +24,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Categories.OrderBy(x => x.CAT_DisplayOrder).ToListAsync());
         }
 
         // GET: Admin/Category/Details/5
@@ -145,14 +145,23 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Categories.Remove(category);
-            }
+				if (await HasAssociatedProducts(id))
+				{
+					TempData["Error"] = "Cannot delete category as it has associated products.";
+					return RedirectToAction(nameof(Index));
+				}
+			    _context.Categories.Remove(category);
+			}
 
-            await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+		private async Task<bool> HasAssociatedProducts(int categoryId)
+		{
+			return await _context.Products.AnyAsync(p => p.CAT_ID == categoryId);
+		}
+		private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.CAT_ID == id);
         }

@@ -1,7 +1,8 @@
-﻿@model IEnumerable<Eshopper_website.Models.Order>
+﻿@model Eshopper_website.Models.Order
 
 @{
-    ViewData["Title"] = "Order";
+    ViewData["Title"] = "Details";
+    var orderDetails = ViewData["OrderDetails"] as List<OrderDetail> ?? [];
 }
 
 <!--begin::App Content Header-->
@@ -11,7 +12,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Order</h3>
+                <h3 class="mb-0">Orders</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -28,25 +29,19 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Orders</h3></div>
+                            <div class="col-md"><h3 class="card-title">Details Orders</h3></div>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tbl" class="table table-hover table-bordered table-striped">
+                            <table class="table table-hovered table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.MEM_ID)
-                                        </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.ORD_OrderCode)
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.ORD_Description)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_TotalPrice)
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.ORD_Status)
@@ -61,47 +56,85 @@
                                             @Html.DisplayNameFor(model => model.ORD_PaymentMethod)
                                         </th>
                                         <th>
+                                            @Html.DisplayNameFor(model => model.ORD_TotalPrice)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Member)
+                                        </th>
+                                        <th>
                                             @Html.DisplayNameFor(model => model.CreatedDate)
                                         </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedBy)
+                                        </th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach(var item in Model)
-                                    {
-                                        <tr>
+                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => modelItem)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_OrderCode)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_OrderCode)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_Description)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_Description)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_Status)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_TotalPrice)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_ShippingCost)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_Status)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_CouponCode)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_ShippingCost)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_PaymentMethod)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_CouponCode)
+                                            @Html.DisplayFor(modelItem => modelItem.ORD_TotalPrice)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ORD_PaymentMethod)
+                                            @Model?.Member?.MEM_Email
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                                            @Html.DisplayFor(modelItem => modelItem.CreatedDate)
                                         </td>
-                                    </tr>
-                                    }
+                                        <td>
+                                            @Html.DisplayFor(modelItem => modelItem.CreatedBy)
+                                        </td>
+                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <h4>List Order Details</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Product Image</th>
+                                        <th>Product ID</th>
+                                        <th>Product Price</th>
+                                        <th>Product Quantity</th>
+                                        <th>Created Date</th>
+                                        <th>Created By</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var item in orderDetails)
+                                {
+                                    <tr>
+                                        <td><img src="~/images/product-details/@item?.Product?.PRO_Image" width="200px" alt="@item?.Product?.PRO_Name" /></td>
+                                        <td>@item?.Product?.PRO_ID</td>
+                                        <td>@item?.Product?.PRO_Price</td>
+                                        <td>@item?.ORDE_Quantity</td>
+                                        <td>@item?.CreatedDate</td>
+                                        <td>@item?.CreatedBy</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
                 </div> <!-- /.card -->
             </div>
         </div> <!--end::Row-->

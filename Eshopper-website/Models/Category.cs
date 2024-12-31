@@ -32,7 +32,7 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter category display order!")]
 		[DisplayName("Display Order")]
-		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
+		[Range(1, 20, ErrorMessage = "Display order must be a positive number!")]
 		public required int CAT_DisplayOrder { get; set; }
 
 		public virtual ICollection<Product>? Products { get; set; }

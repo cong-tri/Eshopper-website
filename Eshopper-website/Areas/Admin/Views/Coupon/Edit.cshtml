@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form asp-action="Create" asp-controller="Coupon" enctype="multipart/form-data">
+                        <form asp-action="Edit">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group mb-3">
                                 <div class="row align-items-center">
@@ -79,7 +79,7 @@
                                                  model => model.COUP_Status, (IEnumerable<SelectListItem>)ViewData["CouponStatus"],
                                                  "Select Status",
                                                  new { @class = "form-select" }
-                                                 )
+                                        )
                                     </div>
                                 </div>
                             </div>

@@ -11,11 +11,15 @@ namespace Eshopper_website.Models
 		[Key]
 		public int BRA_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter brand name!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter brand name!")]
+		[MinLength(5, ErrorMessage = "Name must be at least 5 characters long!")]
+		[MaxLength(255, ErrorMessage = "Name cannot exceed 255 characters!")]
 		[DisplayName("Name")]
 		public required string BRA_Name { get; set; }
 
-		[Required(ErrorMessage = "Please enter brand description!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter brand description!")]
+		[MinLength(5, ErrorMessage = "Description must be at least 5 characters long!")]
+		[MaxLength(255, ErrorMessage = "Description cannot exceed 255 characters!")]
 		[DisplayName("Description")]
 		public required string BRA_Description { get; set; }
 
@@ -28,9 +32,8 @@ namespace Eshopper_website.Models
 		public required BrandStatusEnum BRA_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter brand display order!")]
-		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
+		[Range(1, 20, ErrorMessage = "Display order must be a positive number!")]
 		[DisplayName("Display Order")]
-		[Range(1, int.MaxValue, ErrorMessage = "Display order must be a positive number!")]
 		public required int BRA_DisplayOrder { get; set; }
 
 		public virtual ICollection<Product>? Products { get; set; }

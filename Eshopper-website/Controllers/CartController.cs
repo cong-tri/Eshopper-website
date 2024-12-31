@@ -28,14 +28,14 @@ namespace Eshopper_website.Controllers
 
         public async Task<ActionResult> Checkout()
         {
-			var userInfo = HttpContext.Session.Get<Account>("userInfo");
+			var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
             if (userInfo == null)
             {
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
             }
 
 			//int userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)!.Value);
-   //         string username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
+            //string username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
 
 			List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
             CartItemView cartItemView = new()
@@ -83,7 +83,7 @@ namespace Eshopper_website.Controllers
 
 		public async Task<ActionResult> Add(int Id)
         {
-            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
             if (userInfo == null)
             {
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
