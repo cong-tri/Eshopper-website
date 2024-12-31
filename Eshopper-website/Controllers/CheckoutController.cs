@@ -78,7 +78,7 @@ namespace Eshopper_website.Controllers
             string receiver = userInfo.ACC_Email;
             string subject = "ORDER HAVE BEEN CREATED SUCCESSFULLY!";
             string message = "Your Order have been created successfully. Please waiting for shop owner confirmed!";
-            await _emailSender.SendEmailAsync(receiver, subject, message);
+            await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderItem));
 
             TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
             return RedirectToAction("Index", "Cart");

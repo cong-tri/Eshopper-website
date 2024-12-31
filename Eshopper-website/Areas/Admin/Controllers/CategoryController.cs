@@ -22,9 +22,22 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         // GET: Admin/Category
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            return View(await _context.Categories.ToListAsync());
+            //return View(await _context.Categories.ToListAsync());
+            List <Category> category = _context.Categories.ToList();
+
+            const int pageSize = 10;
+            if (pg > 1)
+            {
+                pg = 1;
+            }
+            int resCount = category.Count();
+            var pager = new Paginate(resCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = category.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewBag.Paper = pager;
+            return View(data);
         }
 
         // GET: Admin/Category/Details/5
@@ -48,7 +61,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Category/Create
         public IActionResult Create()
         {
-            return View();
+            return View() ;
         }
 
         // POST: Admin/Category/Create
@@ -62,8 +75,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 _context.Add(category);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Added Category successfully !";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "Failed to add category something wrong !";
             return View(category);
         }
 
@@ -92,6 +107,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (id != category.CAT_ID)
             {
+                TempData["error"] = "Category ID mismatch. Please try again!";
                 return NotFound();
             }
 
@@ -101,11 +117,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 {
                     _context.Update(category);
                     await _context.SaveChangesAsync();
+                    TempData["success"] = $"Category '{category.CAT_Name}' has been updated successfully!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CategoryExists(category.CAT_ID))
                     {
+                        TempData["error"] = "A concurrency error occurred while updating the category. Please try again!";
                         return NotFound();
                     }
                     else
@@ -115,6 +133,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "Failed to update category. Please check the input values.";
             return View(category);
         }
 
@@ -123,6 +142,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (id == null)
             {
+                TempData["error"] = "Invalid category ID.";
                 return NotFound();
             }
 
@@ -130,6 +150,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 .FirstOrDefaultAsync(m => m.CAT_ID == id);
             if (category == null)
             {
+                TempData["error"] = $"Category with Name '{category.CAT_Name}' was not found.";
                 return NotFound();
             }
 
@@ -144,10 +165,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
+                TempData["error"] = $"Category with ID {id} was not found.";
                 _context.Categories.Remove(category);
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = $"Category '{category.CAT_Name}' was successfully deleted!";
             return RedirectToAction(nameof(Index));
         }
 
