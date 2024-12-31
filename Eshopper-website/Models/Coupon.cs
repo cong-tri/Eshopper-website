@@ -11,7 +11,9 @@ namespace Eshopper_website.Models
 		[Key]
 		public int COUP_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter coupon name!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter coupon name!")]
+		[MinLength(5, ErrorMessage = "Name must be at least 5 characters long!")]
+		[MaxLength(255, ErrorMessage = "Name cannot exceed 255 characters!")]
 		[DisplayName("Name")]
 		public required string COUP_Name { get; set; }
 
@@ -24,7 +26,7 @@ namespace Eshopper_website.Models
 		public required CouponStatusEnum COUP_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter coupon quantity!")]
-        [Range(1, int.MaxValue, ErrorMessage = "Coupon quantity must be a positive number!")]
+        [Range(1, 100, ErrorMessage = "Coupon quantity must be a positive number!")]
         [DisplayName("Quantity")]
 		public required int COUP_Quantity { get; set; }	
 

@@ -39,7 +39,7 @@
                                         <label asp-for="BLG_Title" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="BLG_Title" class="form-control w-100" />
+                                        <input asp-for="BLG_Title" class="form-control w-100" maxlength="255"/>
                                         <span asp-validation-for="BLG_Title" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                         <label asp-for="BLG_Slug" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="BLG_Slug" class="form-control" />
+                                        <input asp-for="BLG_Slug" class="form-control" maxlength="255"/>
                                         <span asp-validation-for="BLG_Slug" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
                                         <label asp-for="BLG_AuthorName" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="BLG_AuthorName" class="form-control" />
+                                        <input asp-for="BLG_AuthorName" class="form-control" maxlength="50"/>
                                         <span asp-validation-for="BLG_AuthorName" class="text-danger"></span>
                                     </div>
                                 </div>

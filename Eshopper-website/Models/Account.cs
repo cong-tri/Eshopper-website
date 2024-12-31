@@ -11,24 +11,35 @@ namespace Eshopper_website.Models
         [Key]
         public int ACC_ID { get; set; }
 
-        [Required(ErrorMessage = "Please enter username!"), MinLength(5), MaxLength(255)]
+        [Required(ErrorMessage = "Please enter username!")]
+        [MinLength(5, ErrorMessage = "Username must be at least 5 characters long!")]
+        [MaxLength(30, ErrorMessage = "Username cannot exceed 30 characters!")]
         [DisplayName("Username")]
         public required string ACC_Username { get; set; }
 
-        [Required(ErrorMessage = "Please enter password!"), MinLength(8), MaxLength(255), DataType(DataType.Password)]
+        [Required(ErrorMessage = "Please enter password!"), DataType(DataType.Password)]
+        [MinLength(5, ErrorMessage = "Password must be at least 5 characters long!")]
+        [MaxLength(20, ErrorMessage = "Password cannot exceed 20 characters!")]
         [DisplayName("Password")]
         public required string ACC_Password { get; set; }
 
-        [Required(ErrorMessage = "Please enter display name!"), MinLength(5), MaxLength(255)]
+        [Required(ErrorMessage = "Please enter display name!")]
+        [MinLength(5, ErrorMessage = "Display name must be at least 5 characters long!")]
+        [MaxLength(50, ErrorMessage = "Display name cannot exceed 50 characters!")]
         [DisplayName("Display Name")]
         public required string ACC_DisplayName { get; set; }
 
-        [Required(ErrorMessage = "Please enter email!"), MinLength(10), MaxLength(255), DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "Please enter email!")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Please enter correct format email!")]
+        [MinLength(10, ErrorMessage = "Email must be at least 5 characters long!")]
+        [MaxLength(30, ErrorMessage = "Email cannot exceed 30 characters!")]
         [DisplayName("Email")]
         public required string ACC_Email { get; set; }
 
-        [Required(ErrorMessage = "Please enter phone number!"), MinLength(10), MaxLength(255), DataType(DataType.PhoneNumber)]
-        //[RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
+        [Required(ErrorMessage = "Please enter phone number!")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Please enter the correct format phone number!")]
+        [MinLength(10, ErrorMessage = "Phone must be at least 10 characters long!")]
+        [MaxLength(12, ErrorMessage = "Phone cannot exceed 12 characters!")]
         [DisplayName("Phone")]
         public required string ACC_Phone { get; set; }
 

@@ -1,7 +1,7 @@
 @using Eshopper_website.Utils.Extension
 @{
-    var userInfo = Context.Session.Get<Account>("userInfo");
-    if (userInfo == null)
+    var userInfo = Context.Session.Get<UserInfo>("userInfo");
+    if (userInfo == null && userInfo?.ACR_ID != 2)
     {
         Context.Response.Redirect("/Admin/User/Login");
     }
@@ -207,14 +207,6 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="OrderDetail" class="nav-link @(ViewData["Title"] == "Order Detail" ? "active" : "")">
-                                <i class="nav-icon bi bi-cart2"></i>
-                                <p>
-                                    Order Detail
-                                </p>
-                            </a>
-                        </li>
                     </ul> <!--end::Sidebar Menu-->
                 </nav> *@
             </div> <!--end::Sidebar Wrapper-->
@@ -222,7 +214,8 @@
 
         <!--begin::App Main-->
         <main class="app-main">
-             @RenderBody()
+            @Html.Partial("_NotificationPartial")
+            @RenderBody()
         </main> 
         <!--end::App Main-->
 

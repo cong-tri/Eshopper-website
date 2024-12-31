@@ -25,7 +25,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Banner
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Banners.ToListAsync());
+            return View(await _context.Banners.OrderBy(x => x.BAN_DisplayOrder).ToListAsync());
         }
 
         // GET: Admin/Banner/Details/5
