@@ -14,13 +14,15 @@ namespace Eshopper_website.Models
 		[DisplayName("Parent ID")]
 		public int? PARENT_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter menu title"), MinLength(2), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter menu title")]
+		[MinLength(2, ErrorMessage = "Title cannot exceed 2 characters!")]
+		[MaxLength(255, ErrorMessage = "Title cannot exceed 255 characters!")]
 		[DisplayName("Title")]
 		public required string MEN_Title { get; set; }
 
 		[Required(ErrorMessage = "Please enter menu display order")]
 		[DisplayName("Display Order")]
-        [Range(1, int.MaxValue, ErrorMessage = "Menu quantity must be a positive number!")]
+        [Range(1, 30, ErrorMessage = "Menu quantity must be a positive number!")]
         public required int MEN_DisplayOrder { get; set; }
 
 		[MaxLength(50, ErrorMessage = "Icon cannot exceed 50 characters long!")]

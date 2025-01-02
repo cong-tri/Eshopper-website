@@ -25,6 +25,7 @@
     </div> <!--end::Container-->
 </div>
 <!--end::App Content Header-->
+
 <!--begin::App Content-->
 <div class="app-content">
     <!--begin::Container-->
@@ -37,7 +38,7 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-md"><h3 class="card-title">List Product</h3></div>
-                            <div class="searchBox">
+                            <div class="col-md-auto searchBox">
                                 <input class="searchInput" type="text" name="" placeholder="Search here">
                                 <button class="searchButton" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
@@ -93,12 +94,6 @@
                                         <th>
                                             @Html.DisplayNameFor(model => model.Brand)
                                         </th>
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Description)
-                                        </th> *@
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.PRO_Slug)
-                                        </th> *@
                                         <th>
                                             @Html.DisplayNameFor(model => model.PRO_Status)
                                         </th>
@@ -107,25 +102,15 @@
                                         </th>
                                          <th>
                                             @Html.DisplayNameFor(model => model.PRO_Sold)
-                                        </th> *
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.CreatedDate)
-                                        </th> *@
+                                        </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.CreatedBy)
                                         </th>
-                                        @* <th>
-                                            @Html.DisplayNameFor(model => model.UpdatedDate)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.UpdatedBy)
-                                        </th> *@
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model)
-                                    {
+                                    @foreach (var item in Model){
                                         <tr>
                                             <td>
                                                 <img src="~/images/product-details/@item.PRO_Image" width="150px" alt="@item.PRO_Name" />
@@ -136,41 +121,22 @@
                                             <td>
                                               <b>@item.PRO_Quantity</b><br/><a asp-controller="Product" asp-action="AddQuantity" asp-route-id="@item.PRO_ID">Add Quantity</a>
                                             </td>
-                                            <td><b>@item.PRO_Sold</b></td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Category.CAT_Name)
+                                                @item.Category?.CAT_Name
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Brand.BRA_Name)
+                                                @item.Brand?.BRA_Name
                                             </td>
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Description)
-                                            </td> *@
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Slug)
-                                            </td> *@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.PRO_Status)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.PRO_Price)
                                             </td>
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_CapitalPrice)
-                                            </td> *@
-                                            
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedDate)
-                                            </td> *@
+                                            <td><b>@item.PRO_Sold</b></td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.CreatedBy)
                                             </td>
-                                            @* <td>
-                                                @Html.DisplayFor(modelItem => item.UpdatedDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.UpdatedBy)
-                                            </td> *@
                                             <td class="text-nowrap">
                                                 <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CAT_ID" title="Edit">
                                                     <i class="fa-regular fa-pen-to-square"></i>

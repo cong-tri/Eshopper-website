@@ -26,24 +26,32 @@ namespace Eshopper_website.Controllers
             return View(cartItemView);
         }
 
-		public async Task<ActionResult> Checkout()
-		{
-            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+        public async Task<ActionResult> Checkout()
+        {
+			var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
+			//int userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)!.Value);
+            //string username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
+
+			List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
             CartItemView cartItemView = new()
             {
                 GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price)
             };
 
-            var ordercode = Guid.NewGuid().ToString();
 			var orderItem = new Order()
 			{
 				MEM_ID = 1,
-				ORD_OrderCode = ordercode,
-				ORD_Description = "This order is created by admin in order to testing.",
+				ORD_OrderCode = Guid.NewGuid().ToString(),
+				ORD_Description = "This order is ordered by " + userInfo.ACC_Username,
 				ORD_Status = OrderStatusEnum.Pending,
 				ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
 				ORD_ShippingCost = 100,
-				CreatedBy = "admin",
+				CreatedBy = userInfo.ACC_Username,
 				ORD_TotalPrice = cartItemView.GrandTotal,
                 CreatedDate = DateTime.Now,
 			};
@@ -60,7 +68,7 @@ namespace Eshopper_website.Controllers
 					ORDE_Price = item.PRO_Price,
 					ORDE_Quantity = item.PRO_Quantity,
 					CreatedDate = DateTime.Now,
-					CreatedBy = "admin"
+					CreatedBy = userInfo.ACC_Username,
 				};
 
                 _context.Add(orderDetails);
@@ -75,7 +83,8 @@ namespace Eshopper_website.Controllers
 
 		public async Task<ActionResult> Add(int Id)
         {
-            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
             if (userInfo == null)
             {
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
