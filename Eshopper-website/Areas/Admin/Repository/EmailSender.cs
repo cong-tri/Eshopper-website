@@ -21,11 +21,13 @@ namespace Eshopper_website.Areas.Admin.Repository
                 // Thay đổi email, pass 
             };
 
-            var msg = new MailMessage(from: constant.sendEmail,
-                                to: email,
-                                subject,
-                                message
-                );
+            var msg = new MailMessage(
+                from: constant.sendEmail,
+                to: email,
+                subject,
+                message
+            );
+
             msg.IsBodyHtml = true;
             return client.SendMailAsync(
                 msg

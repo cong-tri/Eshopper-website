@@ -96,8 +96,16 @@ button:active {
     pointer-events: none;
     z-index: 1;
 }
+/*Print Button */
+.dt-buttons {
+    text-align: center;
+    margin-top: 10px; /* Kho?ng cách gi?a b?ng và các nút */
+}
 
-
+.dataTables_wrapper .row {
+    display: flex;
+    align-items: center;
+}
 
 .app-sidebar {
     background-color: white !important;

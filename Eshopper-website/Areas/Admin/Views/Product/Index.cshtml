@@ -2,6 +2,14 @@
 
 @{
     ViewData["Title"] = "Product";
+
+    Paginate pager = new Paginate();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
 
 <!--begin::App Content Header-->
@@ -59,7 +67,9 @@
                                 </button>
                             </div>
                             <div class="col-md-auto">
-                                <a asp-action="Create" id="btnAdd" role="button" class="btn btn-success"><i class="fa-light fa-add me-1"></i>Add new</a>
+                                <a asp-action="Create" id="btnAdd" role="button" class="btn btn-success">
+                                    <i class="fas fa-plus me-1"></i> Add new
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -128,14 +138,21 @@
                                                 @Html.DisplayFor(modelItem => item.CreatedBy)
                                             </td>
                                             <td class="text-nowrap">
-                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.PRO_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.PRO_ID"><i class="fa-regular fa-circle-info"></i></a> |
-                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.PRO_ID"><i class="fa-regular fa-trash-xmark"></i></a>
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CAT_ID" title="Edit">
+                                                    <i class="fa-regular fa-pen-to-square"></i>
+                                                </a>
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CAT_ID" title="View Details">
+                                                    <i class="fa-regular fa-circle-info"></i>
+                                                </a>
+                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.CAT_ID" title="Delete">
+                                                    <i class="fa-regular fa-trash-xmark"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
+                            <partial name="_paging" model="@pager"/>
                         </div>
                     </div> <!-- /.card-body -->
                 </div> <!-- /.card -->
