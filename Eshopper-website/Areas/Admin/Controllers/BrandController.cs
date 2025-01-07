@@ -23,7 +23,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Brand
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Brands.ToListAsync());
+            return View(await _context.Brands.OrderBy(x => x.BRA_DisplayOrder).ToListAsync());
         }
 
         // GET: Admin/Brand/Details/5
@@ -143,11 +143,21 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var brand = await _context.Brands.FindAsync(id);
             if (brand != null)
             {
+                if (await HasAssociatedProducts(id))
+                {
+                    TempData["Error"] = "Cannot delete brand as it has associated products.";
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Brands.Remove(brand);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> HasAssociatedProducts(int bra_id)
+        {
+            return await _context.Products.AnyAsync(p => p.BRA_ID == bra_id);
         }
 
         private bool BrandExists(int id)

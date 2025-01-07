@@ -24,8 +24,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Category
         public async Task<IActionResult> Index(int pg = 1)
         {
-            //return View(await _context.Categories.ToListAsync());
-            List <Category> category = _context.Categories.ToList();
+            List <Category> category = _context.Categories.OrderBy(x => x.CAT_DisplayOrder).ToList();
 
             const int pageSize = 10;
             if (pg > 1)
@@ -33,10 +32,15 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 pg = 1;
             }
             int resCount = category.Count();
+            
             var pager = new Paginate(resCount, pg, pageSize);
+            
             int recSkip = (pg - 1) * pageSize;
+            
             var data = category.Skip(recSkip).Take(pager.PageSize).ToList();
+            
             ViewBag.Paper = pager;
+            
             return View(data);
         }
 
@@ -78,7 +82,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 TempData["success"] = "Added Category successfully !";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["error"] = "Failed to add category something wrong !";
+            else
+            {
+                TempData["error"] = "Failed to add category something wrong !";
+            }
             return View(category);
         }
 
@@ -162,19 +169,38 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (await HasAssociatedProducts(id))
+				    {
+					      TempData["Error"] = "Cannot delete category as it has associated products.";
+					      return RedirectToAction(nameof(Index));
+				    }
+            
             var category = await _context.Categories.FindAsync(id);
+            
             if (category != null)
             {
-                TempData["error"] = $"Category with ID {id} was not found.";
+                TempData["success"] = $"Category '{category.CAT_Name}' was successfully deleted!";
                 _context.Categories.Remove(category);
+            }
+            else
+            {
+                TempData["error"] = $"Category with ID {id} was not found.";
             }
 
             await _context.SaveChangesAsync();
-            TempData["success"] = $"Category '{category.CAT_Name}' was successfully deleted!";
+			      _context.Categories.Remove(category);
+			}
+
+			await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+		private async Task<bool> HasAssociatedProducts(int categoryId)
+		{
+			return await _context.Products.AnyAsync(p => p.CAT_ID == categoryId);
+		}
+		private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.CAT_ID == id);
         }

@@ -1,7 +1,7 @@
-    @using Eshopper_website.Utils.Extension
+@using Eshopper_website.Utils.Extension
 @{
-    var userInfo = Context.Session.Get<Account>("userInfo");
-    if (userInfo == null)
+    var userInfo = Context.Session.Get<UserInfo>("userInfo");
+    if (userInfo == null && userInfo?.ACR_ID != 2)
     {
         Context.Response.Redirect("/Admin/User/Login");
     }
@@ -172,7 +172,8 @@
 
         <!--begin::App Main-->
         <main class="app-main">
-             @RenderBody()
+            @Html.Partial("_NotificationPartial")
+            @RenderBody()
         </main> 
         <!--end::App Main-->
 
