@@ -20,7 +20,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult Login()
+        public IActionResult Login([FromQuery] string? url)
         {
             // Check cookies
             var login = Request.Cookies.Get<LoginDTO>("UserCredential");
@@ -37,6 +37,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
+            ViewBag.referer = url;
+
             return View();
         }
 
@@ -62,7 +64,16 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 // Set Session
                 HttpContext.Session.Set<Account>("userInfo", result);
                 // Redirect to Dashboard
-                return RedirectToAction("Index", "Home");
+                if (string.IsNullOrEmpty(login.Referer))
+                {
+                    return RedirectToAction("Index", "Home");
+                    
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home", new { Area = "" });
+                    //return Redirect(login.Referer);
+                }
             }
             else
             {

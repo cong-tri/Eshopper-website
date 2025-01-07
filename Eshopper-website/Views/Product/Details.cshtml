@@ -232,7 +232,7 @@
                                         <div class="single-products">
                                             <div class="productinfo text-center">
                                                 <img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name" />
-                                                <h2>@item.PRO_Price $</h2>
+                                                <h2>@item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
                                                 <p>@item.PRO_Name</p>
                                                 <button asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
                                             </div>
