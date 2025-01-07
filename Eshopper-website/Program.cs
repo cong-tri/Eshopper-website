@@ -1,5 +1,7 @@
 using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models.DataContext;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,8 +15,8 @@ namespace Eshopper_website
         {
             var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
-			builder.Services.AddDbContext<EShopperContext>(opt =>
+            // Add services to the container.
+            builder.Services.AddDbContext<EShopperContext>(opt =>
 			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -23,9 +25,12 @@ namespace Eshopper_website
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
             })
+            .AddCookie()
                 .AddJwtBearer(options =>
                 {
                     var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -39,7 +44,31 @@ namespace Eshopper_website
                         ValidAudience = jwtSettings["Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
                     };
+                })
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+                {
+                    options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+                    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
                 });
+            //builder.Services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //    .AddJwtBearer(options =>
+            //    {
+            //        var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+            //        options.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuer = true,
+            //            ValidateAudience = true,
+            //            ValidateLifetime = true,
+            //            ValidateIssuerSigningKey = true,
+            //            ValidIssuer = jwtSettings["Issuer"],
+            //            ValidAudience = jwtSettings["Audience"],
+            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+            //        };
+            //    });
             builder.Services.AddAuthorization();
 
             builder.Services.AddControllersWithViews();
@@ -53,10 +82,20 @@ namespace Eshopper_website
                 options.Cookie.IsEssential = true;
                 options.Cookie.Path = "/";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.Name = ".Eshopper.Session";
             });
 
-            WebApplication app = builder.Build();
+            builder.Services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
+            });
 
+
+            WebApplication app = builder.Build();
+            
+            app.UseCookiePolicy();
             app.UseSession();
 
             // Configure the HTTP request pipeline.
@@ -72,7 +111,7 @@ namespace Eshopper_website
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseMiddleware<JwtCookieToHeaderMiddleware>();
+            //app.UseMiddleware();
             app.UseAuthentication();
 
             app.UseAuthorization();

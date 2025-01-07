@@ -2,10 +2,13 @@
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace Eshopper_website.Controllers
@@ -27,7 +30,7 @@ namespace Eshopper_website.Controllers
         }
         public async Task<ActionResult> Checkout()
         {
-            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
             if (userInfo == null)
             {
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
@@ -40,16 +43,29 @@ namespace Eshopper_website.Controllers
             };
 
             var ordercode = Guid.NewGuid().ToString();
-            var orderItem = new Order()
+
+			var shippingPriceCookie = Request.Cookies["ShippingPrice"];
+			decimal shippingPrice = 0;
+
+			if (shippingPriceCookie != null)
+			{
+				var shippingPriceJson = shippingPriceCookie;
+				shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
+			}
+			//Nhận coupon code
+			var CouponCode = Request.Cookies["CouponTitle"];
+
+			var orderItem = new Order()
             {
-                MEM_ID = 1,
+                MEM_ID = userInfo.MEM_ID,
                 ORD_OrderCode = ordercode,
-                ORD_Description = "This order is created by admin in order to testing.",
+                ORD_Description = $"Order had been ordered by ${userInfo.ACC_Username}.",
                 ORD_Status = OrderStatusEnum.Pending,
                 ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
-                ORD_ShippingCost = 100,
-                CreatedBy = "admin",
-                ORD_TotalPrice = cartItemView.GrandTotal,
+                ORD_ShippingCost = shippingPrice,
+                CreatedBy = userInfo.ACC_Username,
+                ORD_CouponCode = CouponCode,
+                ORD_TotalPrice = cartItemView.GrandTotal + shippingPrice,
                 CreatedDate = DateTime.Now,
             };
 
@@ -65,17 +81,34 @@ namespace Eshopper_website.Controllers
                     ORDE_Price = item.PRO_Price,
                     ORDE_Quantity = item.PRO_Quantity,
                     CreatedDate = DateTime.Now,
-                    CreatedBy = "admin"
+                    CreatedBy = userInfo.ACC_Username
                 };
 
+                var product = await _context.Products.Where(p => p.PRO_ID == item.PRO_ID).FirstOrDefaultAsync();
+
+                product!.PRO_Quantity -= item.PRO_Quantity;
+                product.PRO_Sold += item.PRO_Quantity;
+
+                if(product.PRO_Quantity == 0)
+                {
+                    product.PRO_Status = ProductStatusEnum.OutOfStock;
+                }
+
+                if (product.PRO_Quantity < 20)
+                {
+                    product.PRO_Status = ProductStatusEnum.LowStock;
+                }
+
+                _context.Update(product);
                 _context.Add(orderDetails);
+
                 await _context.SaveChangesAsync();
 
             }
             HttpContext.Session.Remove("Cart");
 
             //string Body = await HtmlRenderer
-            string receiver = userInfo.ACC_Email;
+            string receiver = userInfo?.ACC_Email;
             string subject = "ORDER HAVE BEEN CREATED SUCCESSFULLY!";
             string message = "Your Order have been created successfully. Please waiting for shop owner confirmed!";
             await _emailSender.SendEmailAsync(receiver, subject, message);

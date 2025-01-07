@@ -1,10 +1,10 @@
 ﻿@using Eshopper_website.Models.ViewModels
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@using Eshopper_website.Utils.Extension
+
 @model CartItemView
 @{
 	ViewData["Title"] = "Cart";
+	var userInfo = Context.Session.Get<UserInfo>("userInfo");
 }
 
 <section id="cart_items">
@@ -34,7 +34,7 @@
 						{
 							<tr>
 								<td>
-									<img src="~/images/product-details/@item.PRO_Image" width="200px" alt="@item.PRO_Name">
+									<img src="~/images/product-details/@item.PRO_Image" width="100px" alt="@item.PRO_Name">
 								</td>
 								<td class="cart_description">
 									<h4 class="mt-0"><a class="text-black" asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">@item.PRO_Name</a></h4>
@@ -61,15 +61,6 @@
 								</td>
 							</tr>
 						}
-						<tr>
-							<td colspan="5">
-								<p>Grand Total: $@Model.GrandTotal</p>
-							</td>
-							<td class="text-center">
-								<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
-								<a asp-action="Checkout" asp-controller="Checkout" class="btn btn-success">Checkout</a>
-                            </td>
-						</tr>
 					}
 					else
 					{
@@ -110,54 +101,181 @@
 					</ul>
 					<ul class="user_info">
 						<li class="single_field">
-							<label>Country:</label>
-							<select>
-								<option>United States</option>
-								<option>Bangladesh</option>
-								<option>UK</option>
-								<option>India</option>
-								<option>Pakistan</option>
-								<option>Ucrane</option>
-								<option>Canada</option>
-								<option>Dubai</option>
+							<label>City</label>
+							<select id="tinh" name="tinh" class="form-select" title="Choose City">
+								<option value="0">City</option>
 							</select>
-
 						</li>
 						<li class="single_field">
-							<label>Region / State:</label>
-							<select>
-								<option>Select</option>
-								<option>Dhaka</option>
-								<option>London</option>
-								<option>Dillih</option>
-								<option>Lahore</option>
-								<option>Alaska</option>
-								<option>Canada</option>
-								<option>Dubai</option>
+							<label>District</label>
+							<select class="css_select" id="quan" name="quan" class="form-select" title="Choose District">
+								<option value="0">District</option>
 							</select>
 
 						</li>
 						<li class="single_field zip-field">
-							<label>Zip Code:</label>
-							<input type="text">
+							<label>Ward</label>
+							<select class="css_select" id="phuong" name="phuong" class="form-select" title="Choose Ward">
+								<option value="0">Ward</option>
+							</select>
 						</li>
 					</ul>
-					<a class="btn btn-default update" href="">Get Quotes</a>
-					<a class="btn btn-default check_out" href="">Continue</a>
+					@if (@Model?.ShippingPrice > 0)
+					{
+						<ul>
+							<li>
+								<p>Shipping Cost: @Model.ShippingPrice.ToString()</p>
+								<a style="cursor:pointer" class="btn-delete-shipping">Remove Ship Cost</a>
+							</li>
+						</ul>
+					}
+					<ul>
+						<li>
+							<button type="button" class="btn btn-primary btn-add-shipping">Calculator Ship Cost</button>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div class="col-sm-6">
 				<div class="total_area">
 					<ul>
-						<li>Cart Sub Total <span>$59</span></li>
-						<li>Eco Tax <span>$2</span></li>
-						<li>Shipping Cost <span>Free</span></li>
-						<li>Total <span>$61</span></li>
+						<li>Cart Sub Total <span>$@Model?.GrandTotal</span></li>
+						<li>Eco Tax <span>$0</span></li>
+						<li>Shipping Cost <span>$@Model?.ShippingPrice</span></li>
+						<li>Total <span>$@Model?.GrandTotal</span></li>
 					</ul>
-					<a class="btn btn-default update" href="">Update</a>
-					<a class="btn btn-default check_out" href="">Check Out</a>
+					<div style="margin-left: 4rem">
+                        <a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
+
+                        @if (userInfo != null)
+                        {
+                            @if (@Model?.ShippingPrice > 0)
+                            {
+                                <a class="btn btn-success btn-checkout"
+                                   onclick="return confirm('Confirmed to checkout?');"
+								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
+
+                            }
+                            else
+                            {
+                                <a disabled class="btn btn-success btn-checkout"
+                                   onclick="return confirm('Confirmed to checkout?');"
+								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
+                                <p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
+                            }
+                        }
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section><!--/#do_action-->
+
+@section Scripts{
+	<script>
+		//delete shipping cost
+		$(".btn-apply-coupon").click(function () {
+			var coupon_value = $(".coupon-value").val();
+			//alert(coupon_value);
+			$.ajax({
+				type: "POST",
+				url: "@Url.Action("GetCoupon", "Cart")",
+				data: { coupon_value: coupon_value },
+				success: function (result) {
+					if (result.success) {
+
+						Swal.fire(result.message);
+						location.reload();
+					} else {
+
+						Swal.fire(result.message);
+					}
+				}
+
+			});
+		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			$(".btn-add-shipping").click(function () {
+				var tinh = $("#tinh").find('option:selected').text();
+				var quan = $("#quan").find('option:selected').text();
+				var phuong = $("#phuong").find('option:selected').text();
+
+				if (tinh == '' || quan == '' || phuong == '') {
+					Swal.fire("Please not empty this field.");
+				} else {
+					$.ajax({
+						type: "POST",
+						url: "@Url.Action("GetShipping", "Cart")",
+						data: { tinh: tinh, quan: quan, phuong: phuong },
+
+						success: function (result) {
+							if (result) {
+								location.reload();
+							}
+						}
+
+					});
+				}
+
+
+			})
+			//delete shipping cost
+			$(".btn-delete-shipping").click(function () {
+				$.ajax({
+					type: "POST",
+					url: "@Url.Action("RemoveShippingCookie", "Cart")", // Replace with your controller and action name
+					success: function (result) {
+						if (result.success) {
+							// Handle successful removal (e.g., update UI or redirect)
+							Swal.fire("Xóa thành công.");
+							location.reload();
+						} else {
+							// Handle error (optional)
+							Swal.fire("Xóa thất bại.");
+						}
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						// Handle AJAX errors (optional)
+						console.error("Error removing cookie:", errorThrown);
+					}
+				});
+			});
+			//Lấy tỉnh thành
+			$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+				if (data_tinh.error == 0) {
+					$.each(data_tinh.data, function (key_tinh, val_tinh) {
+						$("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name_en + '</option>');
+					});
+					$("#tinh").change(function (e) {
+						var idtinh = $(this).val();
+						//Lấy quận huyện
+						$.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+							if (data_quan.error == 0) {
+								$("#quan").html('<option value="0">District</option>');
+								$("#phuong").html('<option value="0">Ward</option>');
+								$.each(data_quan.data, function (key_quan, val_quan) {
+									$("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name_en + '</option>');
+								});
+								//Lấy phường xã
+								$("#quan").change(function (e) {
+									var idquan = $(this).val();
+									$.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+										if (data_phuong.error == 0) {
+											$("#phuong").html('<option value="0">Ward</option>');
+											$.each(data_phuong.data, function (key_phuong, val_phuong) {
+												$("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name_en + '</option>');
+											});
+										}
+									});
+								});
+							}
+						});
+					});
+				}
+			});
+		});
+	</script>
+}

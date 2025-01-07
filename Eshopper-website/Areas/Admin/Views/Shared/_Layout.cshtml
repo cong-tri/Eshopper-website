@@ -60,7 +60,12 @@
                             </a>
                         </div>
                     </li> <!--end::Notifications Dropdown Menu--> <!--begin::Fullscreen Toggle-->
-                    <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
+                    <li class="nav-item"> 
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen"> 
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> 
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> 
+                        </a> 
+                    </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="~/admin/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Admin : @userInfo?.ACC_DisplayName</span> </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
@@ -80,7 +85,10 @@
                                     <div class="col-4 text-center"> <a href="#">Friends</a> </div>
                                 </div> <!--end::Row-->
                             </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
-                            <li class="user-footer"> <a href="#" class="btn btn-default btn-flat">Profile</a> <a href="#" class="btn btn-default btn-flat float-end">Sign out</a> </li> <!--end::Menu Footer-->
+                            <li class="user-footer"> 
+                                <a href="#" class="btn btn-default btn-flat">Profile</a> 
+                                <a asp-action="Logout" asp-controller="User" asp-area="Admin" class="btn btn-default btn-flat float-end">Sign out</a> 
+                            </li> <!--end::Menu Footer-->
                         </ul>
                     </li> <!--end::User Menu Dropdown-->
                 </ul> <!--end::End Navbar Links-->
@@ -97,118 +105,6 @@
             </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <vc:navbar-admin></vc:navbar-admin>
-                @* <nav class="mt-2">
-                    <!--begin::Sidebar Menu-->
-                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Home" class="nav-link @(ViewData["Title"] == "Home" ? "active" : "")">
-                                <i class="nav-icon bi bi-houses"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Product" class="nav-link @(ViewData["Title"] == "Product" ? "active" : "")">
-                                <i class="nav-icon bi bi-archive"></i>
-                                <p>
-                                    Product
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Category" class="nav-link @(ViewData["Title"] == "Category" ? "active" : "")">
-                                <i class="nav-icon bi bi-list-check"></i>
-                                <p>
-                                    Category
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Contact" class="nav-link @(ViewData["Title"] == "Contact" ? "active" : "")">
-                                <i class="nav-icon bi bi-gear"></i>
-                                <p>
-                                    Contact
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Brand" class="nav-link @(ViewData["Title"] == "Brand" ? "active" : "")">
-                                <i class="nav-icon bi bi-badge-tm-fill"></i>
-                                <p>
-                                    Brand
-                                </p>
-                            </a>
-                        </li>
-
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Blog" class="nav-link @(ViewData["Title"] == "Blog" ? "active" : "")">
-                                <i class="nav-icon bi bi-chat-left-dots"></i>
-                                <p>
-                                    Blog
-                                </p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Banner" class="nav-link @(ViewData["Title"] == "Banner" ? "active" : "")">
-                                <i class="nav-icon bi bi-display-fill"></i>
-                                <p>
-                                    Banner
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Coupon" class="nav-link @(ViewData["Title"] == "Coupon" ? "active" : "")">
-                                <i class="nav-icon bi bi-coin"></i>
-                                <p>
-                                    Coupon
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Menu" class="nav-link @(ViewData["Title"] == "Memu" ? "active" : "")">
-                                <i class="fa-sharp-duotone fa-regular fa-list-dropdown"></i>
-                                <p>
-                                    Menu
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Account" class="nav-link @(ViewData["Title"] == "Account" ? "active" : "")">
-                                <i class="fa-duotone fa-light fa-users"></i>
-                                <p>
-                                    Account
-                                </p>  
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="AccountRole" class="nav-link @(ViewData["Title"] == "AccountRole" ? "active" : "")">
-                                <i class="fa-regular fa-address-book"></i>
-                                <p>
-                                    Account Role 
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Member" class="nav-link @(ViewData["Title"] == "Member" ? "active" : "")">
-                                <i class="nav-icon bi bi-people"></i>
-                                <p>
-                                    Member
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Order" class="nav-link @(ViewData["Title"] == "Order" ? "active" : "")">
-                                <i class="nav-icon bi bi-cart2"></i>
-                                <p>
-                                    Order
-                                </p>
-                            </a>
-                        </li>
-                    </ul> <!--end::Sidebar Menu-->
-                </nav> *@
             </div> <!--end::Sidebar Wrapper-->
         </aside> <!--end::Sidebar--> 
 

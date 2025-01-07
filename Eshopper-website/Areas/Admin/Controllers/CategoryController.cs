@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Utils.Extension;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -60,6 +61,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+                var username = userInfo != null ? userInfo.ACC_Username : "";
+
+                category.CreatedBy = username;
+                category.CreatedDate = DateTime.Now;
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -100,6 +107,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 try
                 {
+                    var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+                    var username = userInfo != null ? userInfo.ACC_Username : "";
+
+                    category.CreatedBy = username;
+                    category.UpdatedBy = username;
+                    category.UpdatedDate = DateTime.Now;
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -142,14 +156,17 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (await HasAssociatedProducts(id))
+            {
+                TempData["Error"] = "Cannot delete category as it has associated products.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var category = await _context.Categories.FindAsync(id);
+
             if (category != null)
             {
-				if (await HasAssociatedProducts(id))
-				{
-					TempData["Error"] = "Cannot delete category as it has associated products.";
-					return RedirectToAction(nameof(Index));
-				}
+				
 			    _context.Categories.Remove(category);
 			}
 

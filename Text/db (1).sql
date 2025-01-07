@@ -43,13 +43,14 @@ CREATE TABLE Products(
 	CAT_ID				INT					NOT NULL,
 	BRA_ID				INT					NOT NULL,
 	PRO_Name			NVARCHAR(255)		NOT NULL,
-	PRO_Description		NVARCHAR(255)		NOT NULL,
+	PRO_Description		NTEXT				NOT NULL,
 	PRO_Slug			NVARCHAR(255)		NULL,
 	PRO_Price			MONEY				NOT NULL,
 	PRO_Image			VARCHAR(255)		NULL,
 	PRO_Quantity		INT					NOT NULL,
 	PRO_Status			INT					NOT NULL CHECK(PRO_Status BETWEEN 1 AND 5), 
 	PRO_CapitalPrice	MONEY				NOT NULL,
+	PRO_Sold			INT					NOT NULL,
 	CreatedDate         DATETIME			NULL,
 	CreatedBy           VARCHAR(255)        NULL,
 	UpdatedDate         DATETIME            NULL,
@@ -57,6 +58,9 @@ CREATE TABLE Products(
 	CONSTRAINT PK_PRODUCTS PRIMARY KEY (PRO_ID)
 )
 GO
+
+--ALTER TABLE Products
+--ADD PRO_Sold INT NOT NULL DEFAULT 0;
 /* FOR PRO_Status: 1: In Stock; 2: Out of Stock; 3: Low Stock; 4: Back Order; 5: Pre-Order*/
 
 /* CREATE FOREIGN KEY TO TABLE Categories*/
@@ -138,8 +142,11 @@ CREATE TABLE Menus (
    MEN_ID               INT                  IDENTITY(1, 1),
    PARENT_ID            INT                  NULL,
    MEN_Title            NVARCHAR(255)        NOT NULL,
-   MEN_Url              VARCHAR(255)         NULL,
    MEN_DisplayOrder     INT                  NOT NULL,
+   MEN_Icon				VARCHAR(255)		 NULL,
+   MEN_Status			INT					 NOT NULL,
+   -- 1: USER, 2: ADMIN
+   MEN_Controller		NVARCHAR(255)		 NOT NULL,
    CreatedDate          DATETIME             NULL,
    CreatedBy            VARCHAR(255)         NULL,
    UpdatedDate          DATETIME             NULL,
@@ -155,6 +162,7 @@ ALTER TABLE Menus
    ADD CONSTRAINT FK_MENUS_RELATIONS_MENUS FOREIGN KEY (PARENT_ID)
       REFERENCES Menus (MEN_ID)
 GO
+
 ----- END TABLE Menus -------
 
 ----- START TABLE Banners -----
@@ -205,12 +213,22 @@ CREATE TABLE Accounts (
 ALTER TABLE Accounts
 	ADD CONSTRAINT UQ_ACC_Email UNIQUE (ACC_Email);
 
+ALTER TABLE Accounts
+	ADD CONSTRAINT UQ_ACC_Phone UNIQUE (ACC_Phone);
+
+ALTER TABLE Accounts
+	ADD CONSTRAINT UQ_ACC_DisplayName UNIQUE (ACC_DisplayName);
+
+ALTER TABLE Accounts
+	ADD CONSTRAINT UQ_ACC_Username UNIQUE (ACC_Username);
 -----END TABLE Accounts-----
 
 -----START TABLE AccountStatusLogins-----
+
 CREATE TABLE AccountStatusLogins (
 	ACSL_ID					  INT					IDENTITY(1,1),
 	ACC_ID					  INT					NOT NULL,
+	ACSL_JwtToken			  NVARCHAR(MAX)			NOT NULL,
 	ACSL_Status				  INT					NOT NULL,
 	--- Active = 1, Inactive = 2
 	ACSL_DatetimeLogin		  DATETIME				NOT NULL,
@@ -223,6 +241,21 @@ CREATE TABLE AccountStatusLogins (
 	FOREIGN KEY(ACC_ID) REFERENCES Accounts(ACC_ID)
 )
 -----END TABLE AccountStatusLogins-----
+
+-----START TABLE AccountLogins-----
+CREATE TABLE AccountLogins (
+    LoginProvider			NVARCHAR (100)		NOT NULL,
+    ProviderKey				NVARCHAR (100)		NOT NULL,
+    ProviderDisplayName		NVARCHAR (255)		NULL,
+    ACC_ID					INT					NOT NULL,
+	CreatedDate			    datetime            null,
+	CreatedBy				varchar(255)		null,
+	UpdatedDate				datetime            null,
+	UpdatedBy               varchar(255)        null,
+    CONSTRAINT PK_ACCOUNTLOGINS PRIMARY KEY CLUSTERED (LoginProvider ASC, ProviderKey ASC),
+    FOREIGN KEY(ACC_ID) REFERENCES Accounts(ACC_ID)
+);
+-----END TABLE AccountLogins-----
 
 -----START TABLE Members-----
 CREATE TABLE Members (
@@ -247,7 +280,11 @@ CREATE TABLE Members (
    FOREIGN KEY(ACC_ID) REFERENCES Accounts(ACC_ID),
    FOREIGN KEY(ACR_ID) REFERENCES AccountRoles(ACR_ID)
 )
+ALTER TABLE Members
+	ADD CONSTRAINT UQ_MEM_Email UNIQUE (MEM_Email);
 
+ALTER TABLE Members
+	ADD CONSTRAINT UNIQUE_MEMBER_PHONE UNIQUE (MEM_Phone);
 -----END TABLE Members-----
 
 ----- START TABLE Orders ------
@@ -260,6 +297,7 @@ CREATE TABLE Orders(
 	ORD_ShippingCost	MONEY				NOT NULL,
 	ORD_CouponCode		VARCHAR(255)		NULL,
 	ORD_PaymentMethod	INT					NULL CHECK(ORD_PaymentMethod BETWEEN 1 AND 11),
+	ORD_TotalPrice		MONEY				NOT NULL,
 	CreatedDate         DATETIME			NULL,
 	CreatedBy           VARCHAR(255)        NULL,
 	UpdatedDate         DATETIME            NULL,
@@ -268,6 +306,8 @@ CREATE TABLE Orders(
 	FOREIGN KEY(MEM_ID) REFERENCES Members(MEM_ID)
 )
 
+--ALTER TABLE Orders
+--ADD ORD_TotalPrice MONEY NOT NULL DEFAULT 0;
 
 /* FOR ORD_Status:
 	1: Pending; 2: Confirmed; 3: Processing; 4: Completed; 
@@ -615,4 +655,7 @@ INSERT INTO Accounts VALUES
 INSERT INTO Members(ACC_ID, ACR_ID, MEM_LastName, MEM_FirstName, MEM_Gender, MEM_Phone, MEM_Email, MEM_Address, MEM_Status, CreatedDate, CreatedBy, UpdatedDate,  UpdatedBy) VALUES
 (1, 2, 'Cong Tri', 'Dao', 2, '0326034561', 'daocongtri20031609@gmail.com', '999 Le Duc Tho P16 Q.Go Vap', 1, '2024-12-16', 'admin', '2024-12-16', 'admin'),
 (2, 2, 'Quynh Nhu', 'Luong', 3, '0981015452', 'luongquynhnhu0908@gmail.com', '2276/10 QL1A Tô Ký Q.12', 1, '2024-12-16', 'admin', '2024-12-16', 'admin'),
-(3, 1, 'Huu Thien', 'Doan', 2, '0326034561', 'admin2@gmail.com', '', 1, '2024-12-16', 'admin', '2024-12-16', 'admin')
+(3, 1, 'Huu Thien', 'Doan', 2, '1234567891', 'admin2@gmail.com', '', 1, '2024-12-16', 'admin', '2024-12-16', 'admin')
+
+SELECT O.ORD_OrderCode, O.ORD_ID, ORDE_ID, OD.PRO_ID, ORDE_Price, ORDE_Quantity FROM OrderDetails OD, Orders O
+WHERE OD.ORD_ID = O.ORD_ID AND O.ORD_ID = 5
