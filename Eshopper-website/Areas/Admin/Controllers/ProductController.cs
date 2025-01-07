@@ -53,13 +53,16 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Ratings)////
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.PRO_ID == id);
+
             if (product == null)
             {
                 return NotFound();
             }
+
 
             return View(product);
         }
@@ -244,8 +247,19 @@ namespace Eshopper_website.Areas.Admin.Controllers
             return View(request);
         }
 
-        // GET: Admin/Product/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+		// GET: Admin/Product/Delete/5
+
+		//public async Task<IActionResult> Search(string searchTerm)
+		//{
+		//	var products = await _context.Products
+		//		.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
+		//		.ToListAsync();
+
+		//	ViewData.PRO = searchTerm;
+
+		//	return View(products);
+		//}
+		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {

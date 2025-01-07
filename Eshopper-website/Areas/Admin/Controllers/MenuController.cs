@@ -25,6 +25,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             var eShopperContext = _context.Menus.Include(m => m.Parent);
             return View(await eShopperContext.ToListAsync());
+
         }
 
         // GET: Admin/Menu/Details/5
