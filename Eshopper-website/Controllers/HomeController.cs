@@ -43,10 +43,21 @@ namespace Eshopper_website.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [Route("Home/Error404")]
+        public IActionResult Error404()
+        {
+            return View("Error404");
+        }
+
         [Route("/Login")]
         public IActionResult Login() 
         {
             return RedirectToAction("Login", "User", new {Area = "Admin"});
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
         }
 
     }

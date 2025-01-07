@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
+using Eshopper_website.Models.ViewModels;
 
 namespace Eshopper_website.Models.DataContext
 {
@@ -12,7 +13,8 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Banner> Banners { get; set; }
+		public DbSet<Rating> Ratings { get; set; }
+		public DbSet<Banner> Banners { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
@@ -23,5 +25,6 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<AccountRole> AccountRole { get; set; }
+
     }
 }

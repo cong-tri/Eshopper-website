@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Product>
+@{
+	ViewData["Title"] = @ViewBag.Keyword;
+}
+
+<section>
+	<div class="row">
+		<div class="col-sm-3">
+			@Html.Partial("_SidebarPartial")
+		</div>
+
+		<div class="col-sm-9 padding-right">
+			<div class="features_items">
+				<!--features_items-->
+				<h2 class="title text-center">@ViewBag.Keyword</h2>
+				@foreach (var item in Model)
+				{
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<a>
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.BRA_ID">
+											<img src="~/images/product-details/1.jpeg" alt="@item.PRO_Name" width="100%" />
+											<h2>@item.PRO_Price</h2>
+											<p>@item.PRO_Name</p>
+											<p>Danh mục : @item?.Category?.CAT_Name </p>
+											<p>Thương hiệu : @item?.Brand?.BRA_Name</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</a>
+									</div>
+								</div>
+							</a>
+							<div class="choose">
+								<ul class="nav nav-pills nav-justified">
+									<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+									<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				}
+			</div><!--features_items-->
+		</div>
+
+	</div>
+</section>
+

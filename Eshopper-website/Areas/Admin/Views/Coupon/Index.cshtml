@@ -30,7 +30,7 @@
                         <div class="row align-items-center">
                             <div class="col-md"><h3 class="card-title">List Coupon </h3></div>
                             <div class="searchBox">
-                                <input class="searchInput" type="text" name="" placeholder="Search here">
+                                <input id="searchInput" class="searchInput" type="text" name="searchTerm" placeholder="Search here">
                                 <button class="searchButton" href="#">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
                                         <g clip-path="url(#clip0_2_17)">
@@ -126,4 +126,30 @@
             </div>
         </div>
     </div>
- 
+<script>
+    // Hàm tìm kiếm
+    function searchTable() {
+        var searchValue = document.getElementById("searchInput").value.trim().toLowerCase();
+        var rows = document.querySelectorAll("#tbl tbody tr");
+
+        rows.forEach(function (row) {
+            var nameColumn = row.querySelector("td:nth-child(1)");
+            if (nameColumn) {
+                var nameText = nameColumn.textContent.trim().toLowerCase();
+                if (nameText.includes(searchValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+    }
+
+    // Lắng nghe sự kiện "keyup" trên ô nhập
+    document.getElementById("searchInput").addEventListener("keyup", searchTable);
+
+    // Lắng nghe sự kiện "click" trên nút bấm
+    document.querySelector(".searchButton").addEventListener("click", searchTable);
+</script>
+
+
