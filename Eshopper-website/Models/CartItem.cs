@@ -1,13 +1,19 @@
-﻿namespace Eshopper_website.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Eshopper_website.Models
 {
     public class CartItem
     {
         public int PRO_ID { get; set; }
         public string? PRO_Name { get; set; }
         public int PRO_Quantity { get; set; }
-        public decimal PRO_Price { get; set; }
+
+		[Range(1, double.MaxValue, ErrorMessage = "Product price must be a positive number!")]
+		public decimal PRO_Price { get; set; }
         public string PRO_Image { get; set; }
-        public decimal PRO_Total { get { return PRO_Price * PRO_Quantity; } }
+
+		[Range(1, double.MaxValue, ErrorMessage = "Total price must be a positive number!")]
+		public decimal PRO_Total { get { return PRO_Price * PRO_Quantity; } }
 
         public CartItem() { }
         public CartItem(Product product) 

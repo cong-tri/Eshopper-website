@@ -79,8 +79,12 @@
                                                 @Html.DisplayFor(modelItem => item.CONT_Email)
                                             </td>
                                             <td class="text-nowrap">
-                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CONT_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CONT_ID"><i class="fa-regular fa-circle-info"></i></a>
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CONT_ID" title="Edit">
+                                                    <i class="fa-regular fa-pen-to-square"></i>
+                                                </a>
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CONT_ID" title="View Details">
+                                                    <i class="fa-regular fa-circle-info"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     }

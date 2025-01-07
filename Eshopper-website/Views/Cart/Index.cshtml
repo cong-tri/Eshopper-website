@@ -40,7 +40,7 @@
 									<h4 class="mt-0"><a class="text-black" asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">@item.PRO_Name</a></h4>
 								</td>
 								<td class="cart_price">
-									<p>$@item?.PRO_Price</p>
+									<p>$@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
 								</td>
 								<td class="cart_quantity">
 									<div class="text-center">
@@ -67,7 +67,7 @@
 							</td>
 							<td class="text-center">
 								<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
-								<a asp-action="Checkout" asp-controller="Cart" class="btn btn-success">Checkout</a>
+								<a asp-action="Checkout" asp-controller="Checkout" class="btn btn-success">Checkout</a>
                             </td>
 						</tr>
 					}
