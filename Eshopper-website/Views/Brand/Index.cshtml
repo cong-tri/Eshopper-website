@@ -16,7 +16,7 @@
 						<div class="single-products">
 							<div class="productinfo text-center">
 								<img src="~/images/product-details/1.jpeg" alt="@item.PRO_Name" width="100%" />
-								<h2>@item.PRO_Price</h2>
+								<h2>@item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
 								<p>@item.PRO_Name</p>
 								<p>Danh mục : @item?.Category?.CAT_Name </p>
 								<p>Thương hiệu : @item?.Brand?.BRA_Name</p>

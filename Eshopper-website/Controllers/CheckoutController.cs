@@ -6,6 +6,7 @@ using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Eshopper_website.Controllers
@@ -74,11 +75,17 @@ namespace Eshopper_website.Controllers
             }
             HttpContext.Session.Remove("Cart");
 
+            var orderSend = await _context.Orders.AsNoTracking()
+                .Include(x => x.Member)
+                .Include(x => x.OrderDetails!)
+                .ThenInclude(x => x.Product).FirstOrDefaultAsync(x => x.ORD_ID == orderItem.ORD_ID);
+
             //string Body = await HtmlRenderer
             string receiver = userInfo.ACC_Email;
             string subject = "ORDER HAVE BEEN CREATED SUCCESSFULLY!";
-            string message = "Your Order have been created successfully. Please waiting for shop owner confirmed!";
-            await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderItem));
+            //string message = "Your Order have been created successfully. Please waiting for shop owner confirmed!";
+
+            await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderSend!));
 
             TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
             return RedirectToAction("Index", "Cart");

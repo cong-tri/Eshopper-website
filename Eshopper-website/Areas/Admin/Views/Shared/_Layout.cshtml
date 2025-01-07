@@ -22,7 +22,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.dataTables.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="~/admin/plugins/overlayscrollbars/styles/overlayscrollbars.min.css" />
     <link rel="stylesheet" href="~/admin/plugins/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/admin/plugins/font-awesome/css/all.css" />
@@ -33,7 +36,7 @@
 </head>
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary">
     <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+    <div class="app-wrapper" data-bs-theme="dark">
         <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body">
             <!--begin::Container-->
@@ -42,6 +45,67 @@
                 <ul class="navbar-nav">
                     <li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"> <i class="bi bi-list"></i> </a> </li>
                 </ul> <!--end::Start Navbar Links--> <!--begin::End Navbar Links-->
+                <div class="toggle-switch">
+                    <label class="switch">
+                        <input id="input" type="checkbox" checked onclick="myFunction()"/>
+                        <div class="slider round">
+                            <div class="sun-moon">
+                                <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="moon-dot-2" class="moon-dot" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="moon-dot-3" class="moon-dot" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="light-ray-1" class="light-ray" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="light-ray-2" class="light-ray" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="light-ray-3" class="light-ray" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+
+                                <svg id="cloud-1" class="cloud-dark" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="cloud-2" class="cloud-dark" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="cloud-3" class="cloud-dark" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="cloud-4" class="cloud-light" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="cloud-5" class="cloud-light" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                                <svg id="cloud-6" class="cloud-light" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="50"></circle>
+                                </svg>
+                            </div>
+                            <div class="stars">
+                                <svg id="star-1" class="star" viewBox="0 0 20 20">
+                                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                                </svg>
+                                <svg id="star-2" class="star" viewBox="0 0 20 20">
+                                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                                </svg>
+                                <svg id="star-3" class="star" viewBox="0 0 20 20">
+                                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                                </svg>
+                                <svg id="star-4" class="star" viewBox="0 0 20 20">
+                                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </label>
+
+                </div>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-bs-toggle="dropdown" href="#"> <i class="bi bi-bell-fill"></i> <span class="navbar-badge badge text-bg-warning">15</span> </a>
@@ -64,6 +128,8 @@
                             </a>
                         </div>
                     </li> <!--end::Notifications Dropdown Menu--> <!--begin::Fullscreen Toggle-->
+                    
+                    
                     <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="~/admin/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">Admin : @userInfo?.ACC_DisplayName</span> </a>
@@ -91,7 +157,7 @@
             </div> <!--end::Container-->
         </nav> <!--end::Header--> <!--begin::Sidebar-->
 
-        <aside class="app-sidebar shadow" data-bs-theme="light">
+        <aside class="app-sidebar shadow">
             <!--begin::Sidebar Brand-->
             <div class="sidebar-brand"> <!--begin::Brand Link--> 
                 <a asp-action="Index" asp-controller="Home" class="brand-link"> <!--begin::Brand Image--> 
@@ -128,8 +194,13 @@
     <script src="~/admin/js/bootstrap.bundle.min.js"></script>
     <script src="~/admin/js/adminlte.js"></script>
     <script src="~/admin/plugins/jquery/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.all.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.all.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+   @*  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> *@
     <script src="https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -138,6 +209,24 @@
     <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js"></script>
 
+
+    <script>
+        //===============DARKMODE==================//
+                     document.addEventListener('DOMContentLoaded', () => {
+            const appWrapper = document.querySelector('.app-wrapper');
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            document.getElementById('input').checked = isDarkMode;
+            appWrapper.setAttribute('data-bs-theme', isDarkMode ? 'dark' : 'light');
+        });
+
+        function myFunction() {
+            const appWrapper = document.querySelector('.app-wrapper');
+            const isChecked = document.getElementById('input').checked;
+            localStorage.setItem('darkMode', isChecked);
+            appWrapper.setAttribute('data-bs-theme', isChecked ? 'dark' : 'light');
+        }
+    </script>
+    
     <script>
         $(function () {
              var message = '@TempData["success"]';
@@ -168,12 +257,17 @@
                  });
         });
     </script>
-    
+    @section Scripts {
+        <script>
+            let table = new DataTable('#tbl');
+        </script>
+     
+    }
     <script>
-        let table = new DataTable("#myTable", {
+        let table = new DataTable("#tbl", {
             layout: {
                 topStart: {
-                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'] // Nh? t?o b?ng trong dash
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'] // Nh? t?o b?ng trong dashboard
                 }
             }
         });
