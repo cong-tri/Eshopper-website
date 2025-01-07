@@ -3,6 +3,7 @@ using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
 using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -48,7 +49,7 @@ namespace Eshopper_website.Controllers
 
             if (userInfo == null)
             {
-                return RedirectToAction("Login", "User", new { Area = "Admin" });
+                return RedirectToAction("Login", "User", new { Area = "Admin", url=Request.GetEncodedUrl() });
             }
 
             Product? product = await _context.Products.FindAsync(Id);

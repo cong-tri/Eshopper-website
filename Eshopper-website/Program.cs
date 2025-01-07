@@ -123,6 +123,9 @@ namespace Eshopper_website
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.UseStatusCodePagesWithReExecute("/Home/Error404", "?statusCode={0}");
+            
             app.Run();
         }
     }

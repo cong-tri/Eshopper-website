@@ -69,8 +69,8 @@ namespace Eshopper_website.Models
 		public virtual Brand? Brand { get; set; }
 
 		public virtual ICollection<Wishlist>? Wishlists { get; set; }
-		public virtual ICollection<Compare>? Compares { get; set; }
-		public virtual ICollection<Rating>? Ratings { get; set; }
+		//public virtual ICollection<Compare>? Compares { get; set; }
+		public virtual Rating? Ratings { get; set; } 
 		public virtual ICollection<ProductQuantity>? ProductQuantities { get; set; }
 		public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
 	}

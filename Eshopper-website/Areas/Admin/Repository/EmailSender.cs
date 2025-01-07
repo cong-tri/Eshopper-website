@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using Eshopper_website.Utils.Constant;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace Eshopper_website.Areas.Admin.Repository
 {
@@ -8,28 +9,34 @@ namespace Eshopper_website.Areas.Admin.Repository
     {
         
         public EmailSender() { }
-        public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string body)
         {
-            var constant = new EShopperConstant();
-
-            var client = new SmtpClient(constant.serverMailHost, constant.serverMailPort)
+            try
             {
-                EnableSsl = true, //bật bảo mật
-                UseDefaultCredentials = false,
-                
-                Credentials = new NetworkCredential(constant.sendEmail, constant.sendAppPassword)
-                // Thay đổi email, pass 
-            };
+                var constant = new EShopperConstant();
 
-            var msg = new MailMessage(from: constant.sendEmail,
-                                to: email,
-                                subject,
-                                message
-                );
-            msg.IsBodyHtml = true;
-            return client.SendMailAsync(
-                msg
-            );
+                var client = new SmtpClient(constant.serverMailHost, constant.serverMailPort)
+                {
+                    Port = constant.serverMailPort,
+                    EnableSsl = true, //bật bảo mật
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(constant.sendEmail, constant.sendAppPassword)
+                };
+
+                var msg = new MailMessage()
+                {
+                    From = new MailAddress(constant.sendEmail, "EShopper"),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true,
+                };
+                msg.To.Add(email);
+
+                await client.SendMailAsync(msg);
+            }
+            catch (Exception ex) {
+                throw new Exception($"Error: " + ex.Message);
+            }
         }
     }
 }

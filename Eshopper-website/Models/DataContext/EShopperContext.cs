@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
+using Eshopper_website.Models.ViewModels;
 
 namespace Eshopper_website.Models.DataContext
 {

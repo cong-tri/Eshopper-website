@@ -31,7 +31,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult Login()
+        public IActionResult Login([FromQuery] string? url)
         {
             // Check cookies
             var login = Request.Cookies.Get<LoginDTO>("UserCredential");
@@ -111,6 +111,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     }
                 }
             }
+            ViewBag.referer = url;
+
             return View();
         }
 

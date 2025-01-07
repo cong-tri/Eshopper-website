@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Product>
 @{
-	ViewData["Title"] = "Category";
+	ViewData["Title"] = @ViewBag.Keyword;
 }
 
 <section>
@@ -12,7 +12,7 @@
 		<div class="col-sm-9 padding-right">
 			<div class="features_items">
 				<!--features_items-->
-				<h2 class="title text-center">Features Items</h2>
+				<h2 class="title text-center">@ViewBag.Keyword</h2>
 				@foreach (var item in Model)
 				{
 					<div class="col-sm-4">
@@ -20,9 +20,9 @@
 							<a>
 								<div class="single-products">
 									<div class="productinfo text-center">
-										 <a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.BRA_ID">
+										<a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.BRA_ID">
 											<img src="~/images/product-details/1.jpeg" alt="@item.PRO_Name" width="100%" />
-											<h2>@item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
+											<h2>@item.PRO_Price</h2>
 											<p>@item.PRO_Name</p>
 											<p>Danh mục : @item?.Category?.CAT_Name </p>
 											<p>Thương hiệu : @item?.Brand?.BRA_Name</p>

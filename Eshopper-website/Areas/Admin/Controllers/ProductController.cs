@@ -25,10 +25,27 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         // GET: Admin/Product
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
-            return View(await eShopperContext.ToListAsync());
+            //var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
+            //return View(await eShopperContext.ToListAsync());
+            List<Product> product = _context.Products.ToList();
+
+            const int pageSize = 10;
+
+            if (pg > 1)
+            {
+                pg = 1;
+            }
+
+            int resCount = product.Count();
+            var pager = new Paginate(resCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = product.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Paper = pager;
+
+            return View(data);
         }
 
         // GET: Admin/Product/Details/5
@@ -40,13 +57,16 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Ratings)
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.PRO_ID == id);
+
             if (product == null)
             {
                 return NotFound();
             }
+
 
             return View(product);
         }
@@ -137,9 +157,14 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Added product successfully !";
+
                 return RedirectToAction(nameof(Index));
             }
-
+            else
+            {
+                TempData["error"] = "Failed to add product something wrong !";
+            }
             ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", product.BRA_ID);
             ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", product.CAT_ID);
 
@@ -157,6 +182,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
+                TempData["error"] = "Failed to add product something wrong !";
                 return NotFound();
             }
             ViewData["ProductStatus"] = Enum.GetValues(typeof(ProductStatusEnum))
@@ -244,18 +270,32 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         throw;
                     }
                 }
+                TempData["error"] = "Failed to add category something wrong !";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", request.BRA_ID);
             ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", request.CAT_ID);
+            TempData["error"] = "Failed to add category something wrong !";
             return View(request);
         }
 
-        // GET: Admin/Product/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+		// GET: Admin/Product/Delete/5
+
+		//public async Task<IActionResult> Search(string searchTerm)
+		//{
+		//	var products = await _context.Products
+		//		.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
+		//		.ToListAsync();
+
+		//	ViewData.PRO = searchTerm;
+
+		//	return View(products);
+		//}
+		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
+                TempData["error"] = "Product ID mismatch. Please try again!";
                 return NotFound();
             }
 
@@ -267,7 +307,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            
             return View(product);
         }
 
