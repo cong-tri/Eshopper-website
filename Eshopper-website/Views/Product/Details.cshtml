@@ -114,20 +114,20 @@
                             }
                         </span>
                         <div class="product-actions">
-                            @*  <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
-                            <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
-                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                            <button type="submit" class="btn btn-default">
-                            <i class="fa fa-heart"></i> Add to Wishlist
-                            </button>
+                             <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-heart"></i> Add to Wishlist
+                                </button>
                             </form>
                             <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
-                            <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
-                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                            <button type="submit" class="btn btn-default">
-                            <i class="fa fa-exchange"></i> Add to Compare
-                            </button>
-                            </form> *@
+                                <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-exchange"></i> Add to Compare
+                                </button>
+                            </form>
                         </div>
                         <p><b>Availability:</b> @Model?.ProductDetail?.PRO_Status</p>
                         <p><b>Quantities in Stock:</b> @Model?.ProductDetail?.PRO_Quantity</p>
