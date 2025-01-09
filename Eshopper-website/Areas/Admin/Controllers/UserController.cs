@@ -130,7 +130,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                         HttpContext.Session.Set<UserInfo>("userInfo", user);
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home", new {Area = ""});
                     }
                 }
                 else
