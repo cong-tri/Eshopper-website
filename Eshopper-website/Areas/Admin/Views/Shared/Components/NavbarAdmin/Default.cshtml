@@ -2,11 +2,11 @@
 
 <nav class="mt-2">
     <!--begin::Sidebar Menu-->
-    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+    <ul class="nav sidebar-menu flex-column " data-lte-toggle="treeview" role="menu" data-accordion="false">
         @foreach (var item in Model)
         {
              <li class="nav-item">
-                <a asp-action="Index" asp-controller="@item.MEN_Controller" class="nav-link @(ViewData["Title"] == item.MEN_Title.ToString() ? "active" : "")">
+                <a asp-action="Index" asp-controller="@item.MEN_Controller" class="nav-link @(ViewData["Active"] == item.MEN_Controller.ToString() ? "active" : "")">
                     <i class="nav-icon @item.MEN_Icon"></i>
                     <p>
                         @item.MEN_Title

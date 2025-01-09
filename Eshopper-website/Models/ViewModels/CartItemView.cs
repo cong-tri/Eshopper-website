@@ -7,5 +7,6 @@
         public string? CouponCode { get; set; }
         public decimal DiscountAmount { get; set; }
         public decimal FinalTotal => GrandTotal - DiscountAmount;
-    }
+		public decimal ShippingPrice { get; set; }
+	}
 }

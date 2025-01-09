@@ -5,7 +5,8 @@ namespace Eshopper_website.Models
     public class UserInfo : BaseModel
     {
         public int ACC_ID { get; set; }
-        public int ACR_ID { get; set; }
+        public int MEM_ID { get; set; }
+		public int ACR_ID { get; set; }
         public string? ACC_Username { get; set; }
         public string? ACC_DisplayName { get; set; }
         public string? ACC_Email { get; set; }
@@ -14,10 +15,11 @@ namespace Eshopper_website.Models
 
         public UserInfo() { }
 
-        public UserInfo(Account account, int acr_id)
+        public UserInfo(Account account, int acr_id, int mem_id)
         {
             ACC_ID = account.ACC_ID;
             ACR_ID = acr_id;
+            MEM_ID = mem_id;
             ACC_Username = account.ACC_Username;
             ACC_DisplayName = account.ACC_DisplayName;
             ACC_Email = account.ACC_Email;

@@ -1,0 +1,262 @@
+﻿@model IEnumerable<Eshopper_website.Models.Shipping>
+
+@{
+    ViewData["Title"] = "Shipping";
+}
+@section Headers {
+    <style type="text/css">
+        .css_select_div {
+            text-align: center;
+        }
+
+        .css_select {
+            display: inline-table;
+            width: 50%;
+            padding: 5px;
+            margin: 5px 2%;
+            border: solid 1px #686868;
+            border-radius: 5px;
+        }
+    </style>
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Shipping</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">List Shipping</h3></div>
+                            <div class="col-md-auto searchBox">
+                                <input class="searchInput" type="text" name="" placeholder="Search here">
+                                <button class="searchButton" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
+                                        <g clip-path="url(#clip0_2_17)">
+                                            <g filter="url(#filter0_d_2_17)">
+                                                <path d="M23.7953 23.9182L19.0585 19.1814M19.0585 19.1814C19.8188 18.4211 20.4219 17.5185 20.8333 16.5251C21.2448 15.5318 21.4566 14.4671 21.4566 13.3919C21.4566 12.3167 21.2448 11.252 20.8333 10.2587C20.4219 9.2653 19.8188 8.36271 19.0585 7.60242C18.2982 6.84214 17.3956 6.23905 16.4022 5.82759C15.4089 5.41612 14.3442 5.20435 13.269 5.20435C12.1938 5.20435 11.1291 5.41612 10.1358 5.82759C9.1424 6.23905 8.23981 6.84214 7.47953 7.60242C5.94407 9.13789 5.08145 11.2204 5.08145 13.3919C5.08145 15.5634 5.94407 17.6459 7.47953 19.1814C9.01499 20.7168 11.0975 21.5794 13.269 21.5794C15.4405 21.5794 17.523 20.7168 19.0585 19.1814Z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" shape-rendering="crispEdges"></path>
+                                            </g>
+                                        </g>
+                                        <defs>
+                                            <filter id="filter0_d_2_17" x="-0.418549" y="3.70435" width="29.7139" height="29.7139" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+                                                <feOffset dy="4"></feOffset>
+                                                <feGaussianBlur stdDeviation="2"></feGaussianBlur>
+                                                <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+                                                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2_17"></feBlend>
+                                                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2_17" result="shape"></feBlend>
+                                            </filter>
+                                            <clipPath id="clip0_2_17">
+                                                <rect width="28.0702" height="28.0702" fill="white" transform="translate(0.403503 0.526367)"></rect>
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+
+                                </button>
+                            </div>
+                            <div class="col-md-auto">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Create Shipping
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                <div class="form-group">
+                                                    <label>City</label>
+                                                    <select class="css_select" id="tinh" name="tinh" class="form-select" title="Choose City">
+                                                        <option value="0">City</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>District</label>
+                                                    <select class="css_select" id="quan" name="quan" class="form-select" title="Choose District">
+                                                        <option value="0">District</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Ward</label>
+                                                    <select class="css_select" id="phuong" name="phuong" class="form-select" title="Choose Ward">
+                                                        <option value="0">Ward</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Price</label>
+                                                    <input id="price-shipping" type="number" placeholder="vd: 20000" min="1" class="form-control" />
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-primary btn-add-shipping mt-3">Create</button>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SHIP_Ward)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SHIP_District)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SHIP_City)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SHIP_Price)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedDate)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SHIP_Ward)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SHIP_District)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SHIP_City)
+                                            </td>
+                                            <td>
+                                                $@Html.DisplayFor(modelItem => item.SHIP_Price)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <a class="me-1 text-danger" href="@Url.Action("Delete", "Shipping", new { id = item.SHIP_ID })" onclick="return comfirm('Are you sure to delete this shipping?')">
+                                                    <i class="fa-regular fa-trash-xmark"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://esgoo.net/scripts/jquery.js"></script>
+
+    <script>
+        $(".btn-add-shipping").click(function () {
+            var tinh = $("#tinh").find('option:selected').text();
+            var quan = $("#quan").find('option:selected').text();
+            var phuong = $("#phuong").find('option:selected').text();
+            var price = $("#price-shipping").val();
+
+            if (tinh == '' || quan == '' || phuong == '' || price == '') {
+                Swal.fire("Please not empty this field.");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("StoreShipping", "Shipping")",
+                    data: { tinh: tinh, quan: quan, phuong: phuong, price: price },
+
+                    success: function (result) {
+                        if (result.success) {
+
+                            Swal.fire("Created shipping successfully. Reload page again in order to gain data.");
+                            location.reload()
+                        } else if (result.duplicate) {
+
+                            Swal.fire("This data have been exsisted.");
+                        }
+                    }
+                });
+            }
+        })
+
+        $(document).ready(function () {
+            //Lấy tỉnh thành
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+                if (data_tinh.error == 0) {
+                    $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                        $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name_en + '</option>');
+                    });
+                    $("#tinh").change(function (e) {
+                        var idtinh = $(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                            if (data_quan.error == 0) {
+                                $("#quan").html('<option value="0">District</option>');
+                                $("#phuong").html('<option value="0">Ward</option>');
+                                $.each(data_quan.data, function (key_quan, val_quan) {
+                                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name_en + '</option>');
+                                });
+                                //Lấy phường xã
+                                $("#quan").change(function (e) {
+                                    var idquan = $(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                                        if (data_phuong.error == 0) {
+                                            $("#phuong").html('<option value="0">Ward</option>');
+                                            $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                                $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name_en + '</option>');
+                                            });
+                                        }
+                                    });
+                                });
+
+                            }
+                        });
+                    });
+
+                }
+            });
+        });
+    </script>
+}

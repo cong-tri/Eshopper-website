@@ -29,18 +29,22 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             //var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
             //return View(await eShopperContext.ToListAsync());
-            List<Product> product = _context.Products.ToList();
+            List<Product> product = await _context.Products.Include(x => x.Category).Include(x => x.Brand).ToListAsync();
 
             const int pageSize = 10;
+
             if (pg > 1)
             {
                 pg = 1;
             }
+
             int resCount = product.Count();
             var pager = new Paginate(resCount, pg, pageSize);
             int recSkip = (pg - 1) * pageSize;
             var data = product.Skip(recSkip).Take(pager.PageSize).ToList();
+
             ViewBag.Paper = pager;
+
             return View(data);
         }
 
@@ -53,7 +57,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
 
             var product = await _context.Products
-                .Include(p => p.Ratings)////
+                .Include(p => p.Ratings)
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.PRO_ID == id);
@@ -79,9 +83,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 				}).ToList();
 
 			ViewData["BRA_ID"] = new SelectList(
-                _context.Brands
-                //.Where(x => x.BRA_Status.ToString() == "Active")
-                , "BRA_ID", "BRA_Name"
+                _context.Brands.Where(x => x.BRA_Status.ToString() == "Active"), "BRA_ID", "BRA_Name"
             );
 
             ViewData["CAT_ID"] = new SelectList(
@@ -97,7 +99,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] ProductDTO request)
         {
-            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
             var username = userInfo != null ? userInfo.ACC_Username : "";
 
             var product = new Product
@@ -111,10 +113,35 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 PRO_Quantity = request.PRO_Quantity,
                 PRO_CapitalPrice = request.PRO_CapitalPrice,
                 PRO_Status = request.PRO_Status,
-                CreatedBy = username,
                 PRO_Sold = 0,
+                CreatedBy = username,
                 CreatedDate = DateTime.Now
             };
+
+            if (product.PRO_Price <= product.PRO_CapitalPrice)
+            {
+                ModelState.AddModelError("PRO_Price", "Price must be higher than Capital Price");
+                ViewData["Message"] = "Price must be higher than Capital Price";
+            }
+            
+            if (product.PRO_Quantity < 20 && product.PRO_Status != ProductStatusEnum.LowStock)
+            {
+                ModelState.AddModelError("PRO_Status", "Products with quantity less than 20 must have 'LowStock' status");
+                ViewData["Message"] = "Products with quantity less than 20 must have 'LowStock' status";
+            }
+            
+            if (product.PRO_Price > 1000000)
+            {
+                ModelState.AddModelError("PRO_Price", "Product price cannot exceed $1,000,000");
+                ViewData["Message"] = "Product price cannot exceed $1,000,000";
+            }
+            
+            if (product.PRO_CapitalPrice > 500000)
+            {
+                ModelState.AddModelError("PRO_CapitalPrice", "Capital price cannot exceed $500,000");
+                ViewData["Message"] = "Capital price cannot exceed $500,000";
+            }
+
             if (ModelState.IsValid)
             {
                 string? newImageFileName = null;
@@ -126,16 +153,21 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     var filePath = Path.Combine(_hostEnv.WebRootPath, "images", "product-details", newImageFileName);
                     request.PRO_Image.CopyTo(new FileStream(filePath, FileMode.Create));
                 }
-                if (newImageFileName != null) product.PRO_Image = newImageFileName;
+                if (newImageFileName != null) product!.PRO_Image = newImageFileName;
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Added product successfully !";
+
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = "Failed to add product something wrong !";
             }
             ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", product.BRA_ID);
             ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", product.CAT_ID);
-            TempData["error"] = "Failed to add product something wrong !";
+
             return View(product);
         }
 
@@ -182,7 +214,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 try
                 {
-                    var userInfo = HttpContext.Session.Get<Account>("userInfo");
+                    var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
                     var username = userInfo != null ? userInfo.ACC_Username : "";
 
                     var existingProduct = await _context.Products.FindAsync(id);
@@ -203,7 +235,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     existingProduct.CreatedBy = username;
                     existingProduct.UpdatedDate = DateTime.Now;
                     existingProduct.UpdatedBy = username;
-                    existingProduct.PRO_Sold = 0;
+                    existingProduct.PRO_Sold = existingProduct.PRO_Sold;
 
                     if (request.PRO_Image != null)
                     {
@@ -247,18 +279,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
             return View(request);
         }
 
-		// GET: Admin/Product/Delete/5
-
-		//public async Task<IActionResult> Search(string searchTerm)
-		//{
-		//	var products = await _context.Products
-		//		.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
-		//		.ToListAsync();
-
-		//	ViewData.PRO = searchTerm;
-
-		//	return View(products);
-		//}
 		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -284,13 +304,23 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (await HasAssociatedOrderDetail(id))
+            {
+                TempData["Error"] = "Cannot delete product as it has associated order details.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var product = await _context.Products.FindAsync(id);
+
             if (product != null)
             {
-                if (await HasAssociatedOrderDetail(id))
+                if (!string.IsNullOrEmpty(product.PRO_Image))
                 {
-                    TempData["Error"] = "Cannot delete product as it has associated order details.";
-                    return RedirectToAction(nameof(Index));
+                    var oldFilePath = Path.Combine(_hostEnv.WebRootPath, "images", "product-details", product.PRO_Image);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
                 }
                 _context.Products.Remove(product);
             }
@@ -303,10 +333,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             return _context.Products.Any(e => e.PRO_ID == id);
         }
+
         private async Task<bool> HasAssociatedOrderDetail(int PRO_ID)
         {
             return await _context.OrderDetails.AnyAsync(p => p.PRO_ID == PRO_ID);
         }
+
         public async Task<ActionResult> AddQuantity(int Id)
         {
             var productQuantity = await _context.ProductQuantities.Where(pq => pq.PRO_ID == Id).ToListAsync();

@@ -1,6 +1,6 @@
 @using Eshopper_website.Utils.Extension
 @{
-	var userInfo = Context.Session.Get<Account>("userInfo");
+	var userInfo = Context.Session.Get<UserInfo>("userInfo");
 }
 
 <!DOCTYPE html>
@@ -18,11 +18,7 @@
 	<link href="~/css/animate.css" rel="stylesheet">
 	<link href="~/css/main.css" rel="stylesheet">
 	<link href="~/css/responsive.css" rel="stylesheet">
-	@* <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"> *@
-	<!--[if lt IE 9]>
-	<script src="js/html5shiv.js"></script>
-	<script src="js/respond.min.js"></script>
-	<![endif]-->
+
 	<link rel="shortcut icon" href="images/ico/favicon.ico">
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/images/ico/apple-touch-icon-144-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/images/ico/apple-touch-icon-114-precomposed.png">
@@ -103,7 +99,7 @@
 									<li><a asp-controller="Compare" asp-action="Index"><i class="fa fa-exchange"></i> Compare</a></li>
 									<li><a asp-action="Index" asp-controller="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-									<li><a href="#">Account</a></li>
+									<li><a asp-controller="Account" asp-action="Index">Hello, @userInfo.ACC_DisplayName</a></li>
 								}
 								else
 								{
@@ -152,7 +148,7 @@
 								</li>
 								<li><a asp-action="Index" asp-controller="Product">Product</a></li>
 								<li><a asp-action="Index" asp-controller="Blog">Blog</a></li>
-                <li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
+								<li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
 							</ul>
 						</div>
 					</div>
@@ -170,33 +166,7 @@
 	</header><!--/header-->
 	<section>
 		<div class="container">
-			@if (TempData["Success"] != null)
-			{
-				<div class="alert alert-success alert-dismissible" role="alert">
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					@TempData["Success"]
-				</div>
-			}
-			@if (TempData["Info"] != null)
-			{
-				<div class="alert alert-info alert-dismissible" role="alert">
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					@TempData["Info"]
-				</div>
-			}
-			@if (TempData["Error"] != null)
-			{
-				<div class="alert alert-danger alert-dismissible" role="alert">
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					@TempData["Error"]
-				</div>
-			}
+			@Html.Partial("_NotificationPartial")
 			@RenderBody()
 		</div>
 	</section>
@@ -359,7 +329,6 @@
 		</div>
 
 	</footer><!--/Footer-->
-
 	<script src="~/js/jquery.js"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery.scrollUp.min.js"></script>
@@ -367,7 +336,7 @@
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
 
-	<script>
+@* 	<script>
 		// Auto hide alerts after 3 seconds
 		$(document).ready(function () {
 			setTimeout(function () {
@@ -389,7 +358,7 @@
 				}, 2000);
 			});
 		});
-	</script>
+	</script> *@
 
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

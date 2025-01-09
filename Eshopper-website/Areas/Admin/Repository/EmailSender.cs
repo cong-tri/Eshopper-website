@@ -18,7 +18,7 @@ namespace Eshopper_website.Areas.Admin.Repository
                 var client = new SmtpClient(constant.serverMailHost, constant.serverMailPort)
                 {
                     Port = constant.serverMailPort,
-                    EnableSsl = true, //bật bảo mật
+                    EnableSsl = true,
                     UseDefaultCredentials = false,
                     Credentials = new NetworkCredential(constant.sendEmail, constant.sendAppPassword)
                 };
