@@ -18,19 +18,18 @@
                             <div class="col-sm-6">
                                 <h3>Welcome to E-Shopper</h3>
                                 <p>
-                                    E-Shopper là một trong những cửa hàng trực tuyến hàng đầu chuyên cung cấp các sản phẩm
-                                    công nghệ chất lượng cao. Chúng tôi tự hào mang đến cho khách hàng những trải nghiệm
-                                    mua sắm tuyệt vời nhất với đa dạng sản phẩm từ các thương hiệu uy tín trên thế giới.
+                                    E-Shopper is one of the leading online retailers specializing in high-quality technology products.
+                                    We take pride in providing our customers with the best shopping experience, offering a wide range
+                                    of products from trusted global brands.
                                 </p>
                                 <p>
-                                    Với hơn 10 năm kinh nghiệm trong lĩnh vực thương mại điện tử, chúng tôi cam kết mang
-                                    đến cho khách hàng:
+                                    With over 10 years of experience in e-commerce, we are committed to providing our customers with:
                                 </p>
                                 <ul class="about-list">
-                                    <li><i class="fa fa-check"></i> Sản phẩm chính hãng 100%</li>
-                                    <li><i class="fa fa-check"></i> Giá cả cạnh tranh</li>
-                                    <li><i class="fa fa-check"></i> Dịch vụ chăm sóc khách hàng tận tâm</li>
-                                    <li><i class="fa fa-check"></i> Chế độ bảo hành uy tín</li>
+                                    <li><i class="fa fa-check"></i> 100% Genuine Products</li>
+                                    <li><i class="fa fa-check"></i> Competitive Prices</li>
+                                    <li><i class="fa fa-check"></i> Dedicated Customer Service</li>
+                                    <li><i class="fa fa-check"></i> Reliable Warranty Service</li>
                                 </ul>
                             </div>
                         </div>
@@ -45,22 +44,22 @@
                                     <div class="col-sm-4">
                                         <div class="mission-box">
                                             <i class="fa fa-heart"></i>
-                                            <h4>Chất Lượng</h4>
-                                            <p>Cam kết cung cấp sản phẩm chất lượng cao, đáp ứng mọi nhu cầu của khách hàng.</p>
+                                            <h4>Quality</h4>
+                                            <p>Committed to providing high-quality products that meet all customer needs.</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="mission-box">
                                             <i class="fa fa-star"></i>
-                                            <h4>Dịch Vụ</h4>
-                                            <p>Mang đến trải nghiệm mua sắm trực tuyến tuyệt vời với dịch vụ chuyên nghiệp.</p>
+                                            <h4>Service</h4>
+                                            <p>Delivering an excellent online shopping experience with professional service.</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="mission-box">
                                             <i class="fa fa-shield"></i>
-                                            <h4>Uy Tín</h4>
-                                            <p>Xây dựng niềm tin với khách hàng thông qua sự minh bạch và trách nhiệm.</p>
+                                            <h4>Trust</h4>
+                                            <p>Building customer trust through transparency and responsibility.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +71,7 @@
                     <div class="team-section">
                         <h3 class="text-center">Our Team</h3>
                         <div class="row">
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <div class="team-member">
                                     <img src="~/images/about/team1.jpg" alt="Team Member" />
                                     <h4>John Doe</h4>
@@ -84,7 +83,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <div class="team-member">
                                     <img src="~/images/about/team2.jpg" alt="Team Member" />
                                     <h4>Jane Smith</h4>
@@ -96,23 +95,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <div class="team-member">
                                     <img src="~/images/about/team3.jpg" alt="Team Member" />
                                     <h4>Mike Johnson</h4>
                                     <p>Technical Lead</p>
-                                    <div class="social-icons">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="team-member">
-                                    <img src="~/images/about/team4.jpg" alt="Team Member" />
-                                    <h4>Sarah Williams</h4>
-                                    <p>Customer Support</p>
                                     <div class="social-icons">
                                         <a href="#"><i class="fa fa-facebook"></i></a>
                                         <a href="#"><i class="fa fa-twitter"></i></a>
@@ -159,8 +146,9 @@
         </div>
     </div>
 </section>
+
 <style>
-        /* About Page Styles */
+    /* About Page Styles */
     .about-page {
         padding: 40px 0;
     }
@@ -199,6 +187,12 @@
         text-align: center;
         padding: 20px;
         margin-bottom: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .mission-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .mission-box i {
@@ -220,6 +214,11 @@
     .team-member {
         text-align: center;
         margin-bottom: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-5px);
     }
 
     .team-member img {
@@ -227,6 +226,11 @@
         height: 200px;
         border-radius: 50%;
         margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .team-member:hover img {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
     .team-member h4 {
@@ -254,6 +258,7 @@
     .social-icons a:hover {
         background-color: #FE980F;
         color: #fff;
+        transform: translateY(-2px);
     }
 
     /* Contact Section */
@@ -264,28 +269,27 @@
 
     .contact-box {
         text-align: center;
-        padding: 20px;
+        padding: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .contact-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .contact-box i {
-        font-size: 30px;
+        font-size: 40px;
         color: #FE980F;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .contact-box h4 {
         color: #333;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
 
-    /* Responsive Design */
-    /* media (max-width: 768px) {
-        .about-section img {
-            margin-bottom: 20px;
-        } */
-
-        .team-member {
-            margin-bottom: 40px;
-        }
+    .contact-box p {
+        color: #666;
     }
 </style>

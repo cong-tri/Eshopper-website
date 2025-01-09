@@ -93,7 +93,8 @@
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+								<li><a asp-controller="Wishlist" asp-action="Index"><i class="fa fa-star"></i> Wishlist</a></li>
+								<li><a asp-controller="Compare" asp-action="Index"><i class="fa fa-exchange"></i> Compare</a></li>
 								<li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
 								<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
@@ -158,7 +159,33 @@
 	
 	<section>
 		<div class="container">
-			@Html.Partial("_NotificationPartial")
+			@if (TempData["Success"] != null)
+			{
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					@TempData["Success"]
+				</div>
+			}
+			@if (TempData["Info"] != null)
+			{
+				<div class="alert alert-info alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					@TempData["Info"]
+				</div>
+			}
+			@if (TempData["Error"] != null)
+			{
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					@TempData["Error"]
+				</div>
+			}
 			@RenderBody()
 		</div>
 	</section>
@@ -328,6 +355,30 @@
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
+
+	<script>
+		// Auto hide alerts after 3 seconds
+		$(document).ready(function () {
+			setTimeout(function () {
+				$(".alert").fadeOut("slow", function () {
+					$(this).remove();
+				});
+			}, 3000);
+
+			// Add loading state to forms
+			$('form').submit(function() {
+				var $submitButton = $(this).find('button[type="submit"]');
+				var originalText = $submitButton.html();
+				$submitButton.html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+				$submitButton.prop('disabled', true);
+				
+				setTimeout(function() {
+					$submitButton.html(originalText);
+					$submitButton.prop('disabled', false);
+				}, 2000);
+			});
+		});
+	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

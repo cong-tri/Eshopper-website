@@ -8,7 +8,9 @@
     ViewData["Title"] = "Detail Product";
 
     var products = ViewData["relantedProduct"] as List<Product>;
+    var ratings = Model?.ProductDetail?.Ratings as IEnumerable<Rating> ?? Enumerable.Empty<Rating>();
 }
+
 <section>
     <div class="row">
         <div class="col-sm-3">
@@ -24,7 +26,6 @@
                         <h3>ZOOM</h3>
                     </div>
                     <div id="similar-product" class="carousel slide" data-ride="carousel">
-
                         <!-- Wrapper for slides -->
                         <div class="carousel-inner">
                             <div class="item active">
@@ -42,22 +43,41 @@
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
-
                 </div>
+
                 <div class="col-sm-7">
                     <div class="product-information">
                         <!--/product-information-->
                         <h2>@Model?.ProductDetail?.PRO_Name</h2>
                         <span>
                             <span> @Model?.ProductDetail?.PRO_Price $</span>
-                            <label>Quantity: 1</label>
-                            <input type="text" value="1" />
-                            <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
-                                <i class="fa fa-shopping-cart"></i>
-                                Add to cart
-                            </a>
+                            <form asp-controller="Cart" asp-action="Add" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@Model?.ProductDetail?.PRO_ID" />
+                                <label>Quantity:</label>
+                                <input type="number" name="quantity" value="1" min="1" max="@Model?.ProductDetail?.PRO_Quantity" style="width: 60px;" />
+                                <button type="submit" class="btn btn-fefault cart">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Add to cart
+                                </button>
+                            </form>
                         </span>
-                        <p><b>Availability:</b> In Stock</p>
+                        <div class="product-actions">
+                            <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-heart"></i> Add to Wishlist
+                                </button>
+                            </form>
+                            <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
+                                <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-exchange"></i> Add to Compare
+                                </button>
+                            </form>
+                        </div>
+                        <p><b>Availability:</b> @(Model?.ProductDetail?.PRO_Quantity > 0 ? "In Stock" : "Out of Stock")</p>
                         <p><b>Condition:</b> New</p>
                         <p><b>Brand:</b>@Model?.ProductDetail?.Brand?.BRA_Name</p>
                         <p><b>Category:</b>@Model?.ProductDetail?.Category?.CAT_Name</p>
@@ -94,208 +114,193 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery3.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery2.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery4.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="tag">
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery1.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery2.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery3.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <img src="images/home/gallery4.jpg" alt="" />
-                                        <h2>$56</h2>
-                                        <p>Easy Polo Black Edition</p>
-                                        <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>  
-                        </div>
                     </div>
 
                     <div class="tab-pane fade active in" id="reviews">
                         <div class="col-sm-12">
-                            <p><b>Write Your Review</b></p>
-
-                            <form id="reviewForm" autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="post">
-                                <span>
-                                    <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
-                                    <div class="rating-stars">
-                                        <input type="radio" name="RAT_Star" value="5" id="star5" required><label for="star5"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="4" id="star4"><label for="star4"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="3" id="star3"><label for="star3"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="2" id="star2"><label for="star2"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="1" id="star1"><label for="star1"><i class="fa fa-star"></i></label>
+                            <!-- Review Summary -->
+                            <div class="review-summary">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="average-rating text-center">
+                                            <h4>Average Rating</h4>
+                                            @{
+                                                var averageRating = Model.Ratings.Any() ? Model.Ratings.Average(r => r.RAT_Star) : 0;
+                                                var totalReviews = Model.Ratings.Count;
+                                            }
+                                            <div class="rating-score">
+                                                <span class="score">@averageRating.ToString("0.0")</span>
+                                                <div class="stars">
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        if (i <= Math.Floor(averageRating))
+                                                        {
+                                                            <i class="fa fa-star"></i>
+                                                        }
+                                                        else if (i - averageRating < 1 && i - averageRating > 0)
+                                                        {
+                                                            <i class="fa fa-star-half-o"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="fa fa-star-o"></i>
+                                                        }
+                                                    }
+                                                </div>
+                                                <span class="total-reviews">(@totalReviews reviews)</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input type="text" name="RAT_Name" placeholder="Your Name" required minlength="5" maxlength="255" />
-                                    <input type="email" name="RAT_Email" placeholder="Email Address" required minlength="10" maxlength="255" />
-                                </span>
-                                <textarea name="RAT_Comment" placeholder="Your Review" minlength="5" maxlength="255"></textarea>
-                                <button type="submit" class="btn btn-default pull-right">
-                                    Submit
-                                </button>
-                            </form>
+                                    <div class="col-sm-8">
+                                        <div class="rating-breakdown">
+                                            <h4>Rating Breakdown</h4>
+                                            @for (int i = 5; i >= 1; i--)
+                                            {
+                                                var count = Model.Ratings.Count(r => r.RAT_Star == i);
+                                                var percentage = totalReviews > 0 ? (count * 100.0 / totalReviews) : 0;
+                                                <div class="rating-bar">
+                                                    <span class="star-label">@i <i class="fa fa-star"></i></span>
+                                                    <div class="progress">
+                                                        <div class="progress-bar" role="progressbar" style="width: @percentage%">
+                                                        </div>
+                                                    </div>
+                                                    <span class="count">@count</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <style>
-                                .rating-stars {
-                                    display: flex;
-                                    flex-direction: row-reverse;
-                                    justify-content: flex-end;
-                                    margin: 20px 0;
+                            <!-- Customer Reviews Section -->
+                            <div class="customer-reviews">
+                                <h4>Customer Reviews</h4>
+                                @if (Model.Ratings.Any())
+                                {
+                                    <div class="review-filters">
+                                        <select id="reviewSort" class="form-control">
+                                            <option value="newest">Newest First</option>
+                                            <option value="highest">Highest Rated</option>
+                                            <option value="lowest">Lowest Rated</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="reviewsList">
+                                        @{
+                                            var initialReviews = Model.Ratings.Take(5);
+                                            var remainingReviews = Model.Ratings.Skip(5);
+                                        }
+
+                                        @foreach (var rating in initialReviews)
+                                        {
+                                            <div class="review-item" data-rating="@rating.RAT_Star" data-date="@rating.CreatedDate.Ticks">
+                                                <div class="review-header">
+                                                    <div class="reviewer-info">
+                                                        <h5>@rating.RAT_Name</h5>
+                                                        <div class="review-date">@rating.CreatedDate.ToString("MMMM dd, yyyy")</div>
+                                                    </div>
+                                                    <div class="review-rating">
+                                                        <div class="stars-outer">
+                                                            <div class="stars-inner" style="width: @(rating.RAT_Star * 20)%"></div>
+                                                        </div>
+                                                        <span class="rating-number">@rating.RAT_Star.ToString("0.0")</span>
+                                                    </div>
+                                                </div>
+                                                <div class="review-content">
+                                                    <p>@rating.RAT_Comment</p>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        @if (remainingReviews.Any())
+                                        {
+                                            <div class="collapse" id="moreReviews">
+                                                @foreach (var rating in remainingReviews)
+                                                {
+                                                    <div class="review-item" data-rating="@rating.RAT_Star" data-date="@rating.CreatedDate.Ticks">
+                                                        <div class="review-header">
+                                                            <div class="reviewer-info">
+                                                                <h5>@rating.RAT_Name</h5>
+                                                                <div class="review-date">@rating.CreatedDate.ToString("MMMM dd, yyyy")</div>
+                                                            </div>
+                                                            <div class="review-rating">
+                                                                <div class="stars-outer">
+                                                                    <div class="stars-inner" style="width: @(rating.RAT_Star * 20)%"></div>
+                                                                </div>
+                                                                <span class="rating-number">@rating.RAT_Star.ToString("0.0")</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="review-content">
+                                                            <p>@rating.RAT_Comment</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="text-center mt-3">
+                                                <button class="btn btn-link" type="button" 
+                                                        data-toggle="collapse" 
+                                                        data-target="#moreReviews" 
+                                                        aria-expanded="false" 
+                                                        aria-controls="moreReviews"
+                                                        onclick="toggleReviewsText(this)">
+                                                    Show More Reviews
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
                                 }
-
-                                .rating-stars input {
-                                    display: none;
+                                else
+                                {
+                                    <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
                                 }
+                            </div>
 
-                                .rating-stars label {
-                                    cursor: pointer;
-                                    font-size: 25px;
-                                    color: #ddd;
-                                    padding: 5px;
-                                }
+                            <hr />
 
-                                .rating-stars label i {
-                                    transition: all 0.2s ease;
-                                }
-
-                                .rating-stars input:checked ~ label,
-                                .rating-stars label:hover,
-                                .rating-stars label:hover ~ label {
-                                    color: #FE980F;
-                                }
-
-                                .rating-stars input:checked + label:hover,
-                                .rating-stars input:checked ~ label:hover,
-                                .rating-stars input:checked ~ label:hover ~ label,
-                                .rating-stars label:hover ~ input:checked ~ label {
-                                    color: #FE980F;
-                                }
-
-                                #reviewForm input[type="text"],
-                                #reviewForm input[type="email"] {
-                                    width: 100%;
-                                    padding: 10px;
-                                    margin-bottom: 15px;
-                                    border: 1px solid #E6E4DF;
-                                }
-
-                                #reviewForm textarea {
-                                    width: 100%;
-                                    padding: 10px;
-                                    margin-bottom: 15px;
-                                    border: 1px solid #E6E4DF;
-                                    min-height: 120px;
-                                }
-                            </style>
-
-                            <script>
-                                document.getElementById('reviewForm').addEventListener('submit', function(e) {
-                                    e.preventDefault();
+                            <!-- Write Review Form -->
+                            <div class="write-review">
+                                <h4>Write Your Review</h4>
+                                <form id="reviewForm" autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="post">
+                                    <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
                                     
-                                    // Validate form
-                                    const name = this.querySelector('[name="RAT_Name"]').value;
-                                    const email = this.querySelector('[name="RAT_Email"]').value;
-                                    const comment = this.querySelector('[name="RAT_Comment"]').value;
-                                    const rating = this.querySelector('input[name="RAT_Star"]:checked');
+                                    <div class="form-group">
+                                        <label>Your Rating</label>
+                                        <div class="rating-stars">
+                                            <div class="star-rating">
+                                                <input type="radio" name="RAT_Star" value="5" id="star5" required>
+                                                <label for="star5" title="5 stars"><i class="fa fa-star"></i></label>
+                                                <input type="radio" name="RAT_Star" value="4" id="star4">
+                                                <label for="star4" title="4 stars"><i class="fa fa-star"></i></label>
+                                                <input type="radio" name="RAT_Star" value="3" id="star3">
+                                                <label for="star3" title="3 stars"><i class="fa fa-star"></i></label>
+                                                <input type="radio" name="RAT_Star" value="2" id="star2">
+                                                <label for="star2" title="2 stars"><i class="fa fa-star"></i></label>
+                                                <input type="radio" name="RAT_Star" value="1" id="star1">
+                                                <label for="star1" title="1 star"><i class="fa fa-star"></i></label>
+                                            </div>
+                                            <div class="rating-value"></div>
+                                        </div>
+                                    </div>
 
-                                    if (!rating) {
-                                        alert('Please select a rating');
-                                        return;
-                                    }
+                                    <div class="form-group">
+                                        <input type="text" name="RAT_Name" class="form-control" placeholder="Your Name" required minlength="5" maxlength="255" />
+                                    </div>
 
-                                    if (name.length < 5) {
-                                        alert('Name must be at least 5 characters long');
-                                        return;
-                                    }
+                                    <div class="form-group">
+                                        <input type="email" name="RAT_Email" class="form-control" placeholder="Email Address" required minlength="10" maxlength="255" />
+                                    </div>
 
-                                    if (email.length < 10) {
-                                        alert('Email must be at least 10 characters long');
-                                        return;
-                                    }
+                                    <div class="form-group">
+                                        <textarea name="RAT_Comment" class="form-control" placeholder="Your Review" minlength="5" maxlength="255" rows="5"></textarea>
+                                    </div>
 
-                                    if (comment.length < 5) {
-                                        alert('Review must be at least 5 characters long');
-                                        return;
-                                    }
-
-                                    // If validation passes, submit the form
-                                    this.submit();
-                                });
-                            </script>
+                                    <button type="submit" class="btn btn-primary">
+                                        Submit Review
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div><!--/category-tab-->
 
@@ -315,62 +320,244 @@
                                                 <img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name" />
                                                 <h2>@item.PRO_Price $</h2>
                                                 <p>@item.PRO_Name</p>
-                                                <button asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                                <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             }
                         </div>
-                        @* <div class="item">
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/home/recommend1.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/home/recommend2.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/home/recommend3.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> *@
                     </div>
-                    <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                 </div>
             </div><!--/recommended_items-->
-
         </div>
     </div>
 </section>
+
+<style>
+    .review-summary {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 30px;
+    }
+
+    .rating-score {
+        margin: 20px 0;
+    }
+
+    .score {
+        font-size: 48px;
+        font-weight: bold;
+        color: #FE980F;
+    }
+
+    .stars {
+        margin: 10px 0;
+        color: #FE980F;
+    }
+
+    .rating-bar {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+    }
+
+    .star-label {
+        width: 50px;
+        color: #FE980F;
+    }
+
+    .progress {
+        flex-grow: 1;
+        margin: 0 10px;
+        height: 10px;
+    }
+
+    .progress-bar {
+        background-color: #FE980F;
+    }
+
+    .count {
+        width: 30px;
+        text-align: right;
+    }
+
+    .review-filters {
+        margin-bottom: 20px;
+    }
+
+    .review-item {
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .reviewer-info h5 {
+        margin: 0;
+        color: #333;
+    }
+
+    .review-date {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .review-rating {
+        color: #FE980F;
+    }
+
+    .review-content {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .write-review {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .stars-outer {
+        position: relative;
+        display: inline-block;
+        color: #ddd;
+    }
+
+    .stars-outer::before {
+        content: "★★★★★";
+        font-size: 20px;
+    }
+
+    .stars-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #FE980F;
+    }
+
+    .stars-inner::before {
+        content: "★★★★★";
+        font-size: 20px;
+    }
+
+    .rating-number {
+        margin-left: 10px;
+        font-weight: bold;
+        color: #FE980F;
+    }
+
+    .btn-link {
+        color: #FE980F;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-link:hover {
+        color: #e88a02;
+        text-decoration: none;
+    }
+
+    .mt-3 {
+        margin-top: 15px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+
+    .star-rating label {
+        cursor: pointer;
+        font-size: 24px;
+        color: #ddd;
+        transition: all 0.2s ease;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input[type="radio"]:checked ~ label {
+        color: #FE980F;
+    }
+
+    .star-rating label:hover i,
+    .star-rating label:hover ~ label i,
+    .star-rating input[type="radio"]:checked ~ label i {
+        transform: scale(1.1);
+    }
+
+    .rating-stars {
+        position: relative;
+        padding: 10px 0;
+    }
+
+    .rating-value {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+
+<script>
+    document.getElementById('reviewSort').addEventListener('change', function() {
+        const reviewsList = document.getElementById('reviewsList');
+        const reviews = Array.from(reviewsList.getElementsByClassName('review-item'));
+        
+        reviews.sort((a, b) => {
+            if (this.value === 'newest') {
+                return b.dataset.date - a.dataset.date;
+            } else if (this.value === 'highest') {
+                return b.dataset.rating - a.dataset.rating;
+            } else {
+                return a.dataset.rating - b.dataset.rating;
+            }
+        });
+        
+        reviews.forEach(review => reviewsList.appendChild(review));
+    });
+
+    function toggleReviewsText(button) {
+        if (button.getAttribute('aria-expanded') === 'true') {
+            button.textContent = 'Show More Reviews';
+        } else {
+            button.textContent = 'Show Less Reviews';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratingInputs = document.querySelectorAll('.star-rating input[type="radio"]');
+        const ratingValue = document.querySelector('.rating-value');
+
+        ratingInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                ratingValue.textContent = `You selected ${this.value} star${this.value > 1 ? 's' : ''}`;
+            });
+        });
+    });
+</script>
 

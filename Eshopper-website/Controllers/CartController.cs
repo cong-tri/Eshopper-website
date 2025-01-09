@@ -1,10 +1,12 @@
 ﻿using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Eshopper_website.Controllers
 {
@@ -165,5 +167,57 @@ namespace Eshopper_website.Controllers
             TempData["success"] = "Remove all products out of cart successfully.";
             return RedirectToAction("Index");
 		}
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(string couponCode)
+        {
+            if (string.IsNullOrEmpty(couponCode))
+            {
+                TempData["error"] = "Please enter a coupon code.";
+                return RedirectToAction("Index");
+            }
+
+            var coupon = await _context.Coupons
+                .FirstOrDefaultAsync(c => c.COUP_Name == couponCode && c.COUP_Status == CouponStatusEnum.Active);
+
+            if (coupon == null)
+            {
+                TempData["error"] = "Invalid coupon code or coupon is not active.";
+                return RedirectToAction("Index");
+            }
+
+            if (coupon.COUP_DateExpire < DateTime.Now)
+            {
+                TempData["error"] = "This coupon has expired.";
+                return RedirectToAction("Index");
+            }
+
+            if (coupon.COUP_Quantity <= 0)
+            {
+                TempData["error"] = "This coupon is no longer available.";
+                return RedirectToAction("Index");
+            }
+
+            // Get cart items
+            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+            decimal grandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price);
+
+            // Store coupon info in session
+            HttpContext.Session.SetString("CouponCode", couponCode);
+            HttpContext.Session.SetDecimal("DiscountAmount", grandTotal * 0.1m); // 10% discount
+
+            TempData["success"] = "Coupon applied successfully!";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveCoupon()
+        {
+            HttpContext.Session.Remove("CouponCode");
+            HttpContext.Session.Remove("DiscountAmount");
+            
+            TempData["success"] = "Coupon removed successfully!";
+            return RedirectToAction("Index");
+        }
 	}
 }

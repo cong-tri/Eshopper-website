@@ -1,4 +1,5 @@
 ﻿@using Eshopper_website.Models.ViewModels
+@using Eshopper_website.Utils.Extension
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -6,6 +7,53 @@
 @{
 	ViewData["Title"] = "Cart";
 }
+
+<style>
+.coupon-form {
+    margin-bottom: 20px;
+}
+
+.coupon-form .input-group {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.coupon-form input {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 4px 0 0 4px;
+}
+
+.coupon-form button {
+    background: #FE980F;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 0 4px 4px 0;
+    transition: all 0.3s ease;
+}
+
+.coupon-form button:hover {
+    background: #e88a02;
+}
+
+.coupon-info {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.coupon-info p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.coupon-info .btn-danger {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+</style>
 
 <section id="cart_items">
 	<div class="container">
@@ -63,12 +111,21 @@
 						}
 						<tr>
 							<td colspan="5">
-								<p>Grand Total: $@Model.GrandTotal</p>
+								<p>Subtotal: $@Model.GrandTotal</p>
+								@if (!string.IsNullOrEmpty(Context.Session.GetString("CouponCode")))
+								{
+									<p>Discount: -$@Context.Session.GetDecimal("DiscountAmount")</p>
+									<p>Final Total: $@(Model.GrandTotal - Context.Session.GetDecimal("DiscountAmount"))</p>
+								}
+								else
+								{
+									<p>Final Total: $@Model.GrandTotal</p>
+								}
 							</td>
 							<td class="text-center">
 								<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
 								<a asp-action="Checkout" asp-controller="Cart" class="btn btn-success">Checkout</a>
-                            </td>
+							</td>
 						</tr>
 					}
 					else
@@ -93,58 +150,20 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-6">
-				<div class="chose_area">
-					<ul class="user_option">
-						<li>
-							<input type="checkbox">
-							<label>Use Coupon Code</label>
-						</li>
-						<li>
-							<input type="checkbox">
-							<label>Use Gift Voucher</label>
-						</li>
-						<li>
-							<input type="checkbox">
-							<label>Estimate Shipping & Taxes</label>
-						</li>
-					</ul>
-					<ul class="user_info">
-						<li class="single_field">
-							<label>Country:</label>
-							<select>
-								<option>United States</option>
-								<option>Bangladesh</option>
-								<option>UK</option>
-								<option>India</option>
-								<option>Pakistan</option>
-								<option>Ucrane</option>
-								<option>Canada</option>
-								<option>Dubai</option>
-							</select>
-
-						</li>
-						<li class="single_field">
-							<label>Region / State:</label>
-							<select>
-								<option>Select</option>
-								<option>Dhaka</option>
-								<option>London</option>
-								<option>Dillih</option>
-								<option>Lahore</option>
-								<option>Alaska</option>
-								<option>Canada</option>
-								<option>Dubai</option>
-							</select>
-
-						</li>
-						<li class="single_field zip-field">
-							<label>Zip Code:</label>
-							<input type="text">
-						</li>
-					</ul>
-					<a class="btn btn-default update" href="">Get Quotes</a>
-					<a class="btn btn-default check_out" href="">Continue</a>
+				<div class="coupon-section" style="margin: 20px 0;">
+					<input type="text" class="form-control" id="couponCode" name="couponCode" placeholder="Enter coupon code" style="margin-bottom: 10px;">
+					<button type="button" class="btn btn-primary" onclick="applyCoupon()" style="padding: 8px 20px;">Apply Coupon</button>
 				</div>
+				@if (!string.IsNullOrEmpty(Context.Session.GetString("CouponCode")))
+				{
+					<div class="coupon-info">
+						<p>Applied Coupon: @Context.Session.GetString("CouponCode")</p>
+						<p>Discount Amount: $@Context.Session.GetDecimal("DiscountAmount")</p>
+						<form asp-action="RemoveCoupon" method="post" style="display: inline;">
+							<button type="submit" class="btn btn-sm btn-danger">Remove Coupon</button>
+						</form>
+					</div>
+				}
 			</div>
 			<div class="col-sm-6">
 				<div class="total_area">
