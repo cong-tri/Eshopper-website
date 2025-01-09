@@ -1,39 +1,56 @@
 ﻿@model Eshopper_website.Areas.Admin.DTOs.request.ProfileDTO
 @{
     ViewData["Title"] = "Profile";
+    var orderHistory = ViewData["OrderHistory"] as List<Order> ?? [];
 }
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                        <div class="mt-3">
+                            <h4>@Model.ACC_DisplayName</h4>
+                            <p class="text-secondary mb-1">@Model.MEM_Phone</p>
+                            <p class="text-muted font-size-sm">@Model.MEM_Address</p>
+                            <button class="btn btn-primary">Follow</button>
+                            <button class="btn btn-outline-primary">Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card mb-3">
                 <div class="card-header">
                     <h1>Profile User</h1>
                 </div>
                 <div class="card-body">
-                    <form action="Edit" asp-controller="Account" method="post">
+                    <form asp-action="Edit" asp-controller="Account">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input asp-for="ACC_ID" type="hidden" />
                         <input asp-for="MEM_ID" type="hidden" />
-                        <div class="row align-items-center justity-content-between">
-                            <div class="col-md-5 form-group">
+                        <div class="row align-items-center">
+                            <div class="col-md-6 form-group">
                                 <label class="form-label" asp-for="ACC_DisplayName"></label>
-                                <input asp-for="ACC_DisplayName" type="text" class="form-control"/>
+                                <input asp-for="ACC_DisplayName" type="text" class="form-control" maxlength="30" />
                                 <span asp-validation-for="ACC_DisplayName" class="text-danger"></span>
                             </div>
-                            <div class="col-md-5 form-group">
+                            <div class="col-md-6 form-group">
                                 <label class="form-label" asp-for="MEM_Phone"></label>
                                 <input asp-for="MEM_Phone" type="tel" class="form-control" maxlength="11" />
                                 <span asp-validation-for="MEM_Phone" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row align-items-center justity-content-between">
-                            <div class="col-md-5 form-group">
+                            <div class="col-md-6 form-group">
                                 <label class="form-label" asp-for="MEM_Email"></label>
-                                <input asp-for="MEM_Email" type="email" class="form-control" />
+                                <input asp-for="MEM_Email" type="email" class="form-control" maxlength="25" />
                                 <span asp-validation-for="MEM_Email" class="text-danger"></span>
                             </div>
-                            <div class="col-md-5 form-group">
+                            <div class="col-md-6 form-group">
                                 <label class="form-label" asp-for="MEM_Gender"></label>
                                 <select asp-for="MEM_Gender" class="form-select">
                                     <option value="1">Other</option>
@@ -44,16 +61,21 @@
                             </div>
                         </div>
                         <div class="row align-items-center justity-content-between">
-                            <div class="col-md-5 form-group">
+                            <div class="col-md-6 form-group">
                                 <label class="form-label" asp-for="MEM_FirstName"></label>
-                                <input asp-for="MEM_FirstName" type="text" class="form-control" />
+                                <input asp-for="MEM_FirstName" type="text" class="form-control" maxlength="25" />
                                 <span asp-validation-for="MEM_FirstName" class="text-danger"></span>
                             </div>
-                            <div class="col-md-5 form-group">
+                            <div class="col-md-6 form-group">
                                 <label class="form-label" asp-for="MEM_LastName"></label>
-                                <input asp-for="MEM_LastName" type="text" class="form-control" maxlength="11" />
+                                <input asp-for="MEM_LastName" type="text" class="form-control" maxlength="25" />
                                 <span asp-validation-for="MEM_LastName" class="text-danger"></span>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" asp-for="MEM_Address"></label>
+                            <input asp-for="MEM_Address" type="text" class="form-control" />
+                            <span asp-validation-for="MEM_Address" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-primary w-100" />
@@ -62,61 +84,77 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h6 class="mb-0">Full Name</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            Kenneth Valdez
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h6 class="mb-0">Email</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            fip@jukmuh.al
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h6 class="mb-0">Phone</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            (239) 816-9029
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h6 class="mb-0">Mobile</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            (320) 380-4539
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h6 class="mb-0">Address</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            Bay Area, San Francisco, CA
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
-                        </div>
-                    </div>
-                </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-md"><h3 class="card-title">Orders History</h3></div>
             </div>
         </div>
-    </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hovered table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                OrderCode
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                ShippingCost
+                            </th>
+                            <th>
+                                Coupon Code
+                            </th>
+                            <th>
+                                Payment Method
+                            </th>
+                            <th>
+                                Total Price
+                            </th>
+                            <th>
+                                Date Purchased
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in orderHistory)
+                        {
+                            <tr>
+                                <td>
+                                    @item.ORD_OrderCode
+                                </td>
+                                <td>
+                                    @item.ORD_Description
+                                </td>
+                                <td>
+                                    @item.ORD_Status
+                                </td>
+                                <td>
+                                    @item.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
+                                </td>
+                                <td>
+                                    @item.ORD_CouponCode
+                                </td>
+                                <td>
+                                    @item.ORD_PaymentMethod
+                                </td>
+                                <td>
+                                    @item.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
+                                </td>
+                                <td>
+                                    @item.CreatedDate
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- /.card-body -->
+    </div> <!-- /.card -->
 </div>

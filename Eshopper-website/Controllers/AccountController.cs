@@ -33,27 +33,42 @@ namespace Eshopper_website.Controllers
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
             }
 
-            var historyOrder = _context.Orders.AsNoTracking()
+            ViewData["OrderHistory"] = await _context.Orders.AsNoTracking()
                 .Include(x => x.Member)
-                .Where(x => x.MEM_ID == profile.MEM_ID).FirstOrDefaultAsync();
+                .Where(x => x.MEM_ID == profile.MEM_ID).ToListAsync();
 
-            return View();
+            var profileDTO = new ProfileDTO()
+            {
+                ACC_ID = userInfo.ACC_ID,
+                MEM_ID = userInfo.MEM_ID,
+                ACC_DisplayName = userInfo.ACC_DisplayName,
+                MEM_Email = profile.MEM_Email,
+                MEM_Phone = profile.MEM_Phone,
+                MEM_Address = profile.MEM_Address,
+                MEM_FirstName = profile.MEM_FirstName,
+                MEM_LastName = profile.MEM_LastName,
+                MEM_Gender = profile.MEM_Gender,
+            };
+
+            return View(profileDTO);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [FromForm] ProfileDTO request)
+        public async Task<IActionResult> Edit([FromForm] ProfileDTO request)
         {
-            if (id != request.ACC_ID)
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
+            if (userInfo?.ACC_ID != request.ACC_ID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                var account = await _context.Accounts.FirstOrDefaultAsync(m => m.ACC_ID == request.ACC_ID);
+                var account = await _context.Accounts.FindAsync(request.ACC_ID);
 
-                var member = _context.Members.FirstOrDefaultAsync(x => x.MEM_ID == request.MEM_ID);
+                var member = await _context.Members.FindAsync(request.MEM_ID);
 
                 if (account == null || member == null) 
                 {
@@ -62,13 +77,30 @@ namespace Eshopper_website.Controllers
                 }
                 try
                 {
-                    _context.Update(member);
+                    member.MEM_Gender = request.MEM_Gender;
+                    member.MEM_FirstName = request.MEM_FirstName;
+                    member.MEM_LastName = request.MEM_LastName;
+                    member.MEM_Email = request.MEM_Email;
+                    member.MEM_Phone = request.MEM_Phone;
+                    account.ACC_Phone = request.MEM_Phone;
+                    account.ACC_Email = request.MEM_Email;
+                    account.ACC_DisplayName = request.ACC_DisplayName ?? "";
+
+                    _context.Members.Update(member);
+                    _context.Accounts.Update(account);
                     await _context.SaveChangesAsync();
+
+                    var user = new UserInfo(account, member.ACR_ID, member.MEM_ID);
+                    HttpContext.Session.Set<UserInfo>("userInfo", user);
+
+                    TempData["success"] = "Update profile successful.";
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!MemberExists(request.MEM_ID) || !AccountExists(request.ACC_ID))
                     {
+                        ViewData["Message"] = "Account and member not found.";
                         return NotFound();
                     }
                     else

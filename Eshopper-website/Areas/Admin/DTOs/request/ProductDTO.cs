@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace FruitShop.Areas.Admin.DTOs.request
+namespace Eshopper_website.Areas.Admin.DTOs.request
 {
     public class ProductDTO
     {
@@ -26,7 +26,7 @@ namespace FruitShop.Areas.Admin.DTOs.request
 
         public required int PRO_Quantity { get; set; }
 
-        public required ProductStatusEnum PRO_Status { get; set; }
+        public required ProductStatusEnum PRO_Status { get; set; } = ProductStatusEnum.InStock;
 
         public required decimal PRO_CapitalPrice { get; set; }
     }

@@ -1,7 +1,8 @@
 ﻿@model Eshopper_website.Models.Product
 
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "Product - Create";
+    ViewData["Active"] = "Product";
 }
 
 @section Headers {
@@ -116,12 +117,7 @@
                                     <label asp-for="PRO_Status" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    @Html.DropDownListFor(
-                                             model => model.PRO_Status, (IEnumerable<SelectListItem>)ViewData["ProductStatus"],
-                                        "Select Status",
-                                        new { @class = "form-select" }
-                                    )
-
+                                    <select asp-for="PRO_Status" class="form-select" asp-items="ViewBag.ProductStatus"></select>
                                     <span asp-validation-for="PRO_Status" class="text-danger"></span>
                                 </div>
                             </div>

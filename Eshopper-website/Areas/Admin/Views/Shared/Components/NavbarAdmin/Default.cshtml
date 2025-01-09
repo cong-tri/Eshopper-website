@@ -6,7 +6,7 @@
         @foreach (var item in Model)
         {
              <li class="nav-item">
-                <a asp-action="Index" asp-controller="@item.MEN_Controller" class="nav-link @(ViewData["Active"] == item.MEN_Controller.ToString() ? "active" : "")">
+                <a asp-action="Index" asp-controller="@item.MEN_Controller" class="nav-link @(item.MEN_Controller.Equals(ViewData["Active"]) ? "active" : "")">
                     <i class="nav-icon @item.MEN_Icon"></i>
                     <p>
                         @item.MEN_Title

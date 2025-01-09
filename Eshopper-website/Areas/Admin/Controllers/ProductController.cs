@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum;
-using FruitShop.Areas.Admin.DTOs.request;
 using Eshopper_website.Utils.Extension;
+using Eshopper_website.Areas.Admin.DTOs.request;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -27,8 +27,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Product
         public async Task<IActionResult> Index(int pg = 1)
         {
-            //var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
-            //return View(await eShopperContext.ToListAsync());
             List<Product> product = await _context.Products.Include(x => x.Category).Include(x => x.Brand).ToListAsync();
 
             const int pageSize = 10;
@@ -74,13 +72,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Product/Create
         public IActionResult Create()
         {
-			ViewData["ProductStatus"] = Enum.GetValues(typeof(ProductStatusEnum))
+            ViewData["ProductStatus"] = new SelectList(Enum.GetValues(typeof(ProductStatusEnum))
                 .Cast<ProductStatusEnum>()
-				.Select(e => new SelectListItem
+                .Select(e => new SelectListItem
                 {
-					Value = ((int)e).ToString(),
-					Text = e.ToString()
-				}).ToList();
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }), "Value", "Text");
 
 			ViewData["BRA_ID"] = new SelectList(
                 _context.Brands.Where(x => x.BRA_Status.ToString() == "Active"), "BRA_ID", "BRA_Name"
@@ -100,7 +98,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
         public async Task<IActionResult> Create([FromForm] ProductDTO request)
         {
             var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
-            var username = userInfo != null ? userInfo.ACC_Username : "";
 
             var product = new Product
             {
@@ -114,32 +111,43 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 PRO_CapitalPrice = request.PRO_CapitalPrice,
                 PRO_Status = request.PRO_Status,
                 PRO_Sold = 0,
-                CreatedBy = username,
+                CreatedBy = userInfo?.ACC_Username,
                 CreatedDate = DateTime.Now
             };
+
+            ViewData["ProductStatus"] = new SelectList(Enum.GetValues(typeof(ProductStatusEnum))
+                .Cast<ProductStatusEnum>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }), "Value", "Text");
+
+            ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", product.BRA_ID);
+            ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", product.CAT_ID);
 
             if (product.PRO_Price <= product.PRO_CapitalPrice)
             {
                 ModelState.AddModelError("PRO_Price", "Price must be higher than Capital Price");
-                ViewData["Message"] = "Price must be higher than Capital Price";
+                return View(product);
             }
             
             if (product.PRO_Quantity < 20 && product.PRO_Status != ProductStatusEnum.LowStock)
             {
                 ModelState.AddModelError("PRO_Status", "Products with quantity less than 20 must have 'LowStock' status");
-                ViewData["Message"] = "Products with quantity less than 20 must have 'LowStock' status";
+                return View(product);
             }
             
             if (product.PRO_Price > 1000000)
             {
                 ModelState.AddModelError("PRO_Price", "Product price cannot exceed $1,000,000");
-                ViewData["Message"] = "Product price cannot exceed $1,000,000";
+                return View(product);
             }
             
             if (product.PRO_CapitalPrice > 500000)
             {
                 ModelState.AddModelError("PRO_CapitalPrice", "Capital price cannot exceed $500,000");
-                ViewData["Message"] = "Capital price cannot exceed $500,000";
+                return View(product);
             }
 
             if (ModelState.IsValid)
@@ -163,10 +171,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
             else
             {
-                TempData["error"] = "Failed to add product something wrong !";
+                TempData["error"] = "Failed to add product something wrong!";
             }
-            ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", product.BRA_ID);
-            ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", product.CAT_ID);
 
             return View(product);
         }
