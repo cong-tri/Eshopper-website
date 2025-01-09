@@ -15,12 +15,12 @@ namespace Eshopper_website.Models.Components
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(
-                await _context.Menus.AsNoTracking()
+            var menus = await _context.Menus.AsNoTracking()
                 .Where(x => x.MEN_Status == MenuStatusEnum.Admin)
                 .OrderBy(x => x.MEN_DisplayOrder)
-                .ToListAsync()
-            );
+                .ToListAsync();
+
+            return View(menus);
         }
     }
 }

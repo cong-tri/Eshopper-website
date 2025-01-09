@@ -43,13 +43,14 @@ CREATE TABLE Products(
 	CAT_ID				INT					NOT NULL,
 	BRA_ID				INT					NOT NULL,
 	PRO_Name			NVARCHAR(255)		NOT NULL,
-	PRO_Description		NVARCHAR(255)		NOT NULL,
+	PRO_Description		NTEXT				NOT NULL,
 	PRO_Slug			NVARCHAR(255)		NULL,
 	PRO_Price			MONEY				NOT NULL,
 	PRO_Image			VARCHAR(255)		NULL,
 	PRO_Quantity		INT					NOT NULL,
 	PRO_Status			INT					NOT NULL CHECK(PRO_Status BETWEEN 1 AND 5), 
 	PRO_CapitalPrice	MONEY				NOT NULL,
+	PRO_Sold			INT					NOT NULL,
 	CreatedDate         DATETIME			NULL,
 	CreatedBy           VARCHAR(255)        NULL,
 	UpdatedDate         DATETIME            NULL,
@@ -57,6 +58,9 @@ CREATE TABLE Products(
 	CONSTRAINT PK_PRODUCTS PRIMARY KEY (PRO_ID)
 )
 GO
+
+--ALTER TABLE Products
+--ADD PRO_Sold INT NOT NULL DEFAULT 0;
 /* FOR PRO_Status: 1: In Stock; 2: Out of Stock; 3: Low Stock; 4: Back Order; 5: Pre-Order*/
 
 /* CREATE FOREIGN KEY TO TABLE Categories*/
@@ -138,8 +142,11 @@ CREATE TABLE Menus (
    MEN_ID               INT                  IDENTITY(1, 1),
    PARENT_ID            INT                  NULL,
    MEN_Title            NVARCHAR(255)        NOT NULL,
-   MEN_Url              VARCHAR(255)         NULL,
    MEN_DisplayOrder     INT                  NOT NULL,
+   MEN_Icon				VARCHAR(255)		 NULL,
+   MEN_Status			INT					 NOT NULL,
+   -- 1: USER, 2: ADMIN
+   MEN_Controller		NVARCHAR(255)		 NOT NULL,
    CreatedDate          DATETIME             NULL,
    CreatedBy            VARCHAR(255)         NULL,
    UpdatedDate          DATETIME             NULL,
@@ -155,6 +162,7 @@ ALTER TABLE Menus
    ADD CONSTRAINT FK_MENUS_RELATIONS_MENUS FOREIGN KEY (PARENT_ID)
       REFERENCES Menus (MEN_ID)
 GO
+
 ----- END TABLE Menus -------
 
 ----- START TABLE Banners -----
@@ -205,12 +213,22 @@ CREATE TABLE Accounts (
 ALTER TABLE Accounts
 	ADD CONSTRAINT UQ_ACC_Email UNIQUE (ACC_Email);
 
+ALTER TABLE Accounts
+	ADD CONSTRAINT UQ_ACC_Phone UNIQUE (ACC_Phone);
+
+ALTER TABLE Accounts
+	ADD CONSTRAINT UQ_ACC_DisplayName UNIQUE (ACC_DisplayName);
+
+ALTER TABLE Accounts
+	ADD CONSTRAINT UQ_ACC_Username UNIQUE (ACC_Username);
 -----END TABLE Accounts-----
 
 -----START TABLE AccountStatusLogins-----
+
 CREATE TABLE AccountStatusLogins (
 	ACSL_ID					  INT					IDENTITY(1,1),
 	ACC_ID					  INT					NOT NULL,
+	ACSL_JwtToken			  NVARCHAR(MAX)			NOT NULL,
 	ACSL_Status				  INT					NOT NULL,
 	--- Active = 1, Inactive = 2
 	ACSL_DatetimeLogin		  DATETIME				NOT NULL,
@@ -223,6 +241,21 @@ CREATE TABLE AccountStatusLogins (
 	FOREIGN KEY(ACC_ID) REFERENCES Accounts(ACC_ID)
 )
 -----END TABLE AccountStatusLogins-----
+
+-----START TABLE AccountLogins-----
+CREATE TABLE AccountLogins (
+    LoginProvider			NVARCHAR (100)		NOT NULL,
+    ProviderKey				NVARCHAR (100)		NOT NULL,
+    ProviderDisplayName		NVARCHAR (255)		NULL,
+    ACC_ID					INT					NOT NULL,
+	CreatedDate			    datetime            null,
+	CreatedBy				varchar(255)		null,
+	UpdatedDate				datetime            null,
+	UpdatedBy               varchar(255)        null,
+    CONSTRAINT PK_ACCOUNTLOGINS PRIMARY KEY CLUSTERED (LoginProvider ASC, ProviderKey ASC),
+    FOREIGN KEY(ACC_ID) REFERENCES Accounts(ACC_ID)
+);
+-----END TABLE AccountLogins-----
 
 -----START TABLE Members-----
 CREATE TABLE Members (
@@ -247,7 +280,11 @@ CREATE TABLE Members (
    FOREIGN KEY(ACC_ID) REFERENCES Accounts(ACC_ID),
    FOREIGN KEY(ACR_ID) REFERENCES AccountRoles(ACR_ID)
 )
+ALTER TABLE Members
+	ADD CONSTRAINT UQ_MEM_Email UNIQUE (MEM_Email);
 
+ALTER TABLE Members
+	ADD CONSTRAINT UNIQUE_MEMBER_PHONE UNIQUE (MEM_Phone);
 -----END TABLE Members-----
 
 ----- START TABLE Orders ------
@@ -260,6 +297,7 @@ CREATE TABLE Orders(
 	ORD_ShippingCost	MONEY				NOT NULL,
 	ORD_CouponCode		VARCHAR(255)		NULL,
 	ORD_PaymentMethod	INT					NULL CHECK(ORD_PaymentMethod BETWEEN 1 AND 11),
+	ORD_TotalPrice		MONEY				NOT NULL,
 	CreatedDate         DATETIME			NULL,
 	CreatedBy           VARCHAR(255)        NULL,
 	UpdatedDate         DATETIME            NULL,
@@ -268,6 +306,8 @@ CREATE TABLE Orders(
 	FOREIGN KEY(MEM_ID) REFERENCES Members(MEM_ID)
 )
 
+--ALTER TABLE Orders
+--ADD ORD_TotalPrice MONEY NOT NULL DEFAULT 0;
 
 /* FOR ORD_Status:
 	1: Pending; 2: Confirmed; 3: Processing; 4: Completed; 
@@ -470,109 +510,6 @@ CREATE TABLE Blogs (
 	CONSTRAINT PK_BLOGS PRIMARY KEY (BLG_ID)
 );
 
-------- START TABLE NetUsers ------
---CREATE TABLE [dbo].[AspNetUsers] (
---    [Id]                   NVARCHAR (450)     NOT NULL,
---    [Occupation]           NVARCHAR (255)     NULL,
---    [UserName]             NVARCHAR (256)     NULL,
---    [NormalizedUserName]   NVARCHAR (256)     NULL,
---    [Email]                NVARCHAR (256)     NULL,
---    [NormalizedEmail]      NVARCHAR (256)     NULL,
---    [EmailConfirmed]       BIT                NOT NULL,
---    [PasswordHash]         NVARCHAR (MAX)     NULL,
---    [SecurityStamp]        NVARCHAR (MAX)     NULL,
---    [ConcurrencyStamp]     NVARCHAR (MAX)     NULL,
---    [PhoneNumber]          NVARCHAR (MAX)     NULL,
---    [PhoneNumberConfirmed] BIT                NOT NULL,
---    [TwoFactorEnabled]     BIT                NOT NULL,
---    [LockoutEnd]           DATETIMEOFFSET (7) NULL,
---    [LockoutEnabled]       BIT                NOT NULL,
---    [AccessFailedCount]    INT                NOT NULL,
---    CONSTRAINT [PK_AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC)
---);
---GO
-
---CREATE NONCLUSTERED INDEX [EmailIndex]
---    ON [dbo].[AspNetUsers]([NormalizedEmail] ASC);
---GO
-
---CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex]
---    ON [dbo].[AspNetUsers]([NormalizedUserName] ASC) WHERE ([NormalizedUserName] IS NOT NULL);
---GO
-
---CREATE TABLE [dbo].[AspNetRoleClaims] (
---    [Id]         INT            IDENTITY (1, 1) NOT NULL,
---    [RoleId]     NVARCHAR (450) NOT NULL,
---    [ClaimType]  NVARCHAR (MAX) NULL,
---    [ClaimValue] NVARCHAR (MAX) NULL,
---    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY CLUSTERED ([Id] ASC),
---    CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [dbo].[AspNetRoles] ([Id]) ON DELETE CASCADE
---);
---GO
-
---CREATE NONCLUSTERED INDEX [IX_AspNetRoleClaims_RoleId]
---    ON [dbo].[AspNetRoleClaims]([RoleId] ASC);
-
---CREATE TABLE [dbo].[AspNetRoles] (
---    [Id]               NVARCHAR (450) NOT NULL,
---    [Name]             NVARCHAR (256) NULL,
---    [NormalizedName]   NVARCHAR (256) NULL,
---    [ConcurrencyStamp] NVARCHAR (MAX) NULL,
---    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY CLUSTERED ([Id] ASC)
---);
---GO
-
---CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex]
---    ON [dbo].[AspNetRoles]([NormalizedName] ASC) WHERE ([NormalizedName] IS NOT NULL);
-
---CREATE TABLE [dbo].[AspNetUserClaims] (
---    [Id]         INT            IDENTITY (1, 1) NOT NULL,
---    [UserId]     NVARCHAR (450) NOT NULL,
---    [ClaimType]  NVARCHAR (MAX) NULL,
---    [ClaimValue] NVARCHAR (MAX) NULL,
---    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY CLUSTERED ([Id] ASC),
---    CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE
---);
---GO
-
---CREATE NONCLUSTERED INDEX [IX_AspNetUserClaims_UserId]
---    ON [dbo].[AspNetUserClaims]([UserId] ASC);
-
---CREATE TABLE [dbo].[AspNetUserLogins] (
---    [LoginProvider]       NVARCHAR (450) NOT NULL,
---    [ProviderKey]         NVARCHAR (450) NOT NULL,
---    [ProviderDisplayName] NVARCHAR (MAX) NULL,
---    [UserId]              NVARCHAR (450) NOT NULL,
---    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY CLUSTERED ([LoginProvider] ASC, [ProviderKey] ASC),
---    CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE
---);
---GO
-
---CREATE NONCLUSTERED INDEX [IX_AspNetUserLogins_UserId]
---    ON [dbo].[AspNetUserLogins]([UserId] ASC);
-
---CREATE TABLE [dbo].[AspNetUserRoles] (
---    [UserId] NVARCHAR (450) NOT NULL,
---    [RoleId] NVARCHAR (450) NOT NULL,
---    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY CLUSTERED ([UserId] ASC, [RoleId] ASC),
---    CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [dbo].[AspNetRoles] ([Id]) ON DELETE CASCADE,
---    CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE
---);
---GO
-
---CREATE NONCLUSTERED INDEX [IX_AspNetUserRoles_RoleId]
---    ON [dbo].[AspNetUserRoles]([RoleId] ASC);
-
---CREATE TABLE [dbo].[AspNetUserTokens] (
---    [UserId]        NVARCHAR (450) NOT NULL,
---    [LoginProvider] NVARCHAR (450) NOT NULL,
---    [Name]          NVARCHAR (450) NOT NULL,
---    [Value]         NVARCHAR (MAX) NULL,
---    CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY CLUSTERED ([UserId] ASC, [LoginProvider] ASC, [Name] ASC),
---    CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE
---);
-
-------- END TABLE NetUsers ------
 
 INSERT INTO Categories (CAT_Name, CAT_Description, CAT_Slug, CAT_DisplayOrder, CAT_Status, CreatedDate, CreatedBy, UpdatedDate, UpdatedBy) VALUES
 ('PC', 'Computer', 'PC', 1, 1, '2024-12-01', 'admin', '2024-12-01', 'admin'),															     
@@ -615,4 +552,7 @@ INSERT INTO Accounts VALUES
 INSERT INTO Members(ACC_ID, ACR_ID, MEM_LastName, MEM_FirstName, MEM_Gender, MEM_Phone, MEM_Email, MEM_Address, MEM_Status, CreatedDate, CreatedBy, UpdatedDate,  UpdatedBy) VALUES
 (1, 2, 'Cong Tri', 'Dao', 2, '0326034561', 'daocongtri20031609@gmail.com', '999 Le Duc Tho P16 Q.Go Vap', 1, '2024-12-16', 'admin', '2024-12-16', 'admin'),
 (2, 2, 'Quynh Nhu', 'Luong', 3, '0981015452', 'luongquynhnhu0908@gmail.com', '2276/10 QL1A Tô Ký Q.12', 1, '2024-12-16', 'admin', '2024-12-16', 'admin'),
-(3, 1, 'Huu Thien', 'Doan', 2, '0326034561', 'admin2@gmail.com', '', 1, '2024-12-16', 'admin', '2024-12-16', 'admin')
+(3, 1, 'Huu Thien', 'Doan', 2, '1234567891', 'admin2@gmail.com', '', 1, '2024-12-16', 'admin', '2024-12-16', 'admin')
+
+SELECT O.ORD_OrderCode, O.ORD_ID, ORDE_ID, OD.PRO_ID, ORDE_Price, ORDE_Quantity FROM OrderDetails OD, Orders O
+WHERE OD.ORD_ID = O.ORD_ID AND O.ORD_ID = 5

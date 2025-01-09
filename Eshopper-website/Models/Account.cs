@@ -49,5 +49,6 @@ namespace Eshopper_website.Models
 
         public virtual ICollection<Member>? Members { get; set; }
         public virtual ICollection<AccountStatusLogin>? AccountStatusLogins { get; set; }
+        public virtual ICollection<AccountLogin>? AccountLogins { get; set; }
     }
 }

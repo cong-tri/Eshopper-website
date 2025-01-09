@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     var orderDetails = ViewData["OrderDetails"] as List<OrderDetail> ?? [];
+    var index = 1;
 }
 
 <!--begin::App Content Header-->
@@ -53,10 +54,7 @@
                                             @Html.DisplayNameFor(model => model.ORD_CouponCode)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.ORD_PaymentMethod)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_TotalPrice)
+                                            Payment
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.Member)
@@ -67,7 +65,6 @@
                                         <th>
                                             @Html.DisplayNameFor(model => model.CreatedBy)
                                         </th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,7 +79,7 @@
                                             @Html.DisplayFor(modelItem => modelItem.ORD_Status)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_ShippingCost)
+                                            @Model.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => modelItem.ORD_CouponCode)
@@ -91,10 +88,7 @@
                                             @Html.DisplayFor(modelItem => modelItem.ORD_PaymentMethod)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_TotalPrice)
-                                        </td>
-                                        <td>
-                                            @Model?.Member?.MEM_Email
+                                            @Model?.Member?.MEM_FirstName @Model?.Member?.MEM_LastName
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => modelItem.CreatedDate)
@@ -104,6 +98,24 @@
                                         </td>
                                      </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="8">Total: </td>
+                                        <td>
+                                            @Model?.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">
+                                            <input type="hidden" asp-for="ORD_ID"/>
+                                            @Html.DropDownListFor(
+                                                     model => model.ORD_Status, (IEnumerable<SelectListItem>)ViewData["orderStatus"],
+                                                     "Select Status",
+                                                     new { @class = "form-select select-update-order" }
+                                                     )
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div> <!-- /.card-body -->
@@ -113,10 +125,11 @@
                             <table class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Product Image</th>
-                                        <th>Product ID</th>
-                                        <th>Product Price</th>
-                                        <th>Product Quantity</th>
+                                        <th>No. </th> 
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
                                         <th>Created Date</th>
                                         <th>Created By</th>
                                     </tr>
@@ -124,13 +137,15 @@
                                 @foreach (var item in orderDetails)
                                 {
                                     <tr>
-                                        <td><img src="~/images/product-details/@item?.Product?.PRO_Image" width="200px" alt="@item?.Product?.PRO_Name" /></td>
-                                        <td>@item?.Product?.PRO_ID</td>
-                                        <td>@item?.Product?.PRO_Price</td>
+                                        <td>@index</td>
+                                        <td><img src="~/images/product-details/@item?.Product?.PRO_Image" width="150px" alt="@item?.Product?.PRO_Name" /></td>
+                                        <td>@item?.Product?.PRO_Name</td>
+                                        <td>@item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
                                         <td>@item?.ORDE_Quantity</td>
                                         <td>@item?.CreatedDate</td>
                                         <td>@item?.CreatedBy</td>
                                     </tr>
+                                    index++;
                                 }
                             </table>
                         </div>
@@ -141,3 +156,41 @@
     </div> <!--end::Container-->
 </div>
 <!--end::App Content-->
+@section Scripts {
+    <script>
+        new DataTable('#detail_order', {
+            layout: {
+                topStart: {
+                    buttons: ['pdf','print']
+                }
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select-update-order').change(function () {
+                var status = $(this).val(); //status = 1
+                var id = $('#ORD_ID').val(); //
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateOrder", "Order")",
+                    data: { statusEnum: status, id: id }, // Send data to the server
+
+                    success: function (result) {
+                        // Handle successful update
+                        if (result.success) {
+
+                            Swal.fire("Cập nhật đơn hàng thành công.");
+                        } else {
+
+                            Swal.fire("Cập nhật đơn hàng thất bại." + result.message);
+
+                        }
+                    }
+
+                });
+            });
+        });
+    </script>
+}
