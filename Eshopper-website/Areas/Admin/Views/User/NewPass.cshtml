@@ -1,4 +1,4 @@
-﻿@* @model Account; *@
+﻿@* @model Account;
 @{
     Layout = null;
 }
@@ -31,41 +31,31 @@
             </div>
             <div class="card-body login-card-body rounded">
                 <p class="login-box-msg text-danger">@ViewData["Message"]</p>
-                <form asp-action="Login" asp-area="Admin" asp-controller="User">
-                    <input type="hidden" name="referer" value="@ViewBag.referer"/>
+                <!--FORM LOGIN -->
+                <form asp-action="Login" asp-area="Admin" asp-controller="SendMail">
+                    <input type="hidden" name="referer" value="@ViewBag.referer" />
                     <div class="input-group mb-2">
-                        <div class="form-floating"> <input id="username" name="UserName" type="text" class="form-control" maxlength="30" value="" placeholder=""> <label for="loginEmail">User name</label> </div>
+                        <div class="form-floating"> <input id="email" name="Email" type="email" class="form-control" maxlength="30" value="" placeholder="Your Email" > <label for="loginEmail">Email</label> </div>
                         <div class="input-group-text"> <i class="fa-light fa-user"></i> </div>
                     </div>
                     <div class="input-group mb-3">
-                        <div class="form-floating"> <input id="password" name="Password" type="password" class="form-control" maxlength="20" placeholder=""> <label for="loginPassword">Password</label> </div>
+                        <div class="form-floating"> <input id="password" name="Password" type="password" class="form-control" maxlength="20" placeholder="Your Password"> <label for="loginPassword">Password</label> </div>
                         <div class="input-group-text"> <i class="fa-light fa-lock"></i> </div>
                     </div> <!--begin::Row-->
-                    <div class="row mb-3">
-                        <div class="col-6 d-inline-flex align-items-center">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="RememberMe" value="true" id="flexCheckDefault"> <label class="form-check-label" for="flexCheckDefault">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div> <!-- /.col -->
-                        <div class="col-auto">
-                            <div class="d-grid gap-2"> <a href="forgot-password.html">I forgot my password</a> </div>
-                        </div> <!-- /.col -->
-                    </div> <!--end::Row-->
                     <div>
                         <button type="submit" class="btn btn-success w-100">Sign In</button>
                     </div>
                 </form>
-                 <div class="social-auth-links text-center mb-3 d-grid gap-2">
-                    <p>- OR -</p> 
-                    <a asp-action="LoginByGoogle" asp-controller="User" asp-area="Admin" class="btn btn-danger">
+                <div class="social-auth-links text-center mb-3 d-grid gap-2">
+                    <p>- OR -</p> <a href="#" class="btn btn-primary">
+                        <i class="bi bi-facebook me-2"></i> Sign in using Facebook
+                    </a> <a href="#" class="btn btn-danger">
                         <i class="bi bi-google me-2"></i> Sign in using Google+
                     </a>
                 </div>
                 <p class="text-center">
                     <a asp-action="Register" asp-controller="User" asp-area="Admin">Don't have already account? Go to sign up.</a>
-                </p> 
+                </p>
             </div> <!-- /.login-card-body -->
 
         </div>
@@ -102,3 +92,4 @@
     </script>
 </body>
 </html>
+ *@
