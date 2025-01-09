@@ -64,7 +64,7 @@ namespace Eshopper_website
 
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromHours(24);
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.Path = "/";

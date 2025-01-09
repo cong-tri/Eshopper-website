@@ -242,8 +242,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         ViewData["Message"] = "Email already exists!";
                     else if (existingAccount.ACC_Phone == register.Phone)
                         ViewData["Message"] = "Phone number already exists!";
-                    else if (existingAccount.ACC_DisplayName == register.DisplayName)
-                        ViewData["Message"] = "Display name already exists!";
 
                     return View(register);
                 }
