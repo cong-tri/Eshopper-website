@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Areas.Admin.Repository;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -25,7 +26,40 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             return View(await _context.Accounts.ToListAsync());
         }
+        public async Task<IActionResult> NewPass(string returnUrl)
+        {
+            return View(await _context.Accounts.ToListAsync());
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> SendMailFogotPass(Account account)
+        //{
+        //    var checkMail = await account.ACC_Username.FirstOrDefaultAsync(c => c.ACC_Email == account.ACC_Email);
+        //    if (checkMail == null)
+        //    {
+        //        TempData["error"] = "Email not found!";
+        //        return RedirectToAction("ForgetPass", "Account");
+        //    }
+        //    else
+        //    {
+        //        string token = Guid.NewGuid().ToString();
+        //        //Update token to user
+        //        checkMail.Token = token;
+        //        _context.Update(checkMail);
+        //        await _context.SaveChangesAsync();
+        //        var receiver = checkMail.Email;
+        //        var subject = "Change password for user" + checkMail.Email;
+        //        var message = "Click on click here to change your password"
+        //            + "<a href= ' " + $" {Request.Scheme}://{Request.Host}/Account/NewPass" + $"?email=" + checkMail.Email + "&token" + token + "'>";
 
+        //        await EmailSender.SendMailAsync(receiver, subject, message);
+        //    }
+        //    TempData["Sucess"] = "An email has been sent to your registered email address with password reset intructions.";
+        //    return RedirectToAction("ForgetPass", "Account");
+        //}
+        public async Task<IActionResult> FogetPass(string returnUrl)
+        {
+            return View(await _context.Accounts.ToListAsync());
+        }
         // GET: Admin/Account/Details/5
         public async Task<IActionResult> Details(int? id)
         {

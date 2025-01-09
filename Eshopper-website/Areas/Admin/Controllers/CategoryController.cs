@@ -201,7 +201,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 TempData["error"] = $"Category with ID {id} was not found.";
             }
 
-			await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

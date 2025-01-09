@@ -4,11 +4,11 @@
 }
 
     [data-bs-theme="dark"] .navbar {
-        background-color: #333;
+        background-color: #000000;
     }
 
     [data-bs-theme="dark"] .sidebar {
-        background-color: #222;
+        background-color: #000000;
     }
 :root {
     --background-color: #ffffff;
