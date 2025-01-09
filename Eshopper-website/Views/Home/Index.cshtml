@@ -40,11 +40,21 @@
                                     </div>
                                 </div>
                             </a>
-                            <div class="choose">
-                                <ul class="nav nav-pills nav-justified">
-                                    <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                    <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-                                </ul>
+                            <div class="product-actions">
+                                <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                    <input type="hidden" name="productId" value="@item?.PRO_ID" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn action-btn wishlist-btn">
+                                        <i class="fa fa-heart"></i> Add to Wishlist
+                                    </button>
+                                </form>
+                                <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
+                                    <input type="hidden" name="productId" value="@item?.PRO_ID" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn action-btn compare-btn">
+                                        <i class="fa fa-exchange"></i> Add to Compare
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -53,3 +63,33 @@
         </div>
 	</div>
 </section>
+<style>
+.product-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    color: #FE980F;
+    border-color: #FE980F;
+}
+
+.action-btn i {
+    font-size: 13px;
+}
+</style>

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Eshopper_website.Models
 {
@@ -8,10 +8,10 @@ namespace Eshopper_website.Models
     {
         [Key]
         [Column(TypeName = "nvarchar(100)")]
-        public required string LoginProvider {  get; set; }
-        
-        public required string ProviderKey {  get; set; }
-        public required string ProviderDisplayName {  get; set; }
+        public required string LoginProvider { get; set; }
+
+        public required string ProviderKey { get; set; }
+        public required string ProviderDisplayName { get; set; }
         public required int ACC_ID { get; set; }
 
         [ForeignKey("ACC_ID")]
