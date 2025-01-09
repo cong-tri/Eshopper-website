@@ -101,10 +101,9 @@ namespace Eshopper_website.Controllers
 
                 _context.Products.Update(product);
                 _context.OrderDetails.Add(orderDetails);
-
                 await _context.SaveChangesAsync();
-
             }
+
             HttpContext.Session.Remove("Cart");
 
             var orderSend = await _context.Orders.AsNoTracking()

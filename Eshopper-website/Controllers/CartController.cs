@@ -80,10 +80,14 @@ namespace Eshopper_website.Controllers
 
 			var product = _context.Products.Where(x => x.PRO_ID == Id).FirstOrDefault();
 
-			if (product == null) { 
+			if (product == null) 
+			{ 
 				return NotFound();
 			}
-			if (carts == null) return NotFound();
+			if (carts == null)
+			{
+				return NotFound();
+			}
 
 			CartItem? cartItems = carts.Where(x => x.PRO_ID == Id).FirstOrDefault();
 
