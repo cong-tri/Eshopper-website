@@ -1,5 +1,7 @@
 using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Services.NewFolder;
+using Eshopper_website.Services.VNPay;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,8 +15,11 @@ namespace Eshopper_website
         {
             var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
-			builder.Services.AddDbContext<EShopperContext>(opt =>
+            //connect VnPay API
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
+
+            // Add services to the container.
+            builder.Services.AddDbContext<EShopperContext>(opt =>
 			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();

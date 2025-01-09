@@ -170,11 +170,11 @@ namespace Eshopper_website.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (await HasAssociatedProducts(id))
-				    {
-					      TempData["Error"] = "Cannot delete category as it has associated products.";
-					      return RedirectToAction(nameof(Index));
-				    }
-            
+            {
+                TempData["Error"] = "Cannot delete category as it has associated products.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var category = await _context.Categories.FindAsync(id);
             
             if (category != null)
@@ -188,10 +188,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
 
             await _context.SaveChangesAsync();
-			      _context.Categories.Remove(category);
-			}
-
-			await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
