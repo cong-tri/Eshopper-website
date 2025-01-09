@@ -2,6 +2,7 @@
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Services.VNPay;
 using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,20 +14,21 @@ namespace Eshopper_website.Controllers
 {
 	public class CheckoutController : Controller
 	{
+        private readonly IVnPayService _vnPayService;
         private readonly EShopperContext _context;
-        private readonly  IEmailSender _emailSender;
-        private readonly IWebHostEnvironment _hostEnv;
-        public CheckoutController(IEmailSender emailSender ,EShopperContext context, IWebHostEnvironment webHost)
+        private readonly IEmailSender _emailSender;
+        
+        public CheckoutController(IEmailSender emailSender, EShopperContext context, IVnPayService vnPayService)
         {
             _context = context;
             _emailSender = emailSender;
-            _hostEnv = webHost;
+            _vnPayService = vnPayService;
         }
         public IActionResult Index()
         {
             return View();
         }
-        public async Task<ActionResult> Checkout()
+        public async Task<IActionResult> Checkout()
         {
             var userInfo = HttpContext.Session.Get<Account>("userInfo");
             if (userInfo == null)
@@ -34,10 +36,16 @@ namespace Eshopper_website.Controllers
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
             }
 
-            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new();
+            decimal grandTotal = 0;
+            foreach (var item in cartItems)
+            {
+                grandTotal += item.PRO_Quantity * item.PRO_Price;
+            }
+            
             CartItemView cartItemView = new()
             {
-                GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price)
+                GrandTotal = grandTotal
             };
 
             var ordercode = Guid.NewGuid().ToString();
@@ -54,7 +62,7 @@ namespace Eshopper_website.Controllers
                 CreatedDate = DateTime.Now,
             };
 
-            _context.Add(orderItem);
+            await _context.AddAsync(orderItem);
             await _context.SaveChangesAsync();
 
             foreach (var item in cartItems)
@@ -69,26 +77,36 @@ namespace Eshopper_website.Controllers
                     CreatedBy = "admin"
                 };
 
-                _context.Add(orderDetails);
+                await _context.AddAsync(orderDetails);
                 await _context.SaveChangesAsync();
-
             }
+            
             HttpContext.Session.Remove("Cart");
 
             var orderSend = await _context.Orders.AsNoTracking()
                 .Include(x => x.Member)
                 .Include(x => x.OrderDetails!)
-                .ThenInclude(x => x.Product).FirstOrDefaultAsync(x => x.ORD_ID == orderItem.ORD_ID);
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync(x => x.ORD_ID == orderItem.ORD_ID);
 
-            //string Body = await HtmlRenderer
+            if (orderSend == null)
+            {
+                throw new InvalidOperationException("Order not found after creation");
+            }
+
             string receiver = userInfo.ACC_Email;
             string subject = "ORDER HAVE BEEN CREATED SUCCESSFULLY!";
-            //string message = "Your Order have been created successfully. Please waiting for shop owner confirmed!";
 
-            await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderSend!));
+            await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderSend));
 
             TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
             return RedirectToAction("Index", "Cart");
         }
-	}
+        [HttpGet]
+        public async Task<IActionResult> PaymentCallbackVnpay()
+        {
+            var response = await Task.FromResult(_vnPayService.PaymentExecute(Request.Query));
+            return Json(response);
+        }
+    }
 }

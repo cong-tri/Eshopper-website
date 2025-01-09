@@ -12,77 +12,85 @@ namespace Eshopper_website.Controllers
     public class CartController : Controller
     {
         private readonly EShopperContext _context;
-		public CartController(EShopperContext context)
-		{
-			_context = context;
-		}
-		public IActionResult Index()
+        public CartController(EShopperContext context)
+        {
+            _context = context;
+        }
+        public IActionResult Index()
         {
             List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+            decimal grandTotal = 0;
+            foreach (var item in cartItems)
+            {
+                grandTotal += item.PRO_Quantity * item.PRO_Price;
+            }
+            
             CartItemView cartItemView = new()
             {
                 CartItems = cartItems,
-                GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price)
+                GrandTotal = grandTotal
             };
             return View(cartItemView);
         }
 
         public async Task<ActionResult> Checkout()
         {
-			var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
             if (userInfo == null)
             {
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
             }
 
-			//int userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)!.Value);
-            //string username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
-
-			List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
+            decimal grandTotal = 0;
+            foreach (var item in cartItems)
+            {
+                grandTotal += item.PRO_Quantity * item.PRO_Price;
+            }
+            
             CartItemView cartItemView = new()
             {
-                GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price)
+                GrandTotal = grandTotal
             };
 
-			var orderItem = new Order()
-			{
-				MEM_ID = 1,
-				ORD_OrderCode = Guid.NewGuid().ToString(),
-				ORD_Description = "This order is ordered by " + userInfo.ACC_Username,
-				ORD_Status = OrderStatusEnum.Pending,
-				ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
-				ORD_ShippingCost = 100,
-				CreatedBy = userInfo.ACC_Username,
-				ORD_TotalPrice = cartItemView.GrandTotal,
+            var orderItem = new Order()
+            {
+                MEM_ID = 1,
+                ORD_OrderCode = Guid.NewGuid().ToString(),
+                ORD_Description = "This order is ordered by " + userInfo.ACC_Username,
+                ORD_Status = OrderStatusEnum.Pending,
+                ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
+                ORD_ShippingCost = 100,
+                CreatedBy = userInfo.ACC_Username,
+                ORD_TotalPrice = cartItemView.GrandTotal,
                 CreatedDate = DateTime.Now,
-			};
+            };
 
-			_context.Add(orderItem);
-			await _context.SaveChangesAsync();
+            _context.Add(orderItem);
+            await _context.SaveChangesAsync();
 
-			foreach (var item in cartItems)
-			{
-				var orderDetails = new OrderDetail()
-				{
-					ORD_ID = orderItem.ORD_ID,
-					PRO_ID = item.PRO_ID,
-					ORDE_Price = item.PRO_Price,
-					ORDE_Quantity = item.PRO_Quantity,
-					CreatedDate = DateTime.Now,
-					CreatedBy = userInfo.ACC_Username,
-				};
+            foreach (var item in cartItems)
+            {
+                var orderDetails = new OrderDetail()
+                {
+                    ORD_ID = orderItem.ORD_ID,
+                    PRO_ID = item.PRO_ID,
+                    ORDE_Price = item.PRO_Price,
+                    ORDE_Quantity = item.PRO_Quantity,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = userInfo.ACC_Username,
+                };
 
                 _context.Add(orderDetails);
                 await _context.SaveChangesAsync();
-
             }
             HttpContext.Session.Remove("Cart");
 
             TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
-			return RedirectToAction("Index", "Cart");
-		}
+            return RedirectToAction("Index", "Cart");
+        }
 
-		public async Task<ActionResult> Add(int Id)
+        public async Task<ActionResult> Add(int Id)
         {
             var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
 
@@ -115,23 +123,23 @@ namespace Eshopper_website.Controllers
 
         public IActionResult Increase(int Id)
         {
-			List<CartItem>? carts = HttpContext.Session.Get<List<CartItem>>("Cart");
+            List<CartItem>? carts = HttpContext.Session.Get<List<CartItem>>("Cart");
 
-			if (carts == null) return NotFound();
+            if (carts == null) return NotFound();
 
-			CartItem? cartItems = carts.Where(x => x.PRO_ID == Id).FirstOrDefault();
+            CartItem? cartItems = carts.Where(x => x.PRO_ID == Id).FirstOrDefault();
 
-			if (cartItems?.PRO_Quantity >= 1) ++cartItems.PRO_Quantity;
+            if (cartItems?.PRO_Quantity >= 1) ++cartItems.PRO_Quantity;
 
             HttpContext.Session.Set("Cart", carts);
 
             TempData["success"] = "Increase quantity' product successfully.";
 
             return RedirectToAction("Index");
-		}
+        }
 
-		public IActionResult Decrease(int Id)
-		{
+        public IActionResult Decrease(int Id)
+        {
             List<CartItem>? carts = HttpContext.Session.Get<List<CartItem>>("Cart");
 
             if (carts == null) return NotFound();
@@ -150,31 +158,30 @@ namespace Eshopper_website.Controllers
             {
                 HttpContext.Session.Set("Cart", carts);
                 TempData["success"] = "Decrease quantity' product successfully.";
-
             }
             return RedirectToAction("Index");
-		}
+        }
 
         public IActionResult Remove(int Id)
         {
-			List<CartItem>? carts = HttpContext.Session.Get<List<CartItem>>("Cart");
+            List<CartItem>? carts = HttpContext.Session.Get<List<CartItem>>("Cart");
 
             if (carts == null) return NotFound();
             carts.RemoveAll(x => x.PRO_ID == Id);
 
             if (carts.Count == 0) HttpContext.Session.Remove("Cart");
-			else HttpContext.Session.Set("Cart", carts);
+            else HttpContext.Session.Set("Cart", carts);
 
             TempData["success"] = "Remove product out of cart successfully.";
 
             return RedirectToAction("Index");
-		}
+        }
 
-		public IActionResult Clear()
+        public IActionResult Clear()
         {
-			HttpContext.Session.Remove("Cart");
+            HttpContext.Session.Remove("Cart");
             TempData["success"] = "Remove all products out of cart successfully.";
             return RedirectToAction("Index");
-		}
-	}
+        }
+    }
 }
