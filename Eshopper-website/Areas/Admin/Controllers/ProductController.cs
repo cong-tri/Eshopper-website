@@ -29,7 +29,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             //var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
             //return View(await eShopperContext.ToListAsync());
-            List<Product> product = _context.Products.ToList();
+            List<Product> product = await _context.Products.Include(x => x.Category).Include(x => x.Brand).ToListAsync();
 
             const int pageSize = 10;
 
@@ -279,18 +279,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
             return View(request);
         }
 
-		// GET: Admin/Product/Delete/5
-
-		//public async Task<IActionResult> Search(string searchTerm)
-		//{
-		//	var products = await _context.Products
-		//		.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
-		//		.ToListAsync();
-
-		//	ViewData.PRO = searchTerm;
-
-		//	return View(products);
-		//}
 		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

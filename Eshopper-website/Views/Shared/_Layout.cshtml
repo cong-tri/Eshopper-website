@@ -18,11 +18,7 @@
 	<link href="~/css/animate.css" rel="stylesheet">
 	<link href="~/css/main.css" rel="stylesheet">
 	<link href="~/css/responsive.css" rel="stylesheet">
-	@* <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"> *@
-	<!--[if lt IE 9]>
-	<script src="js/html5shiv.js"></script>
-	<script src="js/respond.min.js"></script>
-	<![endif]-->
+
 	<link rel="shortcut icon" href="images/ico/favicon.ico">
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/images/ico/apple-touch-icon-144-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/images/ico/apple-touch-icon-114-precomposed.png">
@@ -102,7 +98,7 @@
 									<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 									<li><a asp-action="Index" asp-controller="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-									<li><a href="#">Account</a></li>
+									<li><a asp-controller="Account" asp-action="Index">Hello, @userInfo.ACC_DisplayName</a></li>
 								}
 								else
 								{
@@ -151,7 +147,7 @@
 								</li>
 								<li><a asp-action="Index" asp-controller="Product">Product</a></li>
 								<li><a asp-action="Index" asp-controller="Blog">Blog</a></li>
-                <li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
+								<li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
 							</ul>
 						</div>
 					</div>
@@ -332,14 +328,12 @@
 		</div>
 
 	</footer><!--/Footer-->
-
 	<script src="~/js/jquery.js"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery.scrollUp.min.js"></script>
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
-
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

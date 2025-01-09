@@ -99,8 +99,8 @@ namespace Eshopper_website.Controllers
                     product.PRO_Status = ProductStatusEnum.LowStock;
                 }
 
-                _context.Update(product);
-                _context.Add(orderDetails);
+                _context.Products.Update(product);
+                _context.OrderDetails.Add(orderDetails);
 
                 await _context.SaveChangesAsync();
 
@@ -113,7 +113,7 @@ namespace Eshopper_website.Controllers
                 .ThenInclude(x => x.Product).FirstOrDefaultAsync(x => x.ORD_ID == orderItem.ORD_ID);
 
             //string Body = await HtmlRenderer
-            string receiver = userInfo?.ACC_Email;
+            string receiver = userInfo.ACC_Email;
             string subject = "ORDER HAVE BEEN CREATED SUCCESSFULLY!";
             //string message = "Your Order have been created successfully. Please waiting for shop owner confirmed!";
 

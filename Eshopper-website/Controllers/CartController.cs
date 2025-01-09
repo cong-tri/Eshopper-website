@@ -90,6 +90,7 @@ namespace Eshopper_website.Controllers
 			if (cartItems?.PRO_Quantity >= 1 && product.PRO_Quantity > cartItems.PRO_Quantity)
 			{
 				++cartItems.PRO_Quantity;
+				TempData["success"] = "Increase quantity' product successfully.";
 			}
 			else
 			{
@@ -98,9 +99,6 @@ namespace Eshopper_website.Controllers
             }
 
             HttpContext.Session.Set("Cart", carts);
-
-            TempData["success"] = "Increase quantity' product successfully.";
-
             return RedirectToAction("Index");
 		}
 

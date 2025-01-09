@@ -8,7 +8,7 @@
     ViewData["Title"] = "Detail Product";
     var products = ViewData["relantedProduct"] as List<Product>;
 }
-@section Headers{
+@section Header{
     <style>
         .rating-stars {
             display: flex;
@@ -74,28 +74,7 @@
                 <div class="col-sm-5">
                     <div class="view-product">
                         <img src="~/images/product-details/@Model?.ProductDetail.PRO_Image" alt="" />
-                        <h3>ZOOM</h3>
                     </div>
-                    <div id="similar-product" class="carousel slide" data-ride="carousel">
-
-                        <!-- Wrapper for slides -->
-                        <div class="carousel-inner">
-                            <div class="item active">
-                                <a href=""><img src="https://anphat.com.vn/media/product/37431_asus_rog_strix_g17_g713qm_k4113t_r7_5800h_197c27cd1bce4217baedb68f8353d1c5_master.png" width="80px" height="100px" alt=""></a>
-                                <a href=""><img src="https://anphat.com.vn/media/product/37431_asus_rog_strix_g17_g713qm_k4113t_r7_5800h_197c27cd1bce4217baedb68f8353d1c5_master.png" width="80px" height="100px" alt=""></a>
-                                <a href=""><img src="https://anphat.com.vn/media/product/37431_asus_rog_strix_g17_g713qm_k4113t_r7_5800h_197c27cd1bce4217baedb68f8353d1c5_master.png" width="80px" height="100px" alt=""></a>
-                            </div>
-                        </div>
-
-                        <!-- Controls -->
-                        <a class="left item-control" href="#similar-product" data-slide="prev">
-                            <i class="fa fa-angle-left"></i>
-                        </a>
-                        <a class="right item-control" href="#similar-product" data-slide="next">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </div>
-
                 </div>
                 <div class="col-sm-7">
                     <div class="product-information">
@@ -103,7 +82,7 @@
                         <h2>@Model?.ProductDetail?.PRO_Name</h2>
                         <span>
                             <span> @Model?.ProductDetail?.PRO_Price $</span>
-                            <label>Quantity: 1</label>
+                            <label>Quantity: </label>
                             <input type="number" value="1" />
                             @if (Model?.ProductDetail.PRO_Quantity > 0)
                             {
@@ -116,20 +95,12 @@
                             {
                                 <button type="button" disabled class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Out of Stock</button>
                             }
-
-                            <input type="text" value="1" />
-                            <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
-                                <i class="fa fa-shopping-cart"></i>
-                                Add to cart
-                            </a>
                         </span>
                         <p><b>Availability:</b> @Model?.ProductDetail?.PRO_Status</p>
                         <p><b>Quantities in Stock:</b> @Model?.ProductDetail?.PRO_Quantity</p>
                         <p><b>Condition:</b> New</p>
-                        <p><b>Brand:</b> @Model?.ProductDetail?.Brand?.BRA_Name</p>
-                        <p><b>Category:</b> @Model?.ProductDetail?.Category?.CAT_Name</p>
-                        <p><b>Brand:</b>@Model?.ProductDetail?.Brand?.BRA_Name</p>
-                        <p><b>Category:</b>@Model?.ProductDetail?.Category?.CAT_Name</p>
+                        <p><b>Brand: </b> @Model?.ProductDetail?.Brand?.BRA_Name</p>
+                        <p><b>Category: </b> @Model?.ProductDetail?.Category?.CAT_Name</p>
                         <a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
                     </div><!--/product-information-->
                 </div>
@@ -257,18 +228,16 @@
                             <p><b>Write Your Review</b></p>
 
                             <form id="reviewForm" autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="post">
-                                <span>
-                                    <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
-                                    <div class="rating-stars">
-                                        <input type="radio" name="RAT_Star" value="5" id="star5" required><label for="star5"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="4" id="star4"><label for="star4"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="3" id="star3"><label for="star3"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="2" id="star2"><label for="star2"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="1" id="star1"><label for="star1"><i class="fa fa-star"></i></label>
-                                    </div>
-                                    <input type="text" name="RAT_Name" placeholder="Your Name" required minlength="5" maxlength="255" />
-                                    <input type="email" name="RAT_Email" placeholder="Email Address" required minlength="10" maxlength="255" />
-                                </span>
+                                <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
+                                <div class="rating-stars">
+                                    <input type="radio" name="RAT_Star" value="5" id="star5" required><label for="star5"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="4" id="star4"><label for="star4"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="3" id="star3"><label for="star3"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="2" id="star2"><label for="star2"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="1" id="star1"><label for="star1"><i class="fa fa-star"></i></label>
+                                </div>
+                                <input type="text" name="RAT_Name" placeholder="Your Name" required minlength="5" maxlength="255" />
+                                <input type="email" name="RAT_Email" placeholder="Email Address" required minlength="10" maxlength="255" />
                                 <textarea name="RAT_Comment" placeholder="Your Review" minlength="5" maxlength="255"></textarea>
                                 <button type="submit" class="btn btn-default pull-right">
                                     Submit

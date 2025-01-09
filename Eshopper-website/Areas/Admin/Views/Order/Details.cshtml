@@ -79,7 +79,7 @@
                                             @Html.DisplayFor(modelItem => modelItem.ORD_Status)
                                         </td>
                                         <td>
-                                            $@Html.DisplayFor(modelItem => modelItem.ORD_ShippingCost)
+                                            @Model.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => modelItem.ORD_CouponCode)
@@ -102,30 +102,11 @@
                                     <tr>
                                         <td colspan="8">Total: </td>
                                         <td>
-                                            $@Html.DisplayFor(modelItem => modelItem.ORD_TotalPrice)
+                                            @Model?.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
                                         </td>
                                     </tr>
                                     <tr>
-                                        @* <td>Confirmed Order:</td> *@
                                         <td colspan="9">
-                                            @* <form asp-action="UpdateOrder">
-                                                <input type="hidden" asp-for="ORD_ID" />
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                        <label asp-for="ORD_Status"></label>
-                                                    </div>
-                                                    <div class="col">
-                                                        @Html.DropDownListFor(
-                                                                 model => model.ORD_Status, (IEnumerable<SelectListItem>)ViewData["orderStatus"],
-                                                                 "Select Status",
-                                                                 new { @class = "form-select select-update-order" }
-                                                                 )
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <input type="submit" value="Save" class="btn btn-primary" />
-                                                    </div>
-                                                </div>
-                                            </form> *@
                                             <input type="hidden" asp-for="ORD_ID"/>
                                             @Html.DropDownListFor(
                                                      model => model.ORD_Status, (IEnumerable<SelectListItem>)ViewData["orderStatus"],
@@ -158,8 +139,8 @@
                                     <tr>
                                         <td>@index</td>
                                         <td><img src="~/images/product-details/@item?.Product?.PRO_Image" width="150px" alt="@item?.Product?.PRO_Name" /></td>
-                                        <td>@item.Product.PRO_Name</td>
-                                        <td>@item?.Product?.PRO_Price</td>
+                                        <td>@item?.Product?.PRO_Name</td>
+                                        <td>@item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
                                         <td>@item?.ORDE_Quantity</td>
                                         <td>@item?.CreatedDate</td>
                                         <td>@item?.CreatedBy</td>
@@ -190,8 +171,6 @@
             $('.select-update-order').change(function () {
                 var status = $(this).val(); //status = 1
                 var id = $('#ORD_ID').val(); //
-                alert(status);
-                alert(id);
 
                 $.ajax({
                     type: "POST",

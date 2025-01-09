@@ -1,0 +1,122 @@
+﻿@model Eshopper_website.Areas.Admin.DTOs.request.ProfileDTO
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Profile User</h1>
+                </div>
+                <div class="card-body">
+                    <form action="Edit" asp-controller="Account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="ACC_ID" type="hidden" />
+                        <input asp-for="MEM_ID" type="hidden" />
+                        <div class="row align-items-center justity-content-between">
+                            <div class="col-md-5 form-group">
+                                <label class="form-label" asp-for="ACC_DisplayName"></label>
+                                <input asp-for="ACC_DisplayName" type="text" class="form-control"/>
+                                <span asp-validation-for="ACC_DisplayName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-5 form-group">
+                                <label class="form-label" asp-for="MEM_Phone"></label>
+                                <input asp-for="MEM_Phone" type="tel" class="form-control" maxlength="11" />
+                                <span asp-validation-for="MEM_Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row align-items-center justity-content-between">
+                            <div class="col-md-5 form-group">
+                                <label class="form-label" asp-for="MEM_Email"></label>
+                                <input asp-for="MEM_Email" type="email" class="form-control" />
+                                <span asp-validation-for="MEM_Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-5 form-group">
+                                <label class="form-label" asp-for="MEM_Gender"></label>
+                                <select asp-for="MEM_Gender" class="form-select">
+                                    <option value="1">Other</option>
+                                    <option value="2">Male</option>
+                                    <option value="3">Female</option>
+                                </select>
+                                <span asp-validation-for="MEM_Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row align-items-center justity-content-between">
+                            <div class="col-md-5 form-group">
+                                <label class="form-label" asp-for="MEM_FirstName"></label>
+                                <input asp-for="MEM_FirstName" type="text" class="form-control" />
+                                <span asp-validation-for="MEM_FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-5 form-group">
+                                <label class="form-label" asp-for="MEM_LastName"></label>
+                                <input asp-for="MEM_LastName" type="text" class="form-control" maxlength="11" />
+                                <span asp-validation-for="MEM_LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary w-100" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Full Name</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            Kenneth Valdez
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Email</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            fip@jukmuh.al
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Phone</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            (239) 816-9029
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Mobile</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            (320) 380-4539
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Address</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            Bay Area, San Francisco, CA
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

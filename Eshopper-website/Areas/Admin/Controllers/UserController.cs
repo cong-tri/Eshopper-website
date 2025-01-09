@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Microsoft.Win32;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -230,8 +232,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 .FirstOrDefaultAsync(x =>
                     x.ACC_Username == register.UserName ||
                     x.ACC_Email == register.Email ||
-                    x.ACC_Phone == register.Phone ||
-                    x.ACC_DisplayName == register.DisplayName);
+                    x.ACC_Phone == register.Phone);
 
                 if (existingAccount != null)
                 {
@@ -328,16 +329,14 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
         public async Task<IActionResult> GoogleResponse()
         {
-            // Authenticate using Google scheme
             var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
 
             if (!result.Succeeded)
             {
-                //Nếu xác thực ko thành công quay về trang Login
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "User", new {Area = "Admin"});
             }
 
-            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            var claims = result?.Principal?.Identities?.FirstOrDefault()?.Claims.Select(claim => new
             {
                 claim.Issuer,
                 claim.OriginalIssuer,
@@ -345,47 +344,62 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 claim.Value
             });
 
-            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            //var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+            var loginProvider = result?.Principal?.Identity?.AuthenticationType;
 
-            string emailName = email.Split('@')[0];
-            //return Json(claims);
-            // Check user có tồn tại không
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var providerDisplayName = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var providerKey = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
             var existingUser = await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.ACC_Email == email);
 
-            if (existingUser == null)
+            if (existingUser == null || existingUser?.ACC_Status == AccountStatusEnum.Inactive)
             {
-                Random random = new Random();
+                ViewData["Message"] = "Account not found!";
+				return RedirectToAction("Login", "User", new { Area = "Admin" });
+			}
 
-                var userPhone = random.Next(10).ToString();
-                //nếu user ko tồn tại trong db thì tạo user mới với password hashed mặc định 1-9
-                var passwordHasher = new PasswordHasher<Account>();
+			var member = await _context.Members.AsNoTracking().Where(x => x.ACC_ID == existingUser!.ACC_ID).FirstOrDefaultAsync();
 
-                var hashedPassword = passwordHasher.HashPassword(null, "123456789");
+			if (member == null && member?.MEM_Status == MemberStatusEnum.Inactive)
+			{
+				ViewData["Message"] = "Member not found!";
+				return RedirectToAction("Login", "User", new { Area = "Admin" });
+			}
 
-                //username thay khoảng cách bằng dấu "-" và chữ thường hết
-                var newUser = new Account() { 
-                    ACC_Username = emailName, 
-                    ACC_Email = email,
-                    ACC_Password = hashedPassword,
-                    ACC_Status = AccountStatusEnum.Inactive,
-                    ACC_DisplayName = emailName,
-                    ACC_Phone = userPhone
-                };
+			var user = new UserInfo(existingUser, member!.ACR_ID, member!.MEM_ID);
 
-                _context.Accounts.Add(newUser);
-                TempData["success"] = "Register new account success.";
-                
-                return RedirectToAction("Index", "Home");
+			var existingAccountLogin = await _context.AccountLogins.AsNoTracking()
+			.FirstOrDefaultAsync(x =>
+				x.ProviderKey == providerKey);
 
-            }
-            else
-            {
-                TempData["error"] = "Register new account not success.";
-            }
+			if (existingAccountLogin != null)
+			{
+                HttpContext.Session.Set<UserInfo>("userInfo", user);
+			    TempData["success"] = "Login successfully.";
+			}
+			else
+			{
+				var newAccountLogin = new AccountLogin()
+				{
+					ACC_ID = existingUser!.ACC_ID,
+					LoginProvider = loginProvider ?? "",
+					ProviderKey = providerKey ?? "",
+					ProviderDisplayName = providerDisplayName ?? "",
+					CreatedBy = existingUser.ACC_Username,
+					CreatedDate = DateTime.Now,
+					UpdatedBy = existingUser.ACC_Username,
+					UpdatedDate = DateTime.Now,
+				};
 
-            return RedirectToAction("Login");
+				HttpContext.Session.Set<UserInfo>("userInfo", user);
 
-        }
+				_context.AccountLogins.Add(newAccountLogin);
+				await _context.SaveChangesAsync();
+
+				TempData["success"] = "Login successfully.";
+			}
+
+			return RedirectToAction("Index", "Home", new { Area = "" });
+		}
     }
 }

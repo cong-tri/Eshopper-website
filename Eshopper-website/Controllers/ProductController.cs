@@ -17,12 +17,14 @@ namespace Eshopper_website.Controllers
 
 		public IActionResult Index()
 		{
-			ViewData["products"] = _context.Products.Include("Category").Include("Brand").ToList();
+			ViewData["products"] = _context.Products.Include(x => x.Category).Include(x => x.Brand).ToList();
 			return View();
 		}
 		public async Task<IActionResult> Search(string searchTerm)
 		{
 			var products = await _context.Products
+				.Include(x => x.Category)
+				.Include(x => x.Brand)
 				.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
 				.ToListAsync();
 			ViewBag.Keyword = searchTerm;
@@ -35,6 +37,8 @@ namespace Eshopper_website.Controllers
 
 			var productsById = _context.Products
 				.Include(p => p.Ratings)
+				.Include(p => p.Brand)
+				.Include(p => p.Category)
 				.Where(p => p.PRO_ID == Id).FirstOrDefault();
 
 			if (productsById == null)

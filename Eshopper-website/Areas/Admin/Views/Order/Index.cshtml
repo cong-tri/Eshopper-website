@@ -111,7 +111,7 @@
                                                 @Html.DisplayFor(modelItem => item.ORD_Status)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.ORD_ShippingCost)
+                                                @item.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.ORD_CouponCode)
@@ -120,10 +120,10 @@
                                                 @Html.DisplayFor(modelItem => item.ORD_PaymentMethod)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.ORD_TotalPrice)
+                                                @item.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Member.MEM_Email)
+                                                @Html.DisplayFor(modelItem => item.Member!.MEM_Email)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.CreatedDate)

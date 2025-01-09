@@ -40,7 +40,7 @@
 									<h4 class="mt-0"><a class="text-black" asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">@item.PRO_Name</a></h4>
 								</td>
 								<td class="cart_price">
-									<p>$@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
+									<p>@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
 								</td>
 								<td class="cart_quantity">
 									<div class="text-center">
@@ -53,7 +53,7 @@
 								</td>
 								<td class="cart_total">
 									<p class="cart_total_price">
-										$@Model.CartItems.Where(x => x.PRO_ID == item?.PRO_ID).Sum(x => x.PRO_Quantity * x.PRO_Price).ToString()
+										@Model.CartItems.Where(x => x.PRO_ID == item?.PRO_ID).Sum(x => x.PRO_Quantity * x.PRO_Price).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
 									</p>
 								</td>
 								<td class="text-center">
@@ -103,20 +103,20 @@
 						<li class="single_field">
 							<label>City</label>
 							<select id="tinh" name="tinh" class="form-select" title="Choose City">
-								<option value="0">City</option>
+								<option value="">City</option>
 							</select>
 						</li>
 						<li class="single_field">
 							<label>District</label>
 							<select class="css_select" id="quan" name="quan" class="form-select" title="Choose District">
-								<option value="0">District</option>
+								<option value="">District</option>
 							</select>
 
 						</li>
 						<li class="single_field zip-field">
 							<label>Ward</label>
 							<select class="css_select" id="phuong" name="phuong" class="form-select" title="Choose Ward">
-								<option value="0">Ward</option>
+								<option value="">Ward</option>
 							</select>
 						</li>
 					</ul>
@@ -139,10 +139,10 @@
 			<div class="col-sm-6">
 				<div class="total_area">
 					<ul>
-						<li>Cart Sub Total <span>$@Model?.GrandTotal</span></li>
+						<li>Cart Sub Total <span>@Model?.GrandTotal.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></li>
 						<li>Eco Tax <span>$0</span></li>
-						<li>Shipping Cost <span>$@Model?.ShippingPrice</span></li>
-						<li>Total <span>$@Model?.GrandTotal</span></li>
+						<li>Shipping Cost <span>@Model?.ShippingPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></li>
+						<li>Total <span>@Model?.GrandTotal.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></li>
 					</ul>
 					<div style="margin-left: 4rem">
                         <a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
@@ -154,7 +154,6 @@
                                 <a class="btn btn-success btn-checkout"
                                    onclick="return confirm('Confirmed to checkout?');"
 								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
-
                             }
                             else
                             {
@@ -172,6 +171,7 @@
 </section><!--/#do_action-->
 
 @section Scripts{
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.all.min.js"></script>
 	<script>
 		//delete shipping cost
 		$(".btn-apply-coupon").click(function () {
@@ -202,9 +202,8 @@
 				var tinh = $("#tinh").find('option:selected').text();
 				var quan = $("#quan").find('option:selected').text();
 				var phuong = $("#phuong").find('option:selected').text();
-
 				if (tinh == '' || quan == '' || phuong == '') {
-					Swal.fire("Please not empty this field.");
+					Swal.fire("Please not empty.");
 				} else {
 					$.ajax({
 						type: "POST",
@@ -212,16 +211,15 @@
 						data: { tinh: tinh, quan: quan, phuong: phuong },
 
 						success: function (result) {
+							// Handle successful update
 							if (result) {
 								location.reload();
 							}
 						}
-
 					});
 				}
-
-
 			})
+
 			//delete shipping cost
 			$(".btn-delete-shipping").click(function () {
 				$.ajax({
@@ -230,11 +228,11 @@
 					success: function (result) {
 						if (result.success) {
 							// Handle successful removal (e.g., update UI or redirect)
-							Swal.fire("Xóa thành công.");
+							Swal.fire("Remove shipping cost successfully.");
 							location.reload();
 						} else {
 							// Handle error (optional)
-							Swal.fire("Xóa thất bại.");
+							Swal.fire("Remove shipping cost unsuccessfully.");
 						}
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
@@ -243,6 +241,7 @@
 					}
 				});
 			});
+
 			//Lấy tỉnh thành
 			$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
 				if (data_tinh.error == 0) {
@@ -271,9 +270,12 @@
 										}
 									});
 								});
+
 							}
-						});
+						}); //end $.getJson
+
 					});
+
 				}
 			});
 		});
