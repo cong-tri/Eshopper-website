@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Utils.Extension;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -77,6 +78,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+                var username = userInfo != null ? userInfo.ACC_Username : "";
+
+                category.CreatedBy = username;
+                category.CreatedDate = DateTime.Now;
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Added Category successfully !";
@@ -122,6 +129,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 try
                 {
+                    var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+                    var username = userInfo != null ? userInfo.ACC_Username : "";
+
+                    category.CreatedBy = username;
+                    category.UpdatedBy = username;
+                    category.UpdatedDate = DateTime.Now;
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                     TempData["success"] = $"Category '{category.CAT_Name}' has been updated successfully!";

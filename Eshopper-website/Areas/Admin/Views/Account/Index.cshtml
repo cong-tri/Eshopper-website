@@ -37,31 +37,31 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tbl" class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.ACC_Username)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.ACC_Password)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.ACC_DisplayName)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.ACC_Email)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.ACC_Phone)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.ACC_Status)
-                                            </th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                @foreach (var item in Model) {
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ACC_Username)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ACC_Password)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ACC_DisplayName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ACC_Email)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ACC_Phone)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ACC_Status)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model) {
                                         <tr>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.ACC_Username)
@@ -87,8 +87,8 @@
                                                 <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.ACC_ID"><i class="fa-regular fa-trash-xmark"></i></a>
                                             </td>
                                         </tr>
-                                }
-                                    </tbody>
+                                    }
+                                </tbody>
                             </table>
                         </div>
                     </div>

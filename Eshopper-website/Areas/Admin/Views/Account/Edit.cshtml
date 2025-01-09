@@ -45,40 +45,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <div class="form-group mb-3">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-3">
-                                            <label asp-for="ACC_Password" class="control-label"></label>
-                                        </div>
-                                        <div class="col-sm">
-                                            <div class="input-group">
-                                                <input asp-for="ACC_Password" class="form-control" maxlength="30" readonly /> 
-                                                @* id="password-field" *@
-                                                <button type="button" class="btn btn-outline-secondary" id="edit-button" onclick="toggleEdit()">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="form-group mb-3">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-3">
-                                            <label asp-for="ACC_Password" class="control-label"></label>
-                                        </div>
-                                        <div class="col-sm">
-                                            <div class="input-group">
-                                                <input asp-for="ACC_Password" class="form-control" maxlength="30" readonly />
-                                                @* id="password-field" *@
-                                                <button type="button" class="btn btn-outline-secondary" id="edit-button" onclick="toggleEdit()">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
                             <div class="form-group mb-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-3">
@@ -145,19 +111,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-<script>
-    function toggleEdit() {
-        const passwordField = document.getElementById('password-field');
-        const editButton = document.getElementById('edit-button');
-
-        if (passwordField.readOnly) {
-            passwordField.readOnly = false;
-            passwordField.focus(); 
-            editButton.innerText = 'Save';
-        } else {
-            passwordField.readOnly = true;
-            editButton.innerText = 'Edit';
-            console.log('New password:', passwordField.value);
-        }
-    }
-</script>

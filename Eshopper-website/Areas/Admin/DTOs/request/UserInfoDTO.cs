@@ -11,7 +11,7 @@ namespace Eshopper_website.Areas.Admin.DTOs.request
 		public string? ACC_DisplayName { get; set; }
 		public string? ACC_Email { get; set; }
 		public string? ACC_Phone { get; set; }
-		public AccountStatusEnum ACC_Status { get; set; } = AccountStatusEnum.Inactive;
+		public AccountStatusEnum ACC_Status { get; set; } = AccountStatusEnum.Active;
 
 		public UserInfoDTO() { }
 

@@ -1,5 +1,7 @@
 using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models.DataContext;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Eshopper_website.Services.NewFolder;
 using Eshopper_website.Services.VNPay;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,7 +19,7 @@ namespace Eshopper_website
 
             //connect VnPay API
             builder.Services.AddScoped<IVnPayService, VnPayService>();
-
+          
             // Add services to the container.
             builder.Services.AddDbContext<EShopperContext>(opt =>
 			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -28,23 +30,32 @@ namespace Eshopper_website
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
             })
-                .AddJwtBearer(options =>
+            .AddCookie()
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
                 {
-                    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSettings["Issuer"],
-                        ValidAudience = jwtSettings["Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-                    };
-                });
+                    options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+                    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+                })
+				.AddJwtBearer(options =>
+				{
+					var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateIssuer = true,
+						ValidateAudience = true,
+						ValidateLifetime = true,
+						ValidateIssuerSigningKey = true,
+						ValidIssuer = jwtSettings["Issuer"],
+						ValidAudience = jwtSettings["Audience"],
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+					};
+				});
+
             builder.Services.AddAuthorization();
 
             builder.Services.AddControllersWithViews();
@@ -58,10 +69,19 @@ namespace Eshopper_website
                 options.Cookie.IsEssential = true;
                 options.Cookie.Path = "/";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
             });
 
-            WebApplication app = builder.Build();
+            //builder.Services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+            //});
 
+
+            WebApplication app = builder.Build();
+            
+            app.UseCookiePolicy();
             app.UseSession();
 
             // Configure the HTTP request pipeline.
@@ -77,7 +97,7 @@ namespace Eshopper_website
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseMiddleware<JwtCookieToHeaderMiddleware>();
+            //app.UseMiddleware();
             app.UseAuthentication();
 
             app.UseAuthorization();

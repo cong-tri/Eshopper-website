@@ -12,7 +12,7 @@ namespace Eshopper_website.Models
 		public int CAT_ID {  get; set; }
 
 		[Required(ErrorMessage = "Please enter category name!")]
-		[MinLength(5, ErrorMessage = "Name must be at least 5 characters long!")]
+		[MinLength(3, ErrorMessage = "Name must be at least 3 characters long!")]
 		[MaxLength(255, ErrorMessage = "Name cannot exceed 255 characters!")]
 		[DisplayName("Name")]
 		public required string CAT_Name { get; set; }

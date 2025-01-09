@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Utils.Enum;
+using Eshopper_website.Utils.Enum.Order;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -48,118 +50,70 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            ViewData["orderStatus"] = Enum.GetValues(typeof(OrderStatusEnum))
+                .Cast<OrderStatusEnum>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }).ToList();
+
             return View(order);
         }
 
-        // GET: Admin/Order/Create
-        public IActionResult Create()
-        {
-            ViewData["MEM_ID"] = new SelectList(_context.Members, "MEM_ID", "MEM_Email");
-            return View();
-        }
+        //public async Task<IActionResult> UpdateOrder(int id, [FromForm] Order order)
+        //{
+        //    if (id != order.ORD_ID)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // POST: Admin/Order/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(order);
+        //            await _context.SaveChangesAsync();
+        //            TempData["success"] = "Order status updated successfully";
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!OrderExists(order.ORD_ID))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                TempData["error"] = "An error occurred while updating the order status.";
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+
+        //    }
+        //    return View(order);
+        //}
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ORD_ID,MEM_ID,ORD_OrderCode,ORD_Description,ORD_Status,ORD_ShippingCost,ORD_CouponCode,ORD_PaymentMethod,ORD_TotalPrice,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy")] Order order)
+        public async Task<IActionResult> UpdateOrder(int id, OrderStatusEnum statusEnum)
         {
-            if (ModelState.IsValid)
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == id);
+
+            if (order == null)
             {
-                _context.Add(order);
+                return NotFound();
+            }
+
+            order.ORD_Status = statusEnum;
+
+            try
+            {
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { success = true, message = "Order status updated successfully" });
             }
-            ViewData["MEM_ID"] = new SelectList(_context.Members, "MEM_ID", "MEM_Email", order.MEM_ID);
-            return View(order);
-        }
-
-        // GET: Admin/Order/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500, "An error occurred while updating the order status.");
             }
-
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["MEM_ID"] = new SelectList(_context.Members, "MEM_ID", "MEM_Email", order.MEM_ID);
-            return View(order);
-        }
-
-        // POST: Admin/Order/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ORD_ID,MEM_ID,ORD_OrderCode,ORD_Description,ORD_Status,ORD_ShippingCost,ORD_CouponCode,ORD_PaymentMethod,ORD_TotalPrice,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy")] Order order)
-        {
-            if (id != order.ORD_ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.ORD_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MEM_ID"] = new SelectList(_context.Members, "MEM_ID", "MEM_Email", order.MEM_ID);
-            return View(order);
-        }
-
-        // GET: Admin/Order/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders
-                .Include(o => o.Member)
-                .FirstOrDefaultAsync(m => m.ORD_ID == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
-        }
-
-        // POST: Admin/Order/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)

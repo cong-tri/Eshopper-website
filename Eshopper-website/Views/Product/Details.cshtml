@@ -6,8 +6,61 @@
 
 @{
     ViewData["Title"] = "Detail Product";
-
     var products = ViewData["relantedProduct"] as List<Product>;
+}
+@section Header{
+    <style>
+        .rating-stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin: 20px 0;
+        }
+
+            .rating-stars input {
+                display: none;
+            }
+
+            .rating-stars label {
+                cursor: pointer;
+                font-size: 25px;
+                color: #ddd;
+                padding: 5px;
+            }
+
+                .rating-stars label i {
+                    transition: all 0.2s ease;
+                }
+
+                .rating-stars input:checked ~ label,
+                .rating-stars label:hover,
+                .rating-stars label:hover ~ label {
+                    color: #FE980F;
+                }
+
+                    .rating-stars input:checked + label:hover,
+                    .rating-stars input:checked ~ label:hover,
+                    .rating-stars input:checked ~ label:hover ~ label,
+                    .rating-stars label:hover ~ input:checked ~ label {
+                        color: #FE980F;
+                    }
+
+        #reviewForm input[type="text"],
+        #reviewForm input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #E6E4DF;
+        }
+
+        #reviewForm textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #E6E4DF;
+            min-height: 120px;
+        }
+    </style>
 }
 <section>
     <div class="row">
@@ -21,28 +74,7 @@
                 <div class="col-sm-5">
                     <div class="view-product">
                         <img src="~/images/product-details/@Model?.ProductDetail.PRO_Image" alt="" />
-                        <h3>ZOOM</h3>
                     </div>
-                    <div id="similar-product" class="carousel slide" data-ride="carousel">
-
-                        <!-- Wrapper for slides -->
-                        <div class="carousel-inner">
-                            <div class="item active">
-                                <a href=""><img src="https://anphat.com.vn/media/product/37431_asus_rog_strix_g17_g713qm_k4113t_r7_5800h_197c27cd1bce4217baedb68f8353d1c5_master.png" width="80px" height="100px" alt=""></a>
-                                <a href=""><img src="https://anphat.com.vn/media/product/37431_asus_rog_strix_g17_g713qm_k4113t_r7_5800h_197c27cd1bce4217baedb68f8353d1c5_master.png" width="80px" height="100px" alt=""></a>
-                                <a href=""><img src="https://anphat.com.vn/media/product/37431_asus_rog_strix_g17_g713qm_k4113t_r7_5800h_197c27cd1bce4217baedb68f8353d1c5_master.png" width="80px" height="100px" alt=""></a>
-                            </div>
-                        </div>
-
-                        <!-- Controls -->
-                        <a class="left item-control" href="#similar-product" data-slide="prev">
-                            <i class="fa fa-angle-left"></i>
-                        </a>
-                        <a class="right item-control" href="#similar-product" data-slide="next">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </div>
-
                 </div>
                 <div class="col-sm-7">
                     <div class="product-information">
@@ -50,17 +82,25 @@
                         <h2>@Model?.ProductDetail?.PRO_Name</h2>
                         <span>
                             <span> @Model?.ProductDetail?.PRO_Price $</span>
-                            <label>Quantity: 1</label>
-                            <input type="text" value="1" />
-                            <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
-                                <i class="fa fa-shopping-cart"></i>
-                                Add to cart
-                            </a>
+                            <label>Quantity: </label>
+                            <input type="number" value="1" />
+                            @if (Model?.ProductDetail.PRO_Quantity > 0)
+                            {
+                                <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Add to cart
+                                </a>
+                            }
+                            else
+                            {
+                                <button type="button" disabled class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Out of Stock</button>
+                            }
                         </span>
-                        <p><b>Availability:</b> In Stock</p>
+                        <p><b>Availability:</b> @Model?.ProductDetail?.PRO_Status</p>
+                        <p><b>Quantities in Stock:</b> @Model?.ProductDetail?.PRO_Quantity</p>
                         <p><b>Condition:</b> New</p>
-                        <p><b>Brand:</b>@Model?.ProductDetail?.Brand?.BRA_Name</p>
-                        <p><b>Category:</b>@Model?.ProductDetail?.Category?.CAT_Name</p>
+                        <p><b>Brand: </b> @Model?.ProductDetail?.Brand?.BRA_Name</p>
+                        <p><b>Category: </b> @Model?.ProductDetail?.Category?.CAT_Name</p>
                         <a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
                     </div><!--/product-information-->
                 </div>
@@ -78,7 +118,7 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade" id="details">
-                       @Html.Raw(Model?.ProductDetail.PRO_Description)
+                        @Html.Raw(@Model?.ProductDetail?.PRO_Description)
                     </div>
 
                     <div class="tab-pane fade" id="companyprofile">
@@ -188,111 +228,21 @@
                             <p><b>Write Your Review</b></p>
 
                             <form id="reviewForm" autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="post">
-                                <span>
-                                    <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
-                                    <div class="rating-stars">
-                                        <input type="radio" name="RAT_Star" value="5" id="star5" required><label for="star5"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="4" id="star4"><label for="star4"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="3" id="star3"><label for="star3"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="2" id="star2"><label for="star2"><i class="fa fa-star"></i></label>
-                                        <input type="radio" name="RAT_Star" value="1" id="star1"><label for="star1"><i class="fa fa-star"></i></label>
-                                    </div>
-                                    <input type="text" name="RAT_Name" placeholder="Your Name" required minlength="5" maxlength="255" />
-                                    <input type="email" name="RAT_Email" placeholder="Email Address" required minlength="10" maxlength="255" />
-                                </span>
+                                <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
+                                <div class="rating-stars">
+                                    <input type="radio" name="RAT_Star" value="5" id="star5" required><label for="star5"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="4" id="star4"><label for="star4"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="3" id="star3"><label for="star3"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="2" id="star2"><label for="star2"><i class="fa fa-star"></i></label>
+                                    <input type="radio" name="RAT_Star" value="1" id="star1"><label for="star1"><i class="fa fa-star"></i></label>
+                                </div>
+                                <input type="text" name="RAT_Name" placeholder="Your Name" required minlength="5" maxlength="255" />
+                                <input type="email" name="RAT_Email" placeholder="Email Address" required minlength="10" maxlength="255" />
                                 <textarea name="RAT_Comment" placeholder="Your Review" minlength="5" maxlength="255"></textarea>
                                 <button type="submit" class="btn btn-default pull-right">
                                     Submit
                                 </button>
                             </form>
-
-                            <style>
-                                .rating-stars {
-                                    display: flex;
-                                    flex-direction: row-reverse;
-                                    justify-content: flex-end;
-                                    margin: 20px 0;
-                                }
-
-                                .rating-stars input {
-                                    display: none;
-                                }
-
-                                .rating-stars label {
-                                    cursor: pointer;
-                                    font-size: 25px;
-                                    color: #ddd;
-                                    padding: 5px;
-                                }
-
-                                .rating-stars label i {
-                                    transition: all 0.2s ease;
-                                }
-
-                                .rating-stars input:checked ~ label,
-                                .rating-stars label:hover,
-                                .rating-stars label:hover ~ label {
-                                    color: #FE980F;
-                                }
-
-                                .rating-stars input:checked + label:hover,
-                                .rating-stars input:checked ~ label:hover,
-                                .rating-stars input:checked ~ label:hover ~ label,
-                                .rating-stars label:hover ~ input:checked ~ label {
-                                    color: #FE980F;
-                                }
-
-                                #reviewForm input[type="text"],
-                                #reviewForm input[type="email"] {
-                                    width: 100%;
-                                    padding: 10px;
-                                    margin-bottom: 15px;
-                                    border: 1px solid #E6E4DF;
-                                }
-
-                                #reviewForm textarea {
-                                    width: 100%;
-                                    padding: 10px;
-                                    margin-bottom: 15px;
-                                    border: 1px solid #E6E4DF;
-                                    min-height: 120px;
-                                }
-                            </style>
-
-                            <script>
-                                document.getElementById('reviewForm').addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    
-                                    // Validate form
-                                    const name = this.querySelector('[name="RAT_Name"]').value;
-                                    const email = this.querySelector('[name="RAT_Email"]').value;
-                                    const comment = this.querySelector('[name="RAT_Comment"]').value;
-                                    const rating = this.querySelector('input[name="RAT_Star"]:checked');
-
-                                    if (!rating) {
-                                        alert('Please select a rating');
-                                        return;
-                                    }
-
-                                    if (name.length < 5) {
-                                        alert('Name must be at least 5 characters long');
-                                        return;
-                                    }
-
-                                    if (email.length < 10) {
-                                        alert('Email must be at least 10 characters long');
-                                        return;
-                                    }
-
-                                    if (comment.length < 5) {
-                                        alert('Review must be at least 5 characters long');
-                                        return;
-                                    }
-
-                                    // If validation passes, submit the form
-                                    this.submit();
-                                });
-                            </script>
                         </div>
                     </div>
 
@@ -322,44 +272,6 @@
                                 </div>
                             }
                         </div>
-                        @* <div class="item">
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/home/recommend1.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/home/recommend2.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/home/recommend3.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> *@
                     </div>
                     <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
                         <i class="fa fa-angle-left"></i>
@@ -374,3 +286,39 @@
     </div>
 </section>
 
+@section Scripts{
+    <script>
+        document.getElementById('reviewForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Validate form
+            const name = this.querySelector('[name="RAT_Name"]').value;
+            const email = this.querySelector('[name="RAT_Email"]').value;
+            const comment = this.querySelector('[name="RAT_Comment"]').value;
+            const rating = this.querySelector('input[name="RAT_Star"]:checked');
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            if (name.length < 5) {
+                alert('Name must be at least 5 characters long');
+                return;
+            }
+
+            if (email.length < 10) {
+                alert('Email must be at least 10 characters long');
+                return;
+            }
+
+            if (comment.length < 5) {
+                alert('Review must be at least 5 characters long');
+                return;
+            }
+
+            // If validation passes, submit the form
+            this.submit();
+        });
+    </script>
+}

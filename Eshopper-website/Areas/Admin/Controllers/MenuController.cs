@@ -24,8 +24,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var eShopperContext = _context.Menus.Include(m => m.Parent);
-            return View(await eShopperContext.ToListAsync());
-
+            return View(await eShopperContext.OrderBy(x => x.MEN_DisplayOrder).ToListAsync());
         }
 
         // GET: Admin/Menu/Details/5

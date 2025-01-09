@@ -49,7 +49,6 @@
                             <table id="tbl" class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                   
                                         <th>
                                             @Html.DisplayNameFor(model => model.PRO_Image)
                                         </th>
@@ -102,20 +101,20 @@
                                                 @Html.DisplayFor(modelItem => item.PRO_Status)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.PRO_Price)
+                                                @item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
                                             </td>
                                             <td><b>@item.PRO_Sold</b></td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.CreatedBy)
                                             </td>
                                             <td class="text-nowrap">
-                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.CAT_ID" title="Edit">
+                                                <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.PRO_ID" title="Edit">
                                                     <i class="fa-regular fa-pen-to-square"></i>
                                                 </a>
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CAT_ID" title="View Details">
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.PRO_ID" title="View Details">
                                                     <i class="fa-regular fa-circle-info"></i>
                                                 </a>
-                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.CAT_ID" title="Delete">
+                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.PRO_ID" title="Delete">
                                                     <i class="fa-regular fa-trash-xmark"></i>
                                                 </a>
                                             </td>

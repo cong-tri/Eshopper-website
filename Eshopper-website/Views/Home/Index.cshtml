@@ -28,16 +28,16 @@
                                             <p>@item?.PRO_Name</p>
                                             <p>Danh mục : @item?.Category?.CAT_Name </p>
                                             <p>Thương hiệu : @item?.Brand?.BRA_Name</p>
-                                            <a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            @if(item?.PRO_Quantity > 0)
+                                            {
+                                                <a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" disabled class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Out of Stock</button>
+                                            }
                                         </a>
                                     </div>
-                                    @* <div class="product-overlay">
-								<div class="overlay-content">
-									<h2>$56</h2>
-									<p>Easy Polo Black Edition</p>
-									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-								</div>
-							</div> *@
                                 </div>
                             </a>
                             <div class="choose">
