@@ -106,7 +106,7 @@
 								}
 								else
 								{
-									<li><a asp-action="Login" asp-controller="User" asp-area="Admin"><i class="fa fa-lock"></i> Login</a></li>	
+									<li><a asp-action="Login" asp-controller="User" asp-area="Admin"><i class="fa fa-lock"></i>Login</a></li>	
 								}
 							</ul>
 						</div>
@@ -151,19 +151,22 @@
 								</li>
 								<li><a asp-action="Index" asp-controller="Product">Product</a></li>
 								<li><a asp-action="Index" asp-controller="Blog">Blog</a></li>
+                <li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-3">
+						<form asp-controller="Product" asp-action="Search" method="post">
 						<div class="search_box pull-right">
-							<input type="text" placeholder="Search" />
+							<input type="text" placeholder="Search" name="searchTerm" />
+							<button class="btn btn-warning" type="submit">Search</button>
 						</div>
+						</form>
 					</div>
 				</div>
 			</div>
 		</div><!--/header-bottom-->
 	</header><!--/header-->
-  
 	<section>
 		<div class="container">
 			@Html.Partial("_NotificationPartial")
@@ -336,6 +339,7 @@
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
