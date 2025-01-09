@@ -10,7 +10,7 @@ namespace Eshopper_website.Models
 		[Key]
 		public int ORDE_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter order id!"), MinLength(5), MaxLength(50)]
+		[Required(ErrorMessage = "Please enter order id!")]
 		[DisplayName("Order ID")]
 		public required int ORD_ID { get; set; }
 
@@ -19,10 +19,12 @@ namespace Eshopper_website.Models
 		public required int PRO_ID { get; set; }
 
 		[Required(ErrorMessage = "Please enter order details price!")]
+		[Range(1, 1000000000, ErrorMessage = "Product price must be a positive number!")]
 		[DisplayName("Price")]
 		public required decimal ORDE_Price { get; set; }
 
 		[Required(ErrorMessage = "Please enter order details quantity!")]
+		[Range(1, 100, ErrorMessage = "Product price must be a positive number!")]
 		[DisplayName("Quantity")]
 		public required int ORDE_Quantity { get; set; }
 

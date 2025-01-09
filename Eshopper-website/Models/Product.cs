@@ -19,19 +19,24 @@ namespace Eshopper_website.Models
 		[DisplayName("Brand ID")]
 		public required int BRA_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter product name!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter product name!")]
+		[MinLength(5, ErrorMessage = "Name must be at least 5 characters long!")]
+		[MaxLength(255, ErrorMessage = "Name cannot exceed 255 characters!")]
 		[DisplayName("Name")]
 		public required string PRO_Name { get; set; }
 
-		[Required(ErrorMessage = "Please enter product description!"), MinLength(5), MaxLength(255)]
+		[Required(ErrorMessage = "Please enter product description!")]
+		[MinLength(5, ErrorMessage = "Description must be at least 5 characters long!")]
+		[MaxLength(255, ErrorMessage = "Description cannot exceed 255 characters!")]
 		[DisplayName("Description")]
 		public required string PRO_Description { get; set; }
 
-		[MaxLength(255)]
+		[MaxLength(255, ErrorMessage = "Slug cannot exceed 255 characters!")]
 		[DisplayName("Slug")]
 		public string? PRO_Slug { get; set; } = string.Empty;
 
 		[Required(ErrorMessage = "Please enter product price!")]
+		[Range(1, 100000000, ErrorMessage = "Product price must be a positive number!")]
 		[DisplayName("Price")]
 		public required decimal PRO_Price { get; set; }
 
@@ -39,9 +44,11 @@ namespace Eshopper_website.Models
 		[DisplayName("Image")]
 		public string? PRO_Image { get; set; } = string.Empty;
 
-		public int PRO_Sold { get; set; }
+		[DisplayName("Sold")]
+		public int? PRO_Sold { get; set; }
 
 		[Required(ErrorMessage = "Please enter product quantity!")]
+		[Range(1, 100, ErrorMessage = "Product quantity must be a positive number!")]
 		[DisplayName("Quantity")]
 		public required int PRO_Quantity { get; set; }
 
@@ -51,6 +58,7 @@ namespace Eshopper_website.Models
 		public required ProductStatusEnum PRO_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter product capital price!")]
+		[Range(1, 100000000, ErrorMessage = "Product captital price must be a positive number!")]
 		[DisplayName("Capital Price")]
 		public required decimal PRO_CapitalPrice { get; set; }
 

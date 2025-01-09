@@ -41,6 +41,9 @@
                                                     <p class="name">@item?.PRO_Name</p>
                                                     <p class="category">Category: @item?.Category?.CAT_Name</p>
                                                     <p class="brand">Brand: @item?.Brand?.BRA_Name</p>
+                                                    <img src="~/images/product-details/@item?.PRO_Image" alt="@item?.PRO_Name" width="100%" />
+                                                    <h2>@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
+                                                    <a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
                                                 </a>
                                             <div class="product-actions">
                                                 <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">

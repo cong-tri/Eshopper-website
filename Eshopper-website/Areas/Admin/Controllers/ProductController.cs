@@ -9,6 +9,7 @@ using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum;
 using FruitShop.Areas.Admin.DTOs.request;
+using Eshopper_website.Utils.Extension;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -24,10 +25,23 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         // GET: Admin/Product
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
-            return View(await eShopperContext.ToListAsync());
+            //var eShopperContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
+            //return View(await eShopperContext.ToListAsync());
+            List<Product> product = _context.Products.ToList();
+
+            const int pageSize = 10;
+            if (pg > 1)
+            {
+                pg = 1;
+            }
+            int resCount = product.Count();
+            var pager = new Paginate(resCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = product.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewBag.Paper = pager;
+            return View(data);
         }
 
         // GET: Admin/Product/Details/5
@@ -83,6 +97,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] ProductDTO request)
         {
+            var userInfo = HttpContext.Session.Get<Account>("userInfo");
+            var username = userInfo != null ? userInfo.ACC_Username : "";
+
             var product = new Product
             {
                 CAT_ID = request.CAT_ID,
@@ -94,7 +111,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 PRO_Quantity = request.PRO_Quantity,
                 PRO_CapitalPrice = request.PRO_CapitalPrice,
                 PRO_Status = request.PRO_Status,
-                CreatedBy = ""
+                CreatedBy = username,
+                PRO_Sold = 0,
+                CreatedDate = DateTime.Now
             };
             if (ModelState.IsValid)
             {
@@ -111,10 +130,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Added product successfully !";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", product.BRA_ID);
             ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", product.CAT_ID);
+            TempData["error"] = "Failed to add product something wrong !";
             return View(product);
         }
 
@@ -129,6 +150,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
+                TempData["error"] = "Failed to add product something wrong !";
                 return NotFound();
             }
             ViewData["ProductStatus"] = Enum.GetValues(typeof(ProductStatusEnum))
@@ -160,6 +182,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 try
                 {
+                    var userInfo = HttpContext.Session.Get<Account>("userInfo");
+                    var username = userInfo != null ? userInfo.ACC_Username : "";
+
                     var existingProduct = await _context.Products.FindAsync(id);
                     if (existingProduct == null)
                     {
@@ -175,6 +200,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     existingProduct.PRO_Quantity = request.PRO_Quantity;
                     existingProduct.PRO_CapitalPrice = request.PRO_CapitalPrice;
                     existingProduct.PRO_Description = request.PRO_Description;
+                    existingProduct.CreatedBy = username;
+                    existingProduct.UpdatedDate = DateTime.Now;
+                    existingProduct.UpdatedBy = username;
+                    existingProduct.PRO_Sold = 0;
 
                     if (request.PRO_Image != null)
                     {
@@ -209,10 +238,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         throw;
                     }
                 }
+                TempData["error"] = "Failed to add category something wrong !";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", request.BRA_ID);
             ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", request.CAT_ID);
+            TempData["error"] = "Failed to add category something wrong !";
             return View(request);
         }
 
@@ -232,6 +263,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (id == null)
             {
+                TempData["error"] = "Product ID mismatch. Please try again!";
                 return NotFound();
             }
 
@@ -243,7 +275,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            
             return View(product);
         }
 
@@ -255,6 +287,11 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
+                if (await HasAssociatedOrderDetail(id))
+                {
+                    TempData["Error"] = "Cannot delete product as it has associated order details.";
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Products.Remove(product);
             }
 
@@ -265,6 +302,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.PRO_ID == id);
+        }
+        private async Task<bool> HasAssociatedOrderDetail(int PRO_ID)
+        {
+            return await _context.OrderDetails.AnyAsync(p => p.PRO_ID == PRO_ID);
         }
         public async Task<ActionResult> AddQuantity(int Id)
         {
