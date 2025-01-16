@@ -33,18 +33,24 @@ namespace Eshopper_website.Controllers
 		}
 		public IActionResult Details(int Id = 0)
 		{
-			if (Id == null) return RedirectToAction("Index");
+			if (Id == 0) return RedirectToAction("Index");
 
 			var productsById = _context.Products
-				.Include(p => p.Ratings)
 				.Include(p => p.Brand)
 				.Include(p => p.Category)
-				.Where(p => p.PRO_ID == Id).FirstOrDefault();
+				.Include(p => p.Ratings)
+				.FirstOrDefault(p => p.PRO_ID == Id);
 
 			if (productsById == null)
 			{
 				return NotFound();
 			}
+
+			// Get ratings for this product
+			var ratings = _context.Ratings
+				.Where(r => r.PRO_ID == Id)
+				.OrderByDescending(r => r.CreatedDate)
+				.ToList();
 
 			var relantedProduct = _context.Products
 				.Where(p => p.CAT_ID == productsById.CAT_ID && p.PRO_ID != productsById.PRO_ID)
@@ -54,6 +60,7 @@ namespace Eshopper_website.Controllers
 			var viewModel = new ProductDetailsView
 			{
 				ProductDetail = productsById,
+				Ratings = ratings
 			};
 
 			ViewData["relantedProduct"] = relantedProduct;

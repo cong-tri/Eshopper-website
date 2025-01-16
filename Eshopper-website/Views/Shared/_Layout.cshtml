@@ -95,7 +95,8 @@
 							<ul class="nav navbar-nav">
 								@if(userInfo != null)
 								{
-									<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+									<li><a asp-controller="Wishlist" asp-action="Index"><i class="fa fa-star"></i> Wishlist</a></li>
+									<li><a asp-controller="Compare" asp-action="Index"><i class="fa fa-exchange"></i> Compare</a></li>
 									<li><a asp-action="Index" asp-controller="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 									<li><a asp-controller="Account" asp-action="Index">Hello, @userInfo.ACC_DisplayName</a></li>
@@ -334,6 +335,31 @@
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
+
+@* 	<script>
+		// Auto hide alerts after 3 seconds
+		$(document).ready(function () {
+			setTimeout(function () {
+				$(".alert").fadeOut("slow", function () {
+					$(this).remove();
+				});
+			}, 3000);
+
+			// Add loading state to forms
+			$('form').submit(function() {
+				var $submitButton = $(this).find('button[type="submit"]');
+				var originalText = $submitButton.html();
+				$submitButton.html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+				$submitButton.prop('disabled', true);
+				
+				setTimeout(function() {
+					$submitButton.html(originalText);
+					$submitButton.prop('disabled', false);
+				}, 2000);
+			});
+		});
+	</script> *@
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
