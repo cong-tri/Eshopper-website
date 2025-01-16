@@ -10,6 +10,7 @@ using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Extension;
 using Eshopper_website.Areas.Admin.DTOs.request;
+using Microsoft.CodeAnalysis;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -27,7 +28,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Product
         public async Task<IActionResult> Index(int pg = 1)
         {
-            List<Product> product = await _context.Products.Include(x => x.Category).Include(x => x.Brand).ToListAsync();
+            List<Product> product = await _context.Products.AsNoTracking()
+                .Include(x => x.OrderDetails)
+                .Include(x => x.Category)
+                .Include(x => x.Brand).ToListAsync();
 
             const int pageSize = 10;
 
@@ -42,6 +46,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var data = product.Skip(recSkip).Take(pager.PageSize).ToList();
 
             ViewBag.Paper = pager;
+            //ViewData["IsDelete"] = HasAssociatedOrderDetail
 
             return View(data);
         }
@@ -105,7 +110,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 BRA_ID = request.BRA_ID,
                 PRO_Name = request.PRO_Name,
                 PRO_Description = request.PRO_Description,
-                PRO_Slug = request.PRO_Slug,
+                PRO_Slug = SlugHelper.GenerateSlug(request.PRO_Name, request.PRO_ID),
                 PRO_Price = request.PRO_Price,
                 PRO_Quantity = request.PRO_Quantity,
                 PRO_CapitalPrice = request.PRO_CapitalPrice,
@@ -188,7 +193,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                TempData["error"] = "Failed to add product something wrong !";
+                TempData["error"] = "Failed to add product something wrong!";
                 return NotFound();
             }
             ViewData["ProductStatus"] = Enum.GetValues(typeof(ProductStatusEnum))
@@ -234,7 +239,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     existingProduct.PRO_Name = request.PRO_Name;
                     existingProduct.PRO_Price = request.PRO_Price;
                     existingProduct.PRO_Status = request.PRO_Status;
-                    existingProduct.PRO_Slug = request.PRO_Slug;
+                    existingProduct.PRO_Slug = SlugHelper.GenerateSlug(request.PRO_Name, request.PRO_ID);
                     existingProduct.PRO_Quantity = request.PRO_Quantity;
                     existingProduct.PRO_CapitalPrice = request.PRO_CapitalPrice;
                     existingProduct.PRO_Description = request.PRO_Description;

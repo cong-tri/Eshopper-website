@@ -85,6 +85,7 @@ namespace Eshopper_website.Controllers
                     account.ACC_Phone = request.MEM_Phone;
                     account.ACC_Email = request.MEM_Email;
                     account.ACC_DisplayName = request.ACC_DisplayName ?? "";
+                    member.MEM_Address = request.MEM_Address;
 
                     _context.Members.Update(member);
                     _context.Accounts.Update(account);

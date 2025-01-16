@@ -13,19 +13,17 @@ namespace Eshopper_website.Areas.Admin.Repository
         {
             try
             {
-                var constant = new EShopperConstant();
-
-                var client = new SmtpClient(constant.serverMailHost, constant.serverMailPort)
+                var client = new SmtpClient(EShopperConstant.serverMailHost, EShopperConstant.serverMailPort)
                 {
-                    Port = constant.serverMailPort,
+                    Port = EShopperConstant.serverMailPort,
                     EnableSsl = true,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(constant.sendEmail, constant.sendAppPassword)
+                    Credentials = new NetworkCredential(EShopperConstant.sendEmail, EShopperConstant.sendAppPassword)
                 };
 
                 var msg = new MailMessage()
                 {
-                    From = new MailAddress(constant.sendEmail, "EShopper"),
+                    From = new MailAddress(EShopperConstant.sendEmail, "EShopper"),
                     Subject = subject,
                     Body = body,
                     IsBodyHtml = true,

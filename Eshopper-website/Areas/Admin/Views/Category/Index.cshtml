@@ -115,9 +115,11 @@
                                                 <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.CAT_ID" title="View Details">
                                                     <i class="fa-regular fa-circle-info"></i>
                                                 </a> 
-                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.CAT_ID" title="Delete">
-                                                    <i class="fa-regular fa-trash-xmark"></i>
-                                                </a>
+                                                @if(item?.Products?.Count == 0){
+                                                    <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.CAT_ID" title="Delete">
+                                                        <i class="fa-regular fa-trash-xmark"></i>
+                                                    </a>
+                                                }
                                             </td>
                                         </tr>
                                     }

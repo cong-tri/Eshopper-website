@@ -6,9 +6,6 @@ namespace Eshopper_website.Areas.Admin.Repository
     {
         public static string GetOrderConfirmationEmail(Order order)
         {
-            var index = 1;
-            //var orderDetail = "";
-
             if (order != null)
             {
                 //foreach(var item in order.OrderDetails as List<OrderDetail> ?? [])
@@ -31,7 +28,7 @@ namespace Eshopper_website.Areas.Admin.Repository
                return $@"
                     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                         <h2 style='color: #333;'>Order Confirmed #{order.ORD_OrderCode}</h2>
-                        <p>Welcome {order?.Member?.MEM_FirstName} {order.Member.MEM_LastName} to EShopper.</p>
+                        <p>Welcome {order?.Member?.MEM_FirstName} {order?.Member?.MEM_LastName} to EShopper.</p>
                         <p>Thank you for buying at EShopper. Your order had been confirmed.</p>
                 
                         <div style='background-color: #f8f9fa; padding: 15px; margin: 15px 0;'>
@@ -54,7 +51,7 @@ namespace Eshopper_website.Areas.Admin.Repository
                                                 <td style='border: 1px solid;'>{item?.Product?.PRO_Name}</td>
                                                 <td style='border: 1px solid;'>{item?.ORDE_Quantity}</td>                        
                                                 <td style='border: 1px solid;'>{item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
-                                                <td style='border: 1px solid;'>{(item.ORDE_Quantity * item.ORDE_Price).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
+                                                <td style='border: 1px solid;'>{(item?.ORDE_Quantity * item?.ORDE_Price)?.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
                                             </tr>
                                             "))}
                                     </tbody>

@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Eshopper_website.Models;
-using Eshopper_website.Models.ViewModels;
 
 namespace Eshopper_website.Models.DataContext
 {
@@ -30,5 +28,6 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Compare> Compares { get; set; }
-    }
+        public DbSet<MomoInfo> Momos { get; set; }
+	}
 }

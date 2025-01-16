@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Eshopper_website.Models.Blog>
-@{
+﻿@{
 	ViewData["Title"] = "Blog";
+	var blogs = ViewData["Blogs"] as List<Blog> ?? [];
 }
 
 <section>
@@ -9,7 +9,7 @@
 			<div class="col-sm-12">
 				<div class="blog-post-area">
 					<h2 class="title text-center">Latest From our Blog</h2>
-					@foreach (var item in Model)
+					@foreach (var item in blogs)
 					{
 						<div class="single-blog-post">
 							<h3>@item.BLG_Title</h3>
@@ -22,12 +22,12 @@
 							</div>
 							@if (!string.IsNullOrEmpty(item.BLG_Image))
 							{
-								<a href="@Url.Action("Details", new { id = item.BLG_ID })">
+								<a asp-action="Details" asp-controller="Blog" asp-route-slug="@item.BLG_Slug">
 									<img src="~/images/blog/@item.BLG_Image" alt="@item.BLG_Title">
 								</a>
 							}
-							<p>@(item.BLG_Content?.Length > 300 ? item.BLG_Content.Substring(0, 300) + "..." : item.BLG_Content)</p>
-							<a class="btn btn-primary" href="@Url.Action("Details", new { id = item.BLG_ID })">Read More</a>
+							<p>@Html.Raw(item.BLG_Content?.Length > 300 ? item.BLG_Content.Substring(0, 300) + "..." : item.BLG_Content)</p>
+							<a class="btn btn-primary" asp-action="Details" asp-controller="Blog" asp-route-slug="@item.BLG_Slug">Read More</a>
 						</div>
 					}
 				</div>

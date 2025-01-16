@@ -1,6 +1,7 @@
-﻿@* @model Account; *@
+﻿@inject IConfiguration configuration
 @{
     Layout = null;
+    var siteKey = configuration["ReCaptchaSetting:SiteKey"];
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +21,7 @@
     <link rel="stylesheet" href="~/admin/plugins/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/admin/css/adminlte.css" />
     <link rel="stylesheet" href="~/admin/css/custom.css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="login-page bg-body-secondary">
     <div class="login-box">
@@ -53,6 +55,16 @@
                             <div class="d-grid gap-2"> <a href="forgot-password.html">I forgot my password</a> </div>
                         </div> <!-- /.col -->
                     </div> <!--end::Row-->
+                    <div class="row mb-3">
+                        <div class="">
+                            <div class="g-recaptcha" data-sitekey="@siteKey"></div>
+                            @* @if(!String.IsNullOrEmpty(ViewBag.ReCaptchaError)){
+                                <div>
+                                    <span class="text-error">@ViewBag.ReCaptchaError</span>
+                                </div>
+                            } *@
+                        </div>
+                    </div>
                     <div>
                         <button type="submit" class="btn btn-success w-100">Sign In</button>
                     </div>
@@ -98,7 +110,6 @@
             }
         });
         //===================== end::OverlayScrollbars Configure =====================
-
     </script>
 </body>
 </html>

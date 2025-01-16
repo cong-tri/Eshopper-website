@@ -158,3 +158,9 @@
         </div> <!-- /.card-body -->
     </div> <!-- /.card -->
 </div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -64,7 +64,7 @@
                                                 <label asp-for="BAN_Url" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                                <input asp-for="BAN_Url" class="form-control" type="url"/>
+                                                <input asp-for="BAN_Url" class="form-control" type="url" maxlength="255"/>
                                                 <span asp-validation-for="BAN_Url" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -75,7 +75,7 @@
                                                 <label asp-for="BAN_DisplayOrder" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                                <input asp-for="BAN_DisplayOrder" class="form-control" max="6"/>
+                                                <input asp-for="BAN_DisplayOrder" class="form-control" max="6" maxlength="2"/>
                                                 <span asp-validation-for="BAN_DisplayOrder" class="text-danger"></span>
                                             </div>
                                         </div>

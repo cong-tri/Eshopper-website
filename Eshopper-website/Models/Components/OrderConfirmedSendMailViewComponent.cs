@@ -13,11 +13,11 @@ namespace Eshopper_website.Models.Components
             _context = context;
             _hostEnv = hostEnv;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var userInfo = HttpContext.Session.Get<Account>("userInfo");
-            ViewData["Users"] = userInfo.ACC_Username;
-             return View();
+            ViewData["Users"] = userInfo?.ACC_Username;
+            return View();
         }
     }
 }

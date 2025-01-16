@@ -2,6 +2,7 @@
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Services.Momo;
 using Eshopper_website.Services.VNPay;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Enum.Order;
@@ -19,12 +20,16 @@ namespace Eshopper_website.Controllers
         private readonly IVnPayService _vnPayService;
         private readonly EShopperContext _context;
         private readonly IEmailSender _emailSender;
-        
-        public CheckoutController(IEmailSender emailSender, EShopperContext context, IVnPayService vnPayService)
+		private readonly IMomoService _momoService;
+
+		public CheckoutController(
+            IEmailSender emailSender, EShopperContext context, 
+            IVnPayService vnPayService, IMomoService momoService)
         {
             _context = context;
             _emailSender = emailSender;
             _vnPayService = vnPayService;
+            _momoService = momoService;
         }
         public IActionResult Index()
         {
@@ -63,7 +68,7 @@ namespace Eshopper_website.Controllers
             //Nhận coupon code
             var CouponCode = Request.Cookies["CouponTitle"];
 
-			      var orderItem = new Order()
+			var orderItem = new Order()
             {
                 MEM_ID = userInfo.MEM_ID,
                 ORD_OrderCode = ordercode,
@@ -133,10 +138,39 @@ namespace Eshopper_website.Controllers
             TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
             return RedirectToAction("Index", "Cart");
         }
-        [HttpGet]
-        public async Task<IActionResult> PaymentCallbackVnpay()
+
+		[HttpGet]
+		public async Task<IActionResult> PaymentCallbackVnpay()
+		{
+			var response = await Task.FromResult(_vnPayService.PaymentExecute(Request.Query));
+			return Json(response);
+		}
+
+		[HttpGet]
+        public async Task<IActionResult> PaymentCallBack(MomoInfo model)
         {
-            var response = await Task.FromResult(_vnPayService.PaymentExecute(Request.Query));
+            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
+            var requestQuery = HttpContext.Request.Query;
+            if (requestQuery["resultCode"] == 0)
+            {
+                var newMomo = new MomoInfo()
+                {
+                    OrderId = requestQuery["OrderId"],
+                    OrderInfo = requestQuery["OrderInfo"],
+                    MOMO_FullName = requestQuery["FullName"],
+                    MOMO_Amount = decimal.Parse(requestQuery["Amount"]),
+                    MOMO_DatePaid = DateTime.Now,
+                    CreatedDate = DateTime.Now
+                };
+
+                _context.Momos.Add(newMomo);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                TempData["success"] = "Cancel payment transaction momo.";
+                return RedirectToAction("Index", "Cart");
+            }
             return Json(response);
         }
     }

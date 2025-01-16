@@ -131,33 +131,25 @@
 								<li class="dropdown">
 									<a href="#">Category<i class="fa fa-angle-down"></i></a>
 									<ul role="menu" class="sub-menu">
-										<li><a asp-controller="Product" asp-action="Index">PC</a></li>
-										<li><a asp-controller="Product" asp-action="Index">Laptop</a></li>
-										<li><a asp-controller="Product" asp-action="Index">Cellphone</a></li>
-										<li><a asp-controller="Product" asp-action="Index">Ipad</a></li>
+										<vc:categories-navbar-user></vc:categories-navbar-user>
 									</ul>
 								</li>
 								<li class="dropdown">
 									<a href="#">Brand<i class="fa fa-angle-down"></i></a>
 									<ul role="menu" class="sub-menu">
-										<li><a asp-controller="Product" asp-action="Index">Samsung</a></li>
-										<li><a asp-controller="Product" asp-action="Index">Macbook</a></li>
-										<li><a asp-controller="Product" asp-action="Index">Xiaomi</a></li>
-										<li><a asp-controller="Product" asp-action="Index">Iphone</a></li>
+										<vc:brands-navbar-user></vc:brands-navbar-user>
 									</ul>
 								</li>
-								<li><a asp-action="Index" asp-controller="Product">Product</a></li>
-								<li><a asp-action="Index" asp-controller="Blog">Blog</a></li>
-								<li><a asp-controller="Home" asp-action="AboutUs">About Us</a></li>
+								<vc:navbar-user></vc:navbar-user>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-3">
 						<form asp-controller="Product" asp-action="Search" method="post">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Search" name="searchTerm" />
-							<button class="btn btn-warning" type="submit">Search</button>
-						</div>
+							<div class="search_box pull-right">
+								<input type="text" placeholder="Search" name="searchTerm" />
+								<button class="btn btn-warning" type="submit">Search</button>
+							</div>
 						</form>
 					</div>
 				</div>

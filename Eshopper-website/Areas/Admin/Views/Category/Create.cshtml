@@ -78,12 +78,11 @@
                                                 <label asp-for="CAT_Status" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                                @* <input asp-for="CAT_Status" class="form-control" /> *@
-                                                <span asp-validation-for="CAT_Status" class="text-danger"></span>
                                                 <select asp-for="CAT_Status" class="form-select">
                                                     <option value="1">Active</option>
                                                     <option value="2">Inactive</option>
                                                 </select>
+                                                <span asp-validation-for="CAT_Status" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>

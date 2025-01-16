@@ -20,26 +20,39 @@ namespace Eshopper_website.Controllers
 			ViewData["products"] = _context.Products.Include(x => x.Category).Include(x => x.Brand).ToList();
 			return View();
 		}
-		public async Task<IActionResult> Search(string searchTerm)
+
+		[HttpGet]
+		public async Task<ActionResult> Search(string searchTerm)
 		{
+			if (string.IsNullOrEmpty(searchTerm)) {
+
+				return View(searchTerm);
+			}
+
 			var products = await _context.Products
 				.Include(x => x.Category)
 				.Include(x => x.Brand)
 				.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
 				.ToListAsync();
+
 			ViewBag.Keyword = searchTerm;
 
 			return View(products);
 		}
-		public IActionResult Details(int Id = 0)
+
+		public IActionResult Details(string? Slug)
 		{
-			if (Id == 0) return RedirectToAction("Index");
+			if (String.IsNullOrEmpty(Slug))
+			{
+                ViewData["products"] = _context.Products.Include(x => x.Category).Include(x => x.Brand).ToList();
+                return View("Index");
+			}
 
 			var productsById = _context.Products
 				.Include(p => p.Brand)
 				.Include(p => p.Category)
 				.Include(p => p.Ratings)
-				.FirstOrDefault(p => p.PRO_ID == Id);
+				.FirstOrDefault(p => p.PRO_Slug == Slug);
 
 			if (productsById == null)
 			{
@@ -48,7 +61,7 @@ namespace Eshopper_website.Controllers
 
 			// Get ratings for this product
 			var ratings = _context.Ratings
-				.Where(r => r.PRO_ID == Id)
+				.Where(r => r.PRO_ID == productsById.PRO_ID)
 				.OrderByDescending(r => r.CreatedDate)
 				.ToList();
 
@@ -67,8 +80,6 @@ namespace Eshopper_website.Controllers
 
 			return View(viewModel);
 		}
-		
-	
 
 		public async Task<IActionResult> CommentProduct(Rating rating)
 		{

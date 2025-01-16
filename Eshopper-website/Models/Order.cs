@@ -49,6 +49,13 @@ namespace Eshopper_website.Models
 		[DisplayName("Total Price")]
         public required decimal ORD_TotalPrice { get; set; }
 
+        [DisplayName("Shipping Address")]
+        [MaxLength(120, ErrorMessage = "Shipping address cannot exceed 120 characters!")]
+        public string? ORD_ShipAddress { get; set; }
+
+        [DisplayName("Is GHN")]
+        public OrderIsGHNEnum ORD_IsGHN { get; set; } = OrderIsGHNEnum.Inactive;
+
         [ForeignKey("MEM_ID")]
 		public virtual Member? Member { get; set; }
 

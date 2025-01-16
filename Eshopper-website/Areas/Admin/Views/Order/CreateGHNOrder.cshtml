@@ -1,0 +1,203 @@
+﻿@using Eshopper_website.Models.ViewModels
+@model GHNOrderView;
+
+<div class="container mt-4">
+    <h2>Create New GHN Order</h2>
+
+    <form asp-action="CreateGHNOrder" asp-controller="Order" asp-area="Admin" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row mb-3">
+            <div class="col-md">
+                <label asp-for="ClientOrderCode" class="control-label"></label>
+                <select asp-for="ClientOrderCode" class="form-select" asp-items="ViewBag.OrderCodes"></select>
+                <span asp-validation-for="ClientOrderCode" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="ToName" class="control-label"></label>
+                    <input asp-for="ToName" class="form-control" />
+                    <span asp-validation-for="ToName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ToPhone" class="control-label"></label>
+                    <input asp-for="ToPhone" type="tel" class="form-control" />
+                    <span asp-validation-for="ToPhone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ToAddress" class="control-label"></label>
+                    <input asp-for="ToAddress" class="form-control" />
+                    <span asp-validation-for="ToAddress" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="ToProviceId" class="control-label"></label>
+                    <select asp-for="ToProviceId" class="form-select"></select>
+                    <span asp-validation-for="ToProviceId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ToDistrictId" class="control-label"></label>
+                    <select asp-for="ToDistrictId" class="form-select"></select>
+                    <span asp-validation-for="ToDistrictId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ToWardCode" class="control-label"></label>
+                    <select asp-for="ToWardCode" class="form-select"></select>
+                    <span asp-validation-for="ToWardCode" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label asp-for="Weight" class="control-label"></label>
+                    <input asp-for="Weight" class="form-control" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label asp-for="Length" class="control-label"></label>
+                    <input asp-for="Length" class="form-control" />
+                    <span asp-validation-for="Length" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label asp-for="Width" class="control-label"></label>
+                    <input asp-for="Width" class="form-control" />
+                    <span asp-validation-for="Width" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label asp-for="Height" class="control-label"></label>
+                    <input asp-for="Height" class="form-control" />
+                    <span asp-validation-for="Height" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Create Order</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            loadProvinces();
+
+            $('#ToProviceId').change(function () {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    loadDistricts(provinceId);
+                } else {
+                    $('#ToDistrictId').empty().append('<option value="">Choose District</option>');
+                    $('#ToWardCode').empty().append('<option value="">Choose Ward</option>');
+                }
+            });
+
+            $('#ToDistrictId').change(function () {
+                var districtId = $(this).val();
+                if (districtId) {
+                    loadWards(districtId);
+                } else {
+                    $('#ToWardCode').empty().append('<option value="">Choose Ward</option>');
+                }
+            });
+        });
+
+        function loadProvinces() {
+            $.ajax({
+                url: '/api/ghn/address/province',
+                type: 'GET',
+                success: function (response) {
+                    if (response.code == 200 && response.data) {
+                        var select = $('#ToProviceId');
+                        select.empty();
+                        select.append('<option value="">Choose Province</option>');
+                        $.each(response.data, function (index, item) {
+                            select.append(`<option value="${item.ProvinceID}">${item.ProvinceName}</option>`);
+                        });
+                    } else {
+                        Swal.fire("Cannot load data province!");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Cannot load data province!");
+                }
+            });
+        }
+
+        function loadDistricts(provinceId) {
+            if (!provinceId) {
+                Swal.fire("Please choose province!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/ghn/address/district/' + provinceId,
+                type: 'GET',
+                success: function (response) {
+                    console.log(response)
+                    if (response.code == 200 && response.data) {
+                        var select = $('#ToDistrictId');
+                        select.empty();
+                        select.append('<option value="">Choose District</option>');
+                        $.each(response.data, function (index, item) {
+                            select.append(`<option value="${item.DistrictID}">${item.DistrictName}</option>`);
+                            console.log(item)
+                        });
+                    } else {
+                        Swal.fire("Cannot load data district!");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Cannot load data district!");
+                }
+            });
+        }
+
+        function loadWards(districtId) {
+            if (!districtId) {
+                Swal.fire("Please choose district!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/ghn/address/ward/' + districtId,
+                type: 'GET',
+                success: function (response) {
+                    if (response.code == 200 && response.data) {
+                        var select = $('#ToWardCode');
+                        select.empty();
+                        select.append('<option value="">Choose Ward</option>');
+                        $.each(response.data, function (index, item) {
+                            select.append(`<option value="${item.WardCode}">${item.WardName}</option>`);
+                        });
+                    } else {
+                        Swal.fire("Cannot load data province!");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Please choose province!");
+                }
+            });
+        }
+    </script>
+}

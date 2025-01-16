@@ -12,7 +12,7 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter banner title")]
 		[MinLength(5, ErrorMessage = "Title must be at least 5 characters long!")]
-		[MaxLength(100, ErrorMessage = "Title cannot exceed 255 characters!")]
+		[MaxLength(100, ErrorMessage = "Title cannot exceed 100 characters!")]
 		[DisplayName("Title")]
 		public required string BAN_Title { get; set; }
 

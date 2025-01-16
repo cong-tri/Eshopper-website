@@ -111,12 +111,14 @@
                                                 <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.PRO_ID" title="Edit">
                                                     <i class="fa-regular fa-pen-to-square"></i>
                                                 </a>
-                                                <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.PRO_ID" title="View Details">
+                                                <a class="me-1 text-primary" asp-action="Details" asp-route-Slug="@item.PRO_Slug" title="View Details">
                                                     <i class="fa-regular fa-circle-info"></i>
                                                 </a>
-                                                <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.PRO_ID" title="Delete">
-                                                    <i class="fa-regular fa-trash-xmark"></i>
-                                                </a>
+                                                @if(item?.OrderDetails?.Count == 0){
+                                                    <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.PRO_ID" title="Delete">
+                                                        <i class="fa-regular fa-trash-xmark"></i>
+                                                    </a>
+                                                }
                                             </td>
                                         </tr>
                                     }

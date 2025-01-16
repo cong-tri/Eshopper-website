@@ -108,27 +108,6 @@
 								</td>
 							</tr>
 						}
-						<tr>
-							<td colspan="5">
-								<p>Subtotal: $@Model.GrandTotal</p>
-								@if (!string.IsNullOrEmpty(Context.Session.GetString("CouponCode")))
-								{
-									<p>Discount: -$@Context.Session.GetDecimal("DiscountAmount")</p>
-									<p>Final Total: $@(Model.GrandTotal - Context.Session.GetDecimal("DiscountAmount"))</p>
-								}
-								else
-								{
-									<p>Final Total: $@Model.GrandTotal</p>
-								}
-							</td>
-							<td class="text-center">
-								<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
-								<a asp-action="Checkout" asp-controller="Cart" class="btn btn-success">Checkout</a>
-							</td>
-							<td>
-								<a asp-action="Checkout" asp-controller="Checkout" class="btn btn-success">Checkout</a>
-                            </td>
-						</tr>
 					}
 					else
 					{
@@ -180,14 +159,14 @@
 						</li>
 						<li class="single_field">
 							<label>District</label>
-							<select class="css_select" id="quan" name="quan" class="form-select" title="Choose District">
+                            <select class="css_select form-select" id="quan" name="quan" title="Choose District">
 								<option value="">District</option>
 							</select>
 
 						</li>
 						<li class="single_field zip-field">
 							<label>Ward</label>
-							<select class="css_select" id="phuong" name="phuong" class="form-select" title="Choose Ward">
+                            <select class="css_select form-select" id="phuong" name="phuong" title="Choose Ward">
 								<option value="">Ward</option>
 							</select>
 						</li>
@@ -235,7 +214,15 @@
                             {
                                 <a class="btn btn-success btn-checkout"
                                    onclick="return confirm('Confirmed to checkout?');"
-								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
+								   asp-action="Checkout" asp-controller="Checkout">Checkout
+							   </a>
+								<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
+									<input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName" />
+									<input type="hidden" name="Amount" value="@Model.GrandTotal" />
+									<input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
+
+									<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
+								</form>
                             }
                             else
                             {
@@ -243,6 +230,14 @@
                                    onclick="return confirm('Confirmed to checkout?');"
 								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
                                 <p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
+
+								<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
+									<input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName"/>
+									<input type="hidden" name="Amount" value="@Model?.GrandTotal" />
+									<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+									<input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
+									<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
+								</form>
                             }
                         }
 					</div>

@@ -4,10 +4,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Eshopper_website.Services.NewFolder;
 using Eshopper_website.Services.VNPay;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Eshopper_website.Services.GHN;
+using Eshopper_website.Models.GHN;
+using Eshopper_website.Models.Momo;
+using Eshopper_website.Services.Momo;
+using Eshopper_website.Models.Recaptcha;
+using Eshopper_website.Services.Recaptcha;
 
 namespace Eshopper_website
 {
@@ -17,11 +22,23 @@ namespace Eshopper_website
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //connect MOMO API
+            builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+            builder.Services.AddScoped<IMomoService, MomoService>();
+
+            // Add GHN Services
+            builder.Services.Configure<GHN_Setting>(builder.Configuration.GetSection("GHNSettings"));
+            builder.Services.AddScoped<IGHNService, GHNService>();
+
+            // connect Recaptcha Google
+            //builder.Services.Configure<Recaptcha_Setting>(builder.Configuration.GetSection("ReCaptchaSetting"));
+            //builder.Services.AddHttpClient<IRecaptchaService, RecaptchaService>();
+
             //connect VnPay API
             builder.Services.AddScoped<IVnPayService, VnPayService>();
-          
-            // Add services to the container.
-            builder.Services.AddDbContext<EShopperContext>(opt =>
+
+			// Add services to the container.
+			builder.Services.AddDbContext<EShopperContext>(opt =>
 			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -58,7 +75,19 @@ namespace Eshopper_website
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.ContractResolver = null;
+                    //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                });
+                //.AddJsonOptions(options =>
+                //{
+                //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                //    //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                //});
 
             builder.Services.AddDistributedMemoryCache();
 
@@ -77,7 +106,6 @@ namespace Eshopper_website
             //    options.CheckConsentNeeded = context => true;
             //    options.MinimumSameSitePolicy = SameSiteMode.Lax;
             //});
-
 
             WebApplication app = builder.Build();
             
@@ -105,6 +133,16 @@ namespace Eshopper_website
             app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
+                name: "blog",
+                pattern: "blog/{Slug?}",
+                defaults: new { controller = "Blog", action = "Details" });
+
+            app.MapControllerRoute(
+                name: "product",
+                pattern: "product/{Slug?}",
+                defaults: new { controller = "Product", action = "Details" });
 
             app.MapControllerRoute(
                 name: "default",

@@ -17,12 +17,10 @@
                 {
                     <div class="col-sm-4">
                         <div class="product-image-wrapper">
-
                             <a>
                                 <div class="single-products">
-
                                     <div class="productinfo text-center">
-                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">
+                                        <a asp-action="Details" asp-controller="Product" asp-route-Slug="@item?.PRO_Slug">
                                             <img src="~/images/product-details/@item?.PRO_Image" alt="@item?.PRO_Name" width="100%" height="250px" />
                                             <h2>@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
                                             <p>@item?.PRO_Name</p>
@@ -44,15 +42,15 @@
                                 <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
                                     <input type="hidden" name="productId" value="@item?.PRO_ID" />
                                     <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                    <button type="submit" class="btn action-btn wishlist-btn">
-                                        <i class="fa fa-heart"></i> Add to Wishlist
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-heart"></i>
                                     </button>
                                 </form>
                                 <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
                                     <input type="hidden" name="productId" value="@item?.PRO_ID" />
                                     <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                    <button type="submit" class="btn action-btn compare-btn">
-                                        <i class="fa fa-exchange"></i> Add to Compare
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-exchange"></i>
                                     </button>
                                 </form>
                             </div>

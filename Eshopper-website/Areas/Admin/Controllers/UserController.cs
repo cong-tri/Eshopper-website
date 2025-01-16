@@ -1,18 +1,17 @@
 ﻿using Eshopper_website.Areas.Admin.DTOs.request;
+using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Services.Recaptcha;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Enum.Member;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.Win32;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,10 +23,19 @@ namespace Eshopper_website.Areas.Admin.Controllers
     {
         private readonly EShopperContext _context;
 		private readonly Appsettings _appsettings;
-        public UserController(EShopperContext context, IOptions<Appsettings> options)
+        private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
+        //private readonly IRecaptchaService _recaptchaService;
+        public UserController(
+            EShopperContext context, IOptions<Appsettings> options, 
+            IEmailSender emailSender, IConfiguration configuration
+            )
         {
             _context = context;
 			_appsettings = options.Value;
+            _emailSender = emailSender;
+            _configuration = configuration;
+            //_recaptchaService = recaptchaService; IRecaptchaService recaptchaService
         }
         public IActionResult Index()
         {
@@ -120,15 +128,33 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[ValidateRecaptcha]
         public async Task<ActionResult> Login(LoginDTO login)
         {
             if (!String.IsNullOrEmpty(login.UserName) && !String.IsNullOrEmpty(login.Password))
             {
-                var account = await _context.Accounts.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.ACC_Username == login.UserName &&
-                        x.ACC_Password == login.Password);
+                //var reCaptchaToken = Request.Form["g-recaptcha-response"].ToString();
+                //var reCaptchaValid = await _recaptchaService.VerifyToken(reCaptchaToken);
+                //if (!reCaptchaValid)
+                //{
+                //    ViewBag.ReCaptchaError = string.IsNullOrEmpty(_recaptchaService.LastError)
+                //        ? "Vui lòng xác nhận bạn không phải là robot"
+                //        : _recaptchaService.LastError;
+                //    return View(login);
+                //}
 
-                if (account != null && account.ACC_Status == AccountStatusEnum.Active)
+                if (login.UserName.Contains(" ") || login.Password.Contains(" "))
+                {
+                    ViewData["Message"] = "Username or password should not contain blank spaces!";
+                    return View(login);
+                }
+
+                var account = await _context.Accounts.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.ACC_Username == login.UserName);
+
+                if (account != null &&
+                    BCrypt.Net.BCrypt.Verify(login.Password, account.ACC_Password) 
+                    && account.ACC_Status == AccountStatusEnum.Active)
                 {
                     var member = await _context.Members.AsNoTracking().Where(x => x.ACC_ID == account.ACC_ID).FirstOrDefaultAsync();
 
@@ -222,6 +248,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
 		{
             if (ModelState.IsValid)
             {
+                //if (!IsValidRecaptcha(Request.Headers["g-recaptcha-response"]))
+                //{
+                //    ViewData["Message"] = "ReCaptcha invalid";
+                //    return View(register);
+                //}
+
                 if (register.UserName.Contains(" "))
                 {
                     ViewData["Message"] = "Username should not contain blank spaces!";
@@ -255,32 +287,31 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 var newAccount = new Account
                 {
                     ACC_Username = register.UserName,
-                    ACC_Password = register.Password,
+                    ACC_Password = BCrypt.Net.BCrypt.HashPassword(register.Password),
                     ACC_Email = register.Email,
                     ACC_Phone = register.Phone,
                     ACC_DisplayName = register.DisplayName,
                     ACC_Status = AccountStatusEnum.Inactive,
-                    CreatedDate = DateTime.Now
-                };
-
-                _context.Accounts.Add(newAccount);
-                await _context.SaveChangesAsync();
-
-                var newMember = new Member
-                {
-                    ACC_ID = newAccount.ACC_ID,
-                    ACR_ID = 1,
-                    MEM_Email = newAccount.ACC_Email,
-                    MEM_Phone = newAccount.ACC_Phone,
-                    MEM_Gender = MemberGenderEnum.Other,
                     CreatedDate = DateTime.Now,
-                    MEM_Status = MemberStatusEnum.Inactive,
                 };
-                _context.Members.Add(newMember);
-                await _context.SaveChangesAsync();
+                //TempData["PendingAccount"] = newAccount;
+                HttpContext.Session.Set<Account>("accountConfirmOTP", newAccount);
+                // Generate OTP (6-digit number)
+                var random = new Random();
+                var otp = random.Next(100000, 999999).ToString();
+                //TempData["OTP"] = otp;
+                HttpContext.Session.Set<String>("OTPtoken", otp);
 
-                ViewData["Message"] = "Registration successful! You can now log in.";
-                return RedirectToAction("Login");
+                await _emailSender.SendEmailAsync(newAccount.ACC_Email, 
+                    "OTP TOKEN TO AUTHORIZE",
+                    $@"Token have been sent to your email: {newAccount.ACC_Email}. Your OTP token: {otp}"
+                );
+
+                //_context.Accounts.Add(newAccount);
+                //await _context.SaveChangesAsync();
+
+                ViewData["Message"] = "Create new account successful! You must be confirm otp code to finish.";
+                return RedirectToAction("ConfirmOTP");
             }
             else
             {
@@ -302,10 +333,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 });
             }
             await HttpContext.SignOutAsync();
-            //Response.Cookies.Delete("UserToken");
-            //Response.Cookies.Delete("UserCredential");
-            //Response.Cookies.Delete("ShippingPrice");
-            //Response.Cookies.Delete("CouponTitle");
 
             HttpContext.Response.Clear();
             HttpContext.Session.Clear();
@@ -399,5 +426,78 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
 			return RedirectToAction("Index", "Home", new { Area = "" });
 		}
+
+        public IActionResult ConfirmOTP()
+        {
+            var pendingAccount = HttpContext.Session.Get<Account>("accountConfirmOTP");
+
+            //var pendingAccount = TempData["PendingAccount"] as Account;
+
+            if (pendingAccount == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            ViewData["EmailReiceive"] = pendingAccount.ACC_Email;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmOTP(string otp)
+        {
+            if (string.IsNullOrEmpty(otp) || otp.Length != 6 || !otp.All(char.IsDigit))
+            {
+                ViewData["Message"] = "OTP must be 6 digits.";
+                return View();
+            }
+
+            var storedOTP = HttpContext.Session.Get<String>("OTPtoken");
+            var pendingAccount = HttpContext.Session.Get<Account>("accountConfirmOTP");
+
+            if (storedOTP == null || pendingAccount == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            if (otp == storedOTP)
+            {
+                // Create account
+                //pendingAccount!.ACC_Status = AccountStatusEnum.Active;
+
+                _context.Accounts.Add(pendingAccount);
+                await _context.SaveChangesAsync();
+
+                var newAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.ACC_ID == pendingAccount.ACC_ID);
+                // Create member
+                var newMember = new Member
+                {
+                    ACC_ID = newAccount!.ACC_ID,
+                    ACR_ID = 1,
+                    MEM_Email = newAccount.ACC_Email,
+                    MEM_Phone = newAccount.ACC_Phone,
+                    MEM_Gender = MemberGenderEnum.Other,
+                    CreatedDate = DateTime.Now,
+                    MEM_Status = MemberStatusEnum.Active,
+                };
+                _context.Members.Add(newMember);
+                await _context.SaveChangesAsync();
+
+                // Update account status to active
+                newAccount.ACC_Status = AccountStatusEnum.Active;
+                _context.Accounts.Update(pendingAccount);
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("OTPtoken");
+                HttpContext.Session.Remove("accountConfirmOTP");
+
+                TempData["success"] = "Registration successful! You can now log in.";
+                return RedirectToAction("Login");
+            }
+
+            ViewData["Message"] = "Invalid OTP. Please try again.";
+            return View();
+        }
+
     }
 }
