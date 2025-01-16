@@ -11,7 +11,7 @@
                     <h1>Profile User</h1>
                 </div>
                 <div class="card-body">
-                    <form action="Edit" asp-controller="Account" method="post">
+                    <form action="Edit" asp-controller="Account">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input asp-for="ACC_ID" type="hidden" />
                         <input asp-for="MEM_ID" type="hidden" />

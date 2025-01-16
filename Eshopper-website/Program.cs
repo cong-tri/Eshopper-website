@@ -2,12 +2,12 @@ using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models.DataContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using Eshopper_website.Services.NewFolder;
 using Eshopper_website.Services.VNPay;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Eshopper_website.Models;
 
 namespace Eshopper_website
 {
@@ -17,8 +17,6 @@ namespace Eshopper_website
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //connect VnPay API
-            builder.Services.AddScoped<IVnPayService, VnPayService>();
           
             // Add services to the container.
             builder.Services.AddDbContext<EShopperContext>(opt =>
@@ -79,6 +77,13 @@ namespace Eshopper_website
             //});
 
 
+            //connect VnPay API
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
+
+            builder.Services.Configure<EmailConfiguration>(
+                builder.Configuration.GetSection("EmailConfiguration"));
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
+
             WebApplication app = builder.Build();
             
             app.UseCookiePolicy();
@@ -105,13 +110,9 @@ namespace Eshopper_website
             app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.UseStatusCodePagesWithReExecute("/Home/Error404", "?statusCode={0}");
-            
             app.Run();
         }
     }

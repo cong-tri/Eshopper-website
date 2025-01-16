@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Product";
     var products = ViewData["products"] as List<Product>;
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <section id="advertisement">
@@ -19,62 +20,54 @@
                     <!--features_items-->
                     <h2 class="title text-center">Features Items</h2>
                     <div class="row">
-                        @foreach (var item in products ?? [])
-                        {       
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
+                    @foreach (var item in products)
+                    {
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <a>
                                     <div class="single-products">
                                         <div class="productinfo text-center">
-                                            <div class="product-img">
-                                                <img src="~/images/product-details/@item?.PRO_Image" alt="@item?.PRO_Name" />
-                                                <div class="product-overlay">
-                                                    <div class="overlay-content">
-                                                        <a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID" class="view-details">
-                                                            View Details
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product-info">
-                                                <a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">
-                                                    <h2 class="price">$@item?.PRO_Price</h2>
-                                                    <p class="name">@item?.PRO_Name</p>
-                                                    <p class="category">Category: @item?.Category?.CAT_Name</p>
-                                                    <p class="brand">Brand: @item?.Brand?.BRA_Name</p>
-                                                    <img src="~/images/product-details/@item?.PRO_Image" alt="@item?.PRO_Name" width="100%" />
-                                                    <h2>@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
+                                            <a asp-action="Details" asp-controller="Product" asp-route-Slug="@item?.PRO_Slug">
+                                                <img src="~/images/product-details/@item?.PRO_Image" alt="@item?.PRO_Name" width="100%" height="250px" />
+                                                @{
+                                                    var price = item?.PRO_Price ?? 0;
+                                                    var formattedPrice = price.ToString("C0", culture);
+                                                }
+                                                <h2>@formattedPrice</h2>
+                                                <p>@item?.PRO_Name</p>
+                                                <p>Danh mục : @item?.Category?.CAT_Name </p>
+                                                <p>Thương hiệu : @item?.Brand?.BRA_Name</p>
+                                                @if (item?.PRO_Quantity > 0)
+                                                {
                                                     <a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                                </a>
-                                            <div class="product-actions">
-                                                <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
-                                                    <input type="hidden" name="productId" value="@item?.PRO_ID" />
-                                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                                    <button type="submit" class="btn action-btn wishlist-btn">
-                                                        <i class="fa fa-heart"></i> Add to Wishlist
-                                                    </button>
-                                                </form>
-                                                <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
-                                                    <input type="hidden" name="productId" value="@item?.PRO_ID" />
-                                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                                    <button type="submit" class="btn action-btn compare-btn">
-                                                        <i class="fa fa-exchange"></i> Add to Compare
-                                                    </button>
-                                                </form>
-                                            </div>
-                                                <form asp-controller="Cart" asp-action="Add" method="post" class="cart-form">
-                                                    <input type="hidden" name="id" value="@item?.PRO_ID" />
-                                                    <input type="hidden" name="quantity" value="1" />
-                                                    <button type="submit" class="btn cart-btn" title="Add to Cart">
-                                                        <i class="fa fa-shopping-cart"></i>
-                                                        Add to Cart
-                                                    </button>
-                                                </form>
-                                            </div>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" disabled class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Out of Stock</button>
+                                                }
+                                            </a>
                                         </div>
                                     </div>
+                                </a>
+                                <div class="product-actions">
+                                    <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                        <input type="hidden" name="productId" value="@item?.PRO_ID" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
+                                        <input type="hidden" name="productId" value="@item?.PRO_ID" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-exchange"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                        }
+                        </div>
+                    }
                     </div>
                 </div><!--features_items-->
             </div>
@@ -82,153 +75,32 @@
 </section>
 
 <style>
-    .product-image-wrapper {
-        border: 1px solid #F7F7F5;
-        overflow: hidden;
-        margin-bottom: 30px;
-        background: #fff;
-        transition: all 0.3s ease;
-    }
-
-    .product-image-wrapper:hover {
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-
-    .product-img {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .product-img img {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        transition: all 0.5s ease;
-    }
-
-    .product-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(254, 152, 15, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: all 0.5s ease;
-    }
-
-    .product-img:hover .product-overlay {
-        opacity: 1;
-    }
-
-    .product-img:hover img {
-        transform: scale(1.1);
-    }
-
-    .view-details {
-        color: #fff;
-        text-decoration: none;
-        padding: 10px 20px;
-        border: 2px solid #fff;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .view-details:hover {
-        background: #fff;
-        color: #FE980F;
-    }
-
-    .product-info {
-        padding: 15px;
-        text-align: center;
-    }
-
-    .product-info a {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .product-info .price {
-        color: #FE980F;
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .product-info .name {
-        color: #333;
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 8px;
-        transition: color 0.3s ease;
-    }
-
-    .product-info a:hover .name {
-        color: #FE980F;
-    }
-
-    .product-info .category,
-    .product-info .brand {
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 5px;
-    }
-
     .product-actions {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin: 15px 0;
+        justify-content: center;
+        gap: 8px;
+        margin: 10px 0;
     }
 
     .action-btn {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 5px;
-        padding: 8px 15px;
-        border-radius: 20px;
+        gap: 4px;
+        padding: 6px 12px;
+        border-radius: 4px;
         background: #fff;
-        color: #FE980F;
-        border: 1px solid #FE980F;
-        transition: all 0.3s ease;
-        font-size: 14px;
+        color: #666;
+        border: 1px solid #ddd;
+        font-size: 13px;
+        transition: all 0.2s ease;
     }
 
-    .wishlist-btn, .compare-btn {
-        min-width: 120px;
-    }
+        .action-btn:hover {
+            color: #FE980F;
+            border-color: #FE980F;
+        }
 
-    .cart-form {
-        margin-top: 10px;
-    }
-
-    .cart-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 10px;
-        background: #FE980F;
-        color: #fff;
-        border: none;
-        border-radius: 25px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-    }
-
-    .cart-btn:hover {
-        background: #e88a02;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(254, 152, 15, 0.3);
-    }
-
-    .cart-btn i {
-        font-size: 16px;
-    }
+        .action-btn i {
+            font-size: 13px;
+        }
 </style>

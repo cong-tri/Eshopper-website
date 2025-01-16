@@ -1,4 +1,5 @@
-﻿using Eshopper_website.Utils.Enum;
+﻿using Eshopper_website.Models.DataContext;
+using Eshopper_website.Utils.Enum;
 
 namespace Eshopper_website.Models
 {
@@ -6,7 +7,7 @@ namespace Eshopper_website.Models
     {
         public int ACC_ID { get; set; }
         public int MEM_ID { get; set; }
-		public int ACR_ID { get; set; }
+        public int ACR_ID { get; set; }
         public string? ACC_Username { get; set; }
         public string? ACC_DisplayName { get; set; }
         public string? ACC_Email { get; set; }

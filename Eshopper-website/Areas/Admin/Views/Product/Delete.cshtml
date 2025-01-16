@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Delete";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <h1>Delete</h1>
@@ -33,7 +34,7 @@
             @Html.DisplayNameFor(model => model.PRO_Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PRO_Price)
+            @Model.PRO_Price.ToString("C0", culture)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PRO_Image)
@@ -57,7 +58,7 @@
             @Html.DisplayNameFor(model => model.PRO_CapitalPrice)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PRO_CapitalPrice)
+            @Model.PRO_CapitalPrice.ToString("C0", culture)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)

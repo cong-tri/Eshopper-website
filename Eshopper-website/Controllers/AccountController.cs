@@ -42,9 +42,15 @@ namespace Eshopper_website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [FromForm] ProfileDTO request)
+        public async Task<IActionResult> Edit([FromForm] ProfileDTO request)
         {
-            if (id != request.ACC_ID)
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
+            if (userInfo.ACC_ID != request.ACC_ID)
             {
                 return NotFound();
             }

@@ -1,14 +1,14 @@
-﻿@* @model Account;
+﻿@using Eshopper_website.Areas.Admin.DTOs.request
+@model NewPassDTO
 @{
     Layout = null;
 }
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>AdminLTE 4 | Login Page v2</title>
+    <title>AdminLTE 4 | NewPass Page v2</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="AdminLTE 4 | Login Page v2">
     <meta name="author" content="ColorlibHQ">
@@ -30,36 +30,74 @@
                 </a>
             </div>
             <div class="card-body login-card-body rounded">
-                <p class="login-box-msg text-danger">@ViewData["Message"]</p>
-                <!--FORM LOGIN -->
-                <form asp-action="Login" asp-area="Admin" asp-controller="SendMail">
-                    <input type="hidden" name="referer" value="@ViewBag.referer" />
+                @if (TempData["Error"] != null)
+                {
+                    <p class="login-box-msg text-danger">@TempData["Error"]</p>
+                }
+                @if (TempData["Success"] != null)
+                {
+                    <p class="login-box-msg text-success">@TempData["Success"]</p>
+                }
+
+                <form method="post" asp-area="Admin" asp-controller="User" asp-action="NewPass">
                     <div class="input-group mb-2">
-                        <div class="form-floating"> <input id="email" name="Email" type="email" class="form-control" maxlength="30" value="" placeholder="Your Email" > <label for="loginEmail">Email</label> </div>
-                        <div class="input-group-text"> <i class="fa-light fa-user"></i> </div>
+                        <div class="form-floating">
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
+                            <label asp-for="Email">Email</label>
+                        </div>
+                        <div class="input-group-text">
+                            <i class="fa-light fa-user"></i>
+                        </div>
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="form-floating"> <input id="password" name="Password" type="password" class="form-control" maxlength="20" placeholder="Your Password"> <label for="loginPassword">Password</label> </div>
-                        <div class="input-group-text"> <i class="fa-light fa-lock"></i> </div>
-                    </div> <!--begin::Row-->
-                    <div>
-                        <button type="submit" class="btn btn-success w-100">Sign In</button>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+
+                    <div class="input-group mb-2">
+                        <div class="form-floating">
+                            <input asp-for="Token" type="text" class="form-control" placeholder="Token" required>
+                            <label asp-for="Token">Token From Your Email</label>
+                        </div>
+                        <div class="input-group-text">
+                            <i class="fa-light fa-lock"></i>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Token" class="text-danger"></span>
+
+                    <div class="input-group mb-2">
+                        <div class="form-floating">
+                            <input asp-for="Password" type="password" class="form-control" required>
+                            <label asp-for="Password">New password</label>
+                        </div>
+                        <div class="input-group-text">
+                            <i class="fa-light fa-lock"></i>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+
+                    <div class="input-group mb-2">
+                        <div class="form-floating">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" required>
+                            <label asp-for="ConfirmPassword">Confirm password</label>
+                        </div>
+                        <div class="input-group-text">
+                            <i class="fa-light fa-lock"></i>
+                        </div>
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success w-100" >Create New Password</button>
+                        </div>
                     </div>
                 </form>
-                <div class="social-auth-links text-center mb-3 d-grid gap-2">
-                    <p>- OR -</p> <a href="#" class="btn btn-primary">
-                        <i class="bi bi-facebook me-2"></i> Sign in using Facebook
-                    </a> <a href="#" class="btn btn-danger">
-                        <i class="bi bi-google me-2"></i> Sign in using Google+
-                    </a>
-                </div>
-                <p class="text-center">
-                    <a asp-action="Register" asp-controller="User" asp-area="Admin">Don't have already account? Go to sign up.</a>
-                </p>
-            </div> <!-- /.login-card-body -->
 
+                <p class="mb-1 mt-3">
+                    <a asp-area="Admin" asp-controller="User" asp-action="FogotPass">I forgot my password</a>
+                </p>
+            </div>
         </div>
-    </div> <!-- /.login-box -->
+    </div>
+
     <script src="~/admin/plugins/overlayscrollbars/browser/overlayscrollbars.browser.es6.min.js"></script>
     <script src="~/admin/js/bootstrap.bundle.min.js"></script>
     <script src="~/admin/js/adminlte.js"></script>
@@ -88,8 +126,6 @@
             }
         });
         //===================== end::OverlayScrollbars Configure =====================
-
     </script>
 </body>
-</html>
- *@
+</html> 

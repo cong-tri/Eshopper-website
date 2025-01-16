@@ -1,4 +1,5 @@
-﻿using Eshopper_website.Areas.Admin.DTOs.request;
+using Eshopper_website.Areas.Admin.DTOs.request;
+using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum;
@@ -11,11 +12,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.Win32;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Eshopper_website.Areas.Admin.Repository;
+using System.Security.Cryptography;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Azure.Core;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -23,11 +26,15 @@ namespace Eshopper_website.Areas.Admin.Controllers
     public class UserController : Controller
     {
         private readonly EShopperContext _context;
-		private readonly Appsettings _appsettings;
-        public UserController(EShopperContext context, IOptions<Appsettings> options)
+        private readonly Appsettings _appsettings;
+        private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _hostEnv;
+        public UserController(EShopperContext context, IOptions<Appsettings> options, IEmailSender emailSender,IWebHostEnvironment hostEnv)
         {
             _context = context;
-			_appsettings = options.Value;
+            _appsettings = options.Value;
+            _emailSender = emailSender;
+            _hostEnv = hostEnv;
         }
         public IActionResult Index()
         {
@@ -196,7 +203,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                         HttpContext.Session.Set<UserInfo>("userInfo", user);
 
-                        return RedirectToAction("Index", "Home", new {Area = ""} );
+                        return RedirectToAction("Index", "Home", new { Area = "" });
                     }
                 }
                 else
@@ -204,22 +211,22 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     ViewData["Message"] = "Wrong username or password!";
                 }
             }
-			else
-			{
-				ViewData["Message"] = "Username or password is empty!";
-			}
-			return View();
-		}
+            else
+            {
+                ViewData["Message"] = "Username or password is empty!";
+            }
+            return View();
+        }
 
-		public IActionResult Register()
-		{
-			return View();
-		}
+        public IActionResult Register()
+        {
+            return View();
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterDTO register)
-		{
+        {
             if (ModelState.IsValid)
             {
                 if (register.UserName.Contains(" "))
@@ -331,7 +338,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
             if (!result.Succeeded)
             {
-                return RedirectToAction("Login", "User", new {Area = "Admin"});
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
             }
 
             var claims = result?.Principal?.Identities?.FirstOrDefault()?.Claims.Select(claim => new
@@ -353,51 +360,247 @@ namespace Eshopper_website.Areas.Admin.Controllers
             if (existingUser == null || existingUser?.ACC_Status == AccountStatusEnum.Inactive)
             {
                 ViewData["Message"] = "Account not found!";
-				return RedirectToAction("Login", "User", new { Area = "Admin" });
-			}
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
 
-			var member = await _context.Members.AsNoTracking().Where(x => x.ACC_ID == existingUser!.ACC_ID).FirstOrDefaultAsync();
+            var member = await _context.Members.AsNoTracking().Where(x => x.ACC_ID == existingUser!.ACC_ID).FirstOrDefaultAsync();
 
-			if (member == null && member?.MEM_Status == MemberStatusEnum.Inactive)
-			{
-				ViewData["Message"] = "Member not found!";
-				return RedirectToAction("Login", "User", new { Area = "Admin" });
-			}
+            if (member == null && member?.MEM_Status == MemberStatusEnum.Inactive)
+            {
+                ViewData["Message"] = "Member not found!";
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
 
-			var user = new UserInfo(existingUser, member!.ACR_ID, member!.MEM_ID);
+            var user = new UserInfo(existingUser, member!.ACR_ID, member!.MEM_ID);
 
-			var existingAccountLogin = await _context.AccountLogins.AsNoTracking()
-			.FirstOrDefaultAsync(x =>
-				x.ProviderKey == providerKey);
+            var existingAccountLogin = await _context.AccountLogins.AsNoTracking()
+            .FirstOrDefaultAsync(x =>
+                x.ProviderKey == providerKey);
 
-			if (existingAccountLogin != null)
-			{
+            if (existingAccountLogin != null)
+            {
                 HttpContext.Session.Set<UserInfo>("userInfo", user);
-			    TempData["success"] = "Login successfully.";
-			}
-			else
-			{
-				var newAccountLogin = new AccountLogin()
-				{
-					ACC_ID = existingUser!.ACC_ID,
-					LoginProvider = loginProvider ?? "",
-					ProviderKey = providerKey ?? "",
-					ProviderDisplayName = providerDisplayName ?? "",
-					CreatedBy = existingUser.ACC_Username,
-					CreatedDate = DateTime.Now,
-					UpdatedBy = existingUser.ACC_Username,
-					UpdatedDate = DateTime.Now,
-				};
+                TempData["success"] = "Login successfully.";
+            }
+            else
+            {
+                var newAccountLogin = new AccountLogin()
+                {
+                    ACC_ID = existingUser!.ACC_ID,
+                    LoginProvider = loginProvider ?? "",
+                    ProviderKey = providerKey ?? "",
+                    ProviderDisplayName = providerDisplayName ?? "",
+                    CreatedBy = existingUser.ACC_Username,
+                    CreatedDate = DateTime.Now,
+                    UpdatedBy = existingUser.ACC_Username,
+                    UpdatedDate = DateTime.Now,
+                };
 
-				HttpContext.Session.Set<UserInfo>("userInfo", user);
+                HttpContext.Session.Set<UserInfo>("userInfo", user);
 
-				_context.AccountLogins.Add(newAccountLogin);
-				await _context.SaveChangesAsync();
+                _context.AccountLogins.Add(newAccountLogin);
+                await _context.SaveChangesAsync();
 
-				TempData["success"] = "Login successfully.";
-			}
+                TempData["success"] = "Login successfully.";
+            }
 
-			return RedirectToAction("Index", "Home", new { Area = "" });
-		}
+            return RedirectToAction("Index", "Home", new { Area = "" });
+        }
+
+        public IActionResult ForgotPass()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPass([FromForm] string email)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(email)) return RedirectToAction("Login", "User", new { Area = "Admin" });
+                var account = await _context.Accounts.FirstOrDefaultAsync(u => u.ACC_Email == email);
+                if (account == null)
+                {
+                    TempData["Error"] = "Account not found.";
+                    return View();
+                }
+                // Tạo mật khẩu mới ngẫu nhiên
+                var token = GenerateRandomPassword();
+                account.ACC_ResetPasswordToken = token;
+                account.ACC_ResetPasswordExpiry = DateTime.Now.AddMinutes(2);
+                 _context.Accounts.Update(account);
+                await _context.SaveChangesAsync();
+                // Tạo nội dung email
+                var emailBody = $@"
+                    <h2>YOUR TOKEN TO CONFIRM</h2>
+                    <p>Hello,</p>
+                    <p>Email login: <strong>{email}</strong></p>
+                    <p>Your token: <strong>{token}</strong></p>
+                    <p>Please confirm to authorize and change new password to secure account.</p>
+                    <p>Best Regard,</p>
+                    <p>EShopper Team</p>";
+                // Gửi email
+                await _emailSender.SendEmailAsync(
+                    email,
+                    "EShopper - Token To Confirm",
+                    emailBody
+                );
+                TempData["Success"] = "Mật khẩu mới đã được gửi đến email của bạn.";
+                return RedirectToAction("NewPass", "User", new { area = "Admin" });
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Có lỗi xảy ra: {ex.Message}";
+                return View();
+            }
+        }
+        private static string GenerateRandomPassword(int length = 8)
+        {
+            const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private static string CreateMD5(string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var inputBytes = Encoding.UTF8.GetBytes(input);
+                var hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                var sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+        public IActionResult NewPass()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> NewPass([FromForm] NewPassDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                if (request.Password != request.ConfirmPassword)
+                {
+                    ModelState.AddModelError("ConfirmPassword", "Confirm password is not same password.");
+                    return View(request);
+                }
+
+                // Tiếp tục xử lý nếu email hợp lệ
+                var account = await _context.Accounts.FirstOrDefaultAsync(u => u.ACC_Email == request.Email);
+
+                if (account == null)
+                {
+                    TempData["Error"] = "Email không tồn tại trong hệ thống.";
+                    return View(request);
+                }
+
+                if (request.Token != account.ACC_ResetPasswordToken && account.ACC_ResetPasswordExpiry < DateTime.Now)
+                {
+                    ModelState.AddModelError("Token", "Token not correct or expire date.");
+                    return View(request);
+                }
+                account.ACC_Password = request.Password;
+                account.ACC_ResetPasswordToken = null;
+                account.ACC_ResetPasswordExpiry = null;
+
+                _context.Accounts.Update(account);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+            return View(request);
+        }
+        [HttpGet]
+        public async Task<IActionResult> UpdateProfileAdmin()
+        {
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+            var profile = await _context.Members.AsNoTracking()
+                .Include(x => x.Account)
+                .Where(x => x.ACC_ID == userInfo.ACC_ID).FirstOrDefaultAsync();
+
+            if (profile == null)
+            {
+                TempData["error"] = "Profile not found!";
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
+            var profileDTO = new ProfileDTO()
+            {
+                ACC_ID = userInfo.ACC_ID,
+                MEM_ID = userInfo.MEM_ID,
+                ACC_DisplayName = userInfo.ACC_DisplayName,
+                MEM_Email = profile.MEM_Email,
+                MEM_Phone = profile.MEM_Phone,
+                MEM_Address = profile.MEM_Address,
+                MEM_FirstName = profile.MEM_FirstName,
+                MEM_LastName = profile.MEM_LastName,
+                MEM_Gender = profile.MEM_Gender,
+            };
+
+            return View(profileDTO);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfileAdmin([FromForm] ProfileDTO profileDTO)
+        {
+            try
+            {
+                var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
+                if (userInfo?.ACC_ID != profileDTO.ACC_ID)
+                {
+                    return NotFound();
+                }
+
+                var account = await _context.Accounts.FindAsync(profileDTO.ACC_ID);
+                var member = await _context.Members.FindAsync(profileDTO.MEM_ID);
+
+                if (account == null || member == null)
+                {
+                    return NotFound();
+                }
+
+                // Update basic information
+                member.MEM_Gender = profileDTO.MEM_Gender;
+                member.MEM_FirstName = profileDTO.MEM_FirstName;
+                member.MEM_LastName = profileDTO.MEM_LastName;
+                member.MEM_Email = profileDTO.MEM_Email;
+                member.MEM_Phone = profileDTO.MEM_Phone;
+                account.ACC_Phone = profileDTO.MEM_Phone;
+                account.ACC_Email = profileDTO.MEM_Email;
+                account.ACC_DisplayName = profileDTO.ACC_DisplayName ?? "";
+                member.MEM_Address = profileDTO.MEM_Address;
+
+                _context.Accounts.Update(account);
+                _context.Members.Update(member);
+
+                await _context.SaveChangesAsync();
+
+                // Update session
+                var user = new UserInfo(account, member.ACC_ID, member.ACC_ID);
+                HttpContext.Session.Set<UserInfo>("userInfo", user);
+
+                TempData["success"] = "Profile updated successfully!";
+                return RedirectToAction("UpdateProfileAdmin");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "An error occurred while updating the profile!";
+                return RedirectToAction("UpdateProfileAdmin");
+            }
+        }
     }
+
 }
+

@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum;
-using FruitShop.Areas.Admin.DTOs.request;
 using Eshopper_website.Utils.Extension;
+using Eshopper_website.Areas.Admin.DTOs.request;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -74,15 +74,15 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Product/Create
         public IActionResult Create()
         {
-			ViewData["ProductStatus"] = Enum.GetValues(typeof(ProductStatusEnum))
+            ViewData["ProductStatus"] = new SelectList(Enum.GetValues(typeof(ProductStatusEnum))
                 .Cast<ProductStatusEnum>()
-				.Select(e => new SelectListItem
+                .Select(e => new SelectListItem
                 {
-					Value = ((int)e).ToString(),
-					Text = e.ToString()
-				}).ToList();
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }), "Value", "Text");
 
-			ViewData["BRA_ID"] = new SelectList(
+            ViewData["BRA_ID"] = new SelectList(
                 _context.Brands.Where(x => x.BRA_Status.ToString() == "Active"), "BRA_ID", "BRA_Name"
             );
 
@@ -117,6 +117,15 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 CreatedBy = username,
                 CreatedDate = DateTime.Now
             };
+
+            ViewData["ProductStatus"] = new SelectList(Enum.GetValues(typeof(ProductStatusEnum))
+                .Cast<ProductStatusEnum>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }), "Value", "Text");
+
 
             if (product.PRO_Price <= product.PRO_CapitalPrice)
             {

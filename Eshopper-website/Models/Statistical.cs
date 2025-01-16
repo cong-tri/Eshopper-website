@@ -10,20 +10,22 @@ namespace Eshopper_website.Models
 		[Key]
 		public int STA_ID { get; set; }
 
-		[Required(ErrorMessage = "Please enter the statistical quantity")]
 		[DisplayName("Quantity")]
-		public required int STA_Quantity  { get; set; }
+		public int? STA_Quantity { get; set; } //Số lượng bán 
 
-		[Required(ErrorMessage = "Please enter the statistical status")]
 		[DisplayName("Status")]
-		public required int STA_Status { get; set; }
+		public int STA_Status { get; set; }
 
-		[Required(ErrorMessage = "Please enter the statistical revenue")]
 		[DisplayName("Revenue")]
-		public required decimal STA_Revenue { get; set; }
+		[Column(TypeName = "decimal(18,2)")]
+		public int? STA_Revenue { get; set; }
 
-		[Required(ErrorMessage = "Please enter the statistical profit")]
 		[DisplayName("Profit")]
-		public required double STA_Profit { get; set; }
+		[Column(TypeName = "decimal(18,2)")]
+		public int? STA_Profit { get; set; }
+
+		[DisplayName("Sold")]
+		public int? STA_Sold { get; set; } // So lg don hang
+
 	}
 }
