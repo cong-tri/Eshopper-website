@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Product - Detail";
     ViewData["Active"] = "Product";
+
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 @section Headers {
@@ -85,7 +87,7 @@
                                     <label asp-for="PRO_Price" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_Price" class="form-control" readonly />
+                                    <input value="@Model.PRO_Price.ToString("C0", culture)" class="form-control" readonly />
                                 </div>
                             </div>
                             <div class="row align-items-center mb-4">
@@ -117,7 +119,7 @@
                                     <label asp-for="PRO_CapitalPrice" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_CapitalPrice" class="form-control" readonly/>
+                                    <input value="@Model.PRO_CapitalPrice.ToString("C0", culture)" class="form-control" readonly/>
                                 </div>
                             </div>
                         </form>

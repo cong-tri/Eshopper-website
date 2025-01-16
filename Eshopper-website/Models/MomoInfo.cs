@@ -31,6 +31,6 @@ namespace Eshopper_website.Models
 		public required DateTime MOMO_DatePaid { get; set; } = DateTime.Now;
 
 		[ForeignKey("ORD_ID")]
-		public virtual Order? Order { get; set; }
+		public virtual account? Order { get; set; }
 	}
 }

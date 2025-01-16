@@ -1,0 +1,99 @@
+﻿@model Account
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<!--begin::Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>AdminLTE 4 | Foget Page v2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="AdminLTE 4 | Login Page v2">
+    <meta name="author" content="ColorlibHQ">
+    <meta name="description" content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS.">
+    <meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fontsource/source-sans-3@5.0.12/index.css" />
+    <link rel="stylesheet" href="~/admin/plugins/overlayscrollbars/styles/overlayscrollbars.min.css" />
+    <link rel="stylesheet" href="~/admin/plugins/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/admin/plugins/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="~/admin/css/adminlte.css" />
+    <link rel="stylesheet" href="~/admin/css/custom.css" />
+</head>
+<body class="login-page bg-body-secondary">
+    <div class="login-box">
+        <div class="card card-outline card-success">
+            <div class="card-header">
+                <a href="#" class="link-dark text-center link-offset-2 link-opacity-100 link-opacity-50-hover">
+                    <h1 class="mb-0"> <b>Admin</b> EShopper</h1>
+                </a>
+            </div>
+            <div class="card-body login-card-body rounded">
+                <p class="login-box-msg">Nhập email để lấy lại mật khẩu</p>
+
+                @if (TempData["Error"] != null)
+                {
+                    <p class="login-box-msg text-danger">@TempData["Error"]</p>
+                }
+                @if (TempData["Success"] != null)
+                {
+                    <p class="login-box-msg text-success">@TempData["Success"]</p>
+                }
+
+                <form method="post">
+                    <div class="input-group mb-2">
+                        <div class="form-floating">
+                            <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            <label>Email</label>
+                        </div>
+                        <div class="input-group-text">
+                            <i class="fa-light fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success w-100">Gửi mật khẩu mới</button>
+                        </div>
+                    </div>
+                </form>
+
+                <p class="mt-3 mb-1">
+                    <a asp-area="Admin" asp-controller="User" asp-action="Login">Quay lại đăng nhập</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/admin/plugins/overlayscrollbars/browser/overlayscrollbars.browser.es6.min.js"></script>
+    <script src="~/admin/js/bootstrap.bundle.min.js"></script>
+    <script src="~/admin/js/adminlte.js"></script>
+    <script src="~/admin/plugins/jquery/jquery-3.7.1.min.js"></script>
+    <script>
+        //===================== begin::OverlayScrollbars Configure =====================
+        const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
+        const Default = {
+            scrollbarTheme: "os-theme-dark",
+            scrollbarAutoHide: "leave",
+            scrollbarClickScroll: true,
+        };
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (
+                sidebarWrapper &&
+                typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
+            ) {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: Default.scrollbarTheme,
+                        autoHide: Default.scrollbarAutoHide,
+                        clickScroll: Default.scrollbarClickScroll,
+                    },
+                });
+            }
+        });
+        //===================== end::OverlayScrollbars Configure =====================
+    </script>
+</body>
+</html>

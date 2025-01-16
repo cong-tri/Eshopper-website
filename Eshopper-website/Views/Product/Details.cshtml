@@ -1,4 +1,4 @@
-﻿@using Eshopper_website.Models.ViewModels
+@using Eshopper_website.Models.ViewModels
 @using System.Linq
 @using System.Collections.Generic
 
@@ -7,6 +7,8 @@
 @{
     ViewData["Title"] = "Detail Product";
     var products = ViewData["relantedProduct"] as List<Product>;
+
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
     var ratings = Model?.ProductDetail?.Ratings as IEnumerable<Rating> ?? Enumerable.Empty<Rating>();
 }
 <style>
@@ -209,7 +211,7 @@
                 <!--product-details-->
                 <div class="col-sm-5">
                     <div class="view-product">
-                        <img src="~/images/product-details/@Model?.ProductDetail.PRO_Image" alt="" />
+                        <img src="~/images/product-details/@Model?.ProductDetail.PRO_Image" alt="@Model?.ProductDetail?.PRO_Name" />
                     </div>
                 </div>
 
@@ -231,9 +233,13 @@
                         
                         <h2>@Model?.ProductDetail?.PRO_Name</h2>
                         <span>
-                            <span> @Model?.ProductDetail?.PRO_Price $</span>
+                            @{
+                                var price = Model?.ProductDetail?.PRO_Price ?? 0;
+                                var formattedPrice = price.ToString("C0", culture);
+                            }
+                            <span>@formattedPrice</span>
                             <label>Quantity: </label>
-                            <input type="number" value="1" />
+                            <input type="number" value="1" min="1" max="@Model?.ProductDetail?.PRO_Quantity" />
                             @if (Model?.ProductDetail.PRO_Quantity > 0)
                             {
                                 <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
@@ -243,9 +249,12 @@
                             }
                             else
                             {
-                                <button type="button" disabled class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Out of Stock</button>
+                                <button type="button" disabled class="btn btn-default add-to-cart">
+                                    <i class="fa fa-shopping-cart"></i>Out of Stock
+                                </button>
                             }
                         </span>
+
                         <div class="product-actions">
                             <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
                                 <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
@@ -267,6 +276,7 @@
                         <p><b>Condition:</b> New</p>
                         <p><b>Brand: </b> @Model?.ProductDetail?.Brand?.BRA_Name</p>
                         <p><b>Category: </b> @Model?.ProductDetail?.Category?.CAT_Name</p>
+
                     </div><!--/product-information-->
                 </div>
             </div><!--/product-details-->
@@ -503,7 +513,7 @@
                                         <div class="single-products">
                                             <div class="productinfo text-center">
                                                 <img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name" />
-                                                <h2>@item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
+                                                <h2>@item.PRO_Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</h2>
                                                 <p>@item.PRO_Name</p>
                                                 <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
                                             </div>

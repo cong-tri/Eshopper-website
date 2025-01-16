@@ -1,9 +1,10 @@
-﻿@model Eshopper_website.Models.Order
+﻿@model Eshopper_website.Models.account
+@using Eshopper_website.Utils.Enum.Order
 
 @{
-    ViewData["Title"] = "Details";
-    var orderDetails = ViewData["OrderDetails"] as List<OrderDetail> ?? [];
+    ViewData["Title"] = "Chi tiết đơn hàng";
     var index = 1;
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <!--begin::App Content Header-->
@@ -13,7 +14,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Orders</h3>
+                <h3 class="mb-0">Quản lý đơn hàng</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -30,7 +31,12 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">Details Orders</h3></div>
+                            <div class="col-md"><h3 class="card-title">Chi tiết đơn hàng</h3></div>
+                            <div class="col-md-auto">
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -38,81 +44,60 @@
                             <table class="table table-hovered table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_OrderCode)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_Description)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_Status)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_ShippingCost)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ORD_CouponCode)
-                                        </th>
-                                        <th>
-                                            Payment
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Member)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.CreatedDate)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.CreatedBy)
-                                        </th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Mô tả</th>
+                                        <th>Trạng thái</th>
+                                        <th>Phí vận chuyển</th>
+                                        <th>Mã giảm giá</th>
+                                        <th>Phương thức thanh toán</th>
+                                        <th>Khách hàng</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Người tạo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                      <tr>
+                                        <td>@Model.ORD_OrderCode</td>
+                                        <td>@Model.ORD_Description</td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_OrderCode)
+                                            <span class="badge @(Model.ORD_Status == OrderStatusEnum.Completed ? "bg-success" : 
+                                                               Model.ORD_Status == OrderStatusEnum.Cancelled ? "bg-danger" : 
+                                                               Model.ORD_Status == OrderStatusEnum.Processing ? "bg-primary" : 
+                                                               Model.ORD_Status == OrderStatusEnum.WaitingForPayment ? "bg-warning" : "bg-secondary")">
+                                                @Model.ORD_Status
+                                            </span>
                                         </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_Description)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_Status)
-                                        </td>
-                                        <td>
-                                            @Model.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_CouponCode)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => modelItem.ORD_PaymentMethod)
-                                        </td>
-                                        <td>
-                                            @Model?.Member?.MEM_FirstName @Model?.Member?.MEM_LastName
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => modelItem.CreatedDate)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => modelItem.CreatedBy)
-                                        </td>
+                                        <td>@Model.ORD_ShippingCost.ToString("C0", culture)</td>
+                                        <td>@(string.IsNullOrEmpty(Model.ORD_CouponCode) ? "Không có" : Model.ORD_CouponCode)</td>
+                                        <td>@Model.ORD_PaymentMethod</td>
+                                        <td>@(Model.Member == null ? "N/A" : $"{Model.Member.MEM_FirstName} {Model.Member.MEM_LastName}")</td>
+                                        <td>@Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@Model.CreatedBy</td>
                                      </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="8">Total: </td>
-                                        <td>
-                                            @Model?.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
-                                        </td>
+                                        <td colspan="8">Tổng tiền: </td>
+                                        <td>@Model.ORD_TotalPrice.ToString("C0", culture)</td>
                                     </tr>
+                                    @if (Model.ModifiedDate.HasValue)
+                                    {
+                                        <tr>
+                                            <td colspan="4">Cập nhật lần cuối:</td>
+                                            <td colspan="5">@Model.ModifiedDate.Value.ToString("dd/MM/yyyy HH:mm") bởi @(string.IsNullOrEmpty(Model.ModifiedBy) ? "Unknown" : Model.ModifiedBy)</td>
+                                        </tr>
+                                    }
                                     <tr>
                                         <td colspan="9">
-                                            <input type="hidden" asp-for="ORD_ID"/>
-                                            @Html.DropDownListFor(
-                                                     model => model.ORD_Status, (IEnumerable<SelectListItem>)ViewData["orderStatus"],
-                                                     "Select Status",
-                                                     new { @class = "form-select select-update-order" }
-                                                     )
+                                            <div class="form-group">
+                                                <label>Cập nhật trạng thái:</label>
+                                                <input type="hidden" asp-for="ORD_ID"/>
+                                                @Html.DropDownListFor(
+                                                    model => model.ORD_Status, 
+                                                    (IEnumerable<SelectListItem>)ViewData["orderStatus"]!,
+                                                    new { @class = "form-select select-update-order" }
+                                                )
+                                            </div>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -120,33 +105,46 @@
                         </div>
                     </div> <!-- /.card-body -->
                     <div class="card-body">
-                        <h4>List Order Details</h4>
+                        <h4>Chi tiết sản phẩm</h4>
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>No. </th> 
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Created Date</th>
-                                        <th>Created By</th>
+                                        <th>STT</th> 
+                                        <th>Hình ảnh</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Thành tiền</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Người tạo</th>
                                     </tr>
                                 </thead>
-                                @foreach (var item in orderDetails)
+                                <tbody>
+                                @if (Model.OrderDetails != null)
                                 {
-                                    <tr>
-                                        <td>@index</td>
-                                        <td><img src="~/images/product-details/@item?.Product?.PRO_Image" width="150px" alt="@item?.Product?.PRO_Name" /></td>
-                                        <td>@item?.Product?.PRO_Name</td>
-                                        <td>@item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
-                                        <td>@item?.ORDE_Quantity</td>
-                                        <td>@item?.CreatedDate</td>
-                                        <td>@item?.CreatedBy</td>
-                                    </tr>
-                                    index++;
+                                    foreach (var item in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>@(index++)</td>
+                                            <td>
+                                                @if (item.Product?.PRO_Image != null)
+                                                {
+                                                    <img src="~/images/product-details/@item.Product.PRO_Image" 
+                                                         width="150" 
+                                                         alt="@(item.Product?.PRO_Name ?? "Product image")" />
+                                                }
+                                            </td>
+                                            <td>@(item.Product?.PRO_Name ?? "N/A")</td>
+                                            <td>@((item.Product?.PRO_Price ?? 0).ToString("C0", culture))</td>
+                                            <td>@item.ORDE_Quantity</td>
+                                            <td>@((item.ORDE_Quantity * (item.Product?.PRO_Price ?? 0)).ToString("C0", culture))</td>
+                                            <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@item.CreatedBy</td>
+                                        </tr>
+                                    }
                                 }
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -158,37 +156,54 @@
 <!--end::App Content-->
 @section Scripts {
     <script>
-        new DataTable('#detail_order', {
-            layout: {
-                topStart: {
-                    buttons: ['pdf','print']
-                }
-            }
-        });
-    </script>
-    <script>
         $(document).ready(function () {
             $('.select-update-order').change(function () {
-                var status = $(this).val(); //status = 1
-                var id = $('#ORD_ID').val(); //
+                var status = $(this).val();
+                var id = $('#ORD_ID').val();
 
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("UpdateOrder", "Order")",
-                    data: { statusEnum: status, id: id }, // Send data to the server
-
-                    success: function (result) {
-                        // Handle successful update
-                        if (result.success) {
-
-                            Swal.fire("Cập nhật đơn hàng thành công.");
-                        } else {
-
-                            Swal.fire("Cập nhật đơn hàng thất bại." + result.message);
-
-                        }
+                // Confirm before updating
+                Swal.fire({
+                    title: 'Xác nhận cập nhật',
+                    text: 'Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Cập nhật',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("UpdateOrder", "Order")",
+                            data: { statusEnum: status, id: id },
+                            success: function (result) {
+                                if (result.success) {
+                                    Swal.fire({
+                                        title: 'Thành công',
+                                        text: result.message,
+                                        icon: 'success'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi',
+                                        text: result.message,
+                                        icon: 'error'
+                                    });
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    } else {
+                        // Reset the dropdown to the previous value
+                        $(this).val('@Model.ORD_Status');
                     }
-
                 });
             });
         });

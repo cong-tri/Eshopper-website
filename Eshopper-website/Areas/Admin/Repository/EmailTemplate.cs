@@ -4,27 +4,10 @@ namespace Eshopper_website.Areas.Admin.Repository
 {
     public static class EmailTemplates
     {
-        public static string GetOrderConfirmationEmail(Order order)
+        public static string GetOrderConfirmationEmail(account order)
         {
             if (order != null)
             {
-                //foreach(var item in order.OrderDetails as List<OrderDetail> ?? [])
-                //{
-                //    orderDetail += $@"
-                //    <tr>
-                //        <td>{index}</td>                        
-                //        <td>
-                //            <img src='~/images/product-details/{item?.Product?.PRO_Image}' alt='{item?.Product?.PRO_Name}' width='100px'/>
-                //        </td>
-                //        <td>{item?.Product?.PRO_Name}</td>
-                //        <td>{item?.ORDE_Quantity}</td>                        
-                //        <td>{item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
-                //        <td>{(item.ORDE_Quantity * item.ORDE_Price).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en - US"))}</td>
-                //    </tr>
-                //    ";
-                //    index++;
-                //}
-
                return $@"
                     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                         <h2 style='color: #333;'>Order Confirmed #{order.ORD_OrderCode}</h2>
@@ -50,19 +33,19 @@ namespace Eshopper_website.Areas.Admin.Repository
                                                 <td style='border: 1px solid;'>{idx + 1}</td> 
                                                 <td style='border: 1px solid;'>{item?.Product?.PRO_Name}</td>
                                                 <td style='border: 1px solid;'>{item?.ORDE_Quantity}</td>                        
-                                                <td style='border: 1px solid;'>{item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
-                                                <td style='border: 1px solid;'>{(item?.ORDE_Quantity * item?.ORDE_Price)?.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
+                                                <td style='border: 1px solid;'>{item?.Product?.PRO_Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))}</td>
+                                                <td style='border: 1px solid;'>{(item.ORDE_Quantity * item.ORDE_Price).ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))}</td>
                                             </tr>
                                             "))}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <td colspan='4' style='border: 1px solid;'>Shipping Cost</td>
-                                            <td style='border: 1px solid;'>{order.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
+                                            <td style='border: 1px solid;'>{order.ORD_ShippingCost.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))}</td>
                                         </tr>
                                         <tr>
                                             <td colspan='4' style='border: 1px solid;'>Total price</td>
-                                            <td style='border: 1px solid;'>{order.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
+                                            <td style='border: 1px solid;'>{order.ORD_TotalPrice.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -70,8 +53,8 @@ namespace Eshopper_website.Areas.Admin.Repository
                         </div>
                         <div style='margin: 15px 0;'>
                             <h3 style='color: #333;'>Information Delivery:</h3>
-                            <p>Receiver: {order.Member.MEM_FirstName} {order.Member.MEM_LastName}</p>
-                            <p>Phone number: {order.Member.MEM_Phone}</p>
+                            <p>Receiver: {order?.Member?.MEM_FirstName} {order?.Member.MEM_LastName}</p>
+                            <p>Phone number: {order?.Member.MEM_Phone}</p>
                             <p>Address: </p>
                             <p>Payment method: Cash</p>
                         </div>

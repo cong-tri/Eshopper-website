@@ -232,19 +232,13 @@
 			<span>
 				<label><input type="checkbox"> Direct Bank Transfer</label>
 			</span>
-			@* <span>
+			<span>
 				<label><input type="checkbox"> Check Payment</label>
-			</span> *@
-			@* <span>
+			</span> 
+			 <span>
 				<label><input type="checkbox"> Paypal</label>
-			</span> *@
-			<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
-				<input type="hidden" name="Name" value="@User..Name"/>
-				<input type="hidden" name="Amount" value="@Model.GrandTotal"/>
-				<input type="hidden" name="OrderDesciption" value="Thanh toán qua VNPay tại EShopper"/>
-				<input type="hidden" name="OrderType" value="other" />
-				<button class="btn btn-success" type="submit">Pay with VnPay</button>
-			</form>
+			</span>
+			
 		</div>
 	</div>
 </section> 

@@ -61,6 +61,7 @@ namespace Eshopper_website.Models
 
         public virtual ICollection<Wishlist>? Wishlists { get; set; }
         public virtual ICollection<Compare>? Compares { get; set; }
-        public virtual ICollection<Order>? Orders { get; set; }
+        public virtual ICollection<account>? Orders { get; set; }
+        
     }
 }

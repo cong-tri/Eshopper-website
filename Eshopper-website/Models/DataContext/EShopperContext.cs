@@ -19,7 +19,7 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<ProductQuantity> ProductQuantities { get; set; }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<account> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<AccountRole> AccountRole { get; set; }
         public DbSet<AccountStatusLogin> AccountStatusLogins { get; set; }
@@ -29,5 +29,6 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Compare> Compares { get; set; }
         public DbSet<MomoInfo> Momos { get; set; }
-	}
+        public DbSet<Statistical> Statisticals { get; set; }
+    }
 }

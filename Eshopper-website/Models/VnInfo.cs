@@ -31,7 +31,7 @@ namespace Eshopper_website.Models
 		public required int PAY_ID { get; set; }
 
 		[ForeignKey("ORD_ID")]
-		public virtual Order? Order { get; set; }
+		public virtual account? Order { get; set; }
 
 		//[ForeignKey("PAY_ID")]
 		//public virtual Payment? Payment { get; set; }

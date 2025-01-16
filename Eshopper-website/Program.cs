@@ -2,7 +2,6 @@ using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models.DataContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using Eshopper_website.Services.NewFolder;
 using Eshopper_website.Services.VNPay;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +12,8 @@ using Eshopper_website.Models.Momo;
 using Eshopper_website.Services.Momo;
 using Eshopper_website.Models.Recaptcha;
 using Eshopper_website.Services.Recaptcha;
+
+using Eshopper_website.Models;
 
 namespace Eshopper_website
 {
@@ -36,9 +37,9 @@ namespace Eshopper_website
 
             //connect VnPay API
             builder.Services.AddScoped<IVnPayService, VnPayService>();
-
-			// Add services to the container.
-			builder.Services.AddDbContext<EShopperContext>(opt =>
+          
+            // Add services to the container.
+            builder.Services.AddDbContext<EShopperContext>(opt =>
 			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -107,6 +108,10 @@ namespace Eshopper_website
             //    options.MinimumSameSitePolicy = SameSiteMode.Lax;
             //});
 
+            builder.Services.Configure<EmailConfiguration>(
+                builder.Configuration.GetSection("EmailConfiguration"));
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
+
             WebApplication app = builder.Build();
             
             app.UseCookiePolicy();
@@ -133,7 +138,6 @@ namespace Eshopper_website
             app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
             app.MapControllerRoute(
                 name: "blog",
                 pattern: "blog/{Slug?}",
@@ -147,9 +151,6 @@ namespace Eshopper_website
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.UseStatusCodePagesWithReExecute("/Home/Error404", "?statusCode={0}");
-            
             app.Run();
         }
     }

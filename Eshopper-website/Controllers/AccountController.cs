@@ -59,7 +59,12 @@ namespace Eshopper_website.Controllers
         {
             var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
 
-            if (userInfo?.ACC_ID != request.ACC_ID)
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
+            if (userInfo.ACC_ID != request.ACC_ID)
             {
                 return NotFound();
             }

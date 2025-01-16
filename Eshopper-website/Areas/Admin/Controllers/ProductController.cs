@@ -85,7 +85,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     Text = e.ToString()
                 }), "Value", "Text");
 
-			ViewData["BRA_ID"] = new SelectList(
+            ViewData["BRA_ID"] = new SelectList(
                 _context.Brands.Where(x => x.BRA_Status.ToString() == "Active"), "BRA_ID", "BRA_Name"
             );
 

@@ -14,6 +14,7 @@ using Eshopper_website.Areas.Admin.Repository;
 using NuGet.Protocol.Plugins;
 using Eshopper_website.Utils.Extension;
 
+
 namespace Eshopper_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -23,21 +24,40 @@ namespace Eshopper_website.Areas.Admin.Controllers
         private readonly IGHNService _ghnService;
         private readonly IOptions<GHN_Setting> _options;
         private readonly IEmailSender _emailSender;
-        public OrderController(EShopperContext context, 
+        private readonly ILogger<OrderController> _logger;
+
+        public OrderController(
+            EShopperContext context, 
             IGHNService ghnService,
-            IOptions<GHN_Setting> options, IEmailSender emailSender)
+            IOptions<GHN_Setting> options, 
+            IEmailSender emailSender, 
+            ILogger<OrderController> logger)
         {
             _context = context;
             _ghnService = ghnService;
             _options = options;
             _emailSender = emailSender;
+            _logger = logger;
         }
 
         // GET: Admin/Order
         public async Task<IActionResult> Index()
         {
-            var eShopperContext = _context.Orders.Include(o => o.Member);
-            return View(await eShopperContext.ToListAsync());
+            try 
+            {
+                var orders = await _context.Orders
+                    .Include(o => o.Member)
+                    .OrderByDescending(o => o.CreatedDate)
+                    .ToListAsync();
+                
+                return View(orders);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving orders");
+                TempData["error"] = "Có lỗi xảy ra khi tải danh sách đơn hàng";
+                return View(new List<account>());
+            }
         }
 
         // GET: Admin/Order/Details/5
@@ -45,6 +65,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Order details requested with null ID");
                 return NotFound();
             }
 
@@ -54,7 +75,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 .FirstOrDefaultAsync(m => m.ORD_ID == id);
 
             ViewData["OrderDetails"] = await _context.OrderDetails
-                .Include(x => x.Product).Include(x => x.Order).Where(x => x.ORD_ID == id).ToListAsync();
+                .Include(x => x.Product)
+                .Include(x => x.Order)
+                .Where(x => x.ORD_ID == id)
+                .ToListAsync();
 
             if (order == null)
             {
@@ -86,6 +110,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
             if (order == null)
             {
+                _logger.LogWarning("Order not found with ID: {OrderId}", id);
                 return NotFound();
             }
 
@@ -108,9 +133,11 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                 return Ok(new { success = true, message = "Order status updated successfully" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while updating the order status.");
+                _logger.LogError(ex, "Error retrieving order details for ID: {OrderId}", id);
+                TempData["error"] = "Có lỗi xảy ra khi tải thông tin đơn hàng";
+                return RedirectToAction(nameof(Index));
             }
         }
 

@@ -5,6 +5,15 @@
 @{
 	ViewData["Title"] = "Cart";
 	var userInfo = Context.Session.Get<UserInfo>("userInfo");
+	var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+	
+	// Calculate amounts in VND (whole numbers)
+	var subTotal = Model?.CartItems?.Sum(x => x.PRO_Quantity * x.PRO_Price) ?? 0;
+	var shippingCost = Model?.ShippingPrice ?? 0;
+	var grandTotal = subTotal + shippingCost;
+	
+	// Format for VNPay (must be a whole number in VND)
+	var vnpayAmount = grandTotal;
 }
 
 <style>
@@ -79,6 +88,7 @@
 					{
 						@foreach(var item in Model.CartItems)
 						{
+							var itemTotal = (long)(item.PRO_Quantity * item.PRO_Price);
 							<tr>
 								<td>
 									<img src="~/images/product-details/@item.PRO_Image" width="100px" alt="@item.PRO_Name">
@@ -87,7 +97,7 @@
 									<h4 class="mt-0"><a class="text-black" asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">@item.PRO_Name</a></h4>
 								</td>
 								<td class="cart_price">
-									<p>@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
+									<p>@item?.PRO_Price.ToString("C0", culture)</p>
 								</td>
 								<td class="cart_quantity">
 									<div class="text-center">
@@ -95,12 +105,11 @@
 										<input class="w-25" type="text" name="quantity" value="@item?.PRO_Quantity" autocomplete="off" size="2">
 										<a class="btn btn-success" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item?.PRO_ID"> - </a>
 										<a class="btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item?.PRO_ID"> Remove </a>
-
 									</div>
 								</td>
 								<td class="cart_total">
 									<p class="cart_total_price">
-										@Model.CartItems.Where(x => x.PRO_ID == item?.PRO_ID).Sum(x => x.PRO_Quantity * x.PRO_Price).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+										@itemTotal.ToString("C0", culture)
 									</p>
 								</td>
 								<td class="text-center">
@@ -112,7 +121,7 @@
 					else
 					{
 						<tr>
-							<td colspan="5">
+							<td colspan="6" class="text-center">
 								<h1>Your cart is empty!</h1>
 							</td>
 						</tr>
@@ -159,30 +168,29 @@
 						</li>
 						<li class="single_field">
 							<label>District</label>
-                            <select class="css_select form-select" id="quan" name="quan" title="Choose District">
+							<select class="css_select form-select" id="quan" name="quan" title="Choose District">
 								<option value="">District</option>
 							</select>
-
 						</li>
 						<li class="single_field zip-field">
 							<label>Ward</label>
-                            <select class="css_select form-select" id="phuong" name="phuong" title="Choose Ward">
+							<select class="css_select form-select" id="phuong" name="phuong" title="Choose Ward">
 								<option value="">Ward</option>
 							</select>
 						</li>
 					</ul>
-					@if (@Model?.ShippingPrice > 0)
+					@if (shippingCost > 0)
 					{
 						<ul>
 							<li>
-								<p>Shipping Cost: @Model.ShippingPrice.ToString()</p>
+								<p>Shipping Cost: @shippingCost.ToString("C0", culture)</p>
 								<a style="cursor:pointer" class="btn-delete-shipping">Remove Ship Cost</a>
 							</li>
 						</ul>
 					}
 					<ul>
 						<li>
-							<button type="button" class="btn btn-primary btn-add-shipping">Calculator Ship Cost</button>
+							<button type="button" class="btn btn-primary btn-add-shipping">Calculate Ship Cost</button>
 						</li>
 					</ul>
 				</div>
@@ -200,47 +208,51 @@
 			<div class="col-sm-6">
 				<div class="total_area">
 					<ul>
-						<li>Cart Sub Total <span>@Model?.GrandTotal.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></li>
-						<li>Eco Tax <span>$0</span></li>
-						<li>Shipping Cost <span>@Model?.ShippingPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></li>
-						<li>Total <span>@Model?.GrandTotal.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></li>
+						<li>Cart Sub Total <span>@subTotal.ToString("C0", culture)</span></li>
+						<li>Shipping Cost <span>@shippingCost.ToString("C0", culture)</span></li>
+						<li>Total <span>@grandTotal.ToString("C0", culture)</span></li>
 					</ul>
-					<div style="margin-left: 4rem">
+                    <div style="margin-left: 4rem">
                         <a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
 
                         @if (userInfo != null)
                         {
-                            @if (@Model?.ShippingPrice > 0)
+                            @if (shippingCost > 0)
                             {
                                 <a class="btn btn-success btn-checkout"
                                    onclick="return confirm('Confirmed to checkout?');"
-								   asp-action="Checkout" asp-controller="Checkout">Checkout
-							   </a>
-								<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
-									<input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName" />
-									<input type="hidden" name="Amount" value="@Model.GrandTotal" />
-									<input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
-
-									<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
-								</form>
+                                   asp-action="Checkout" asp-controller="Checkout">
+                                    Checkout
+                                </a>
+                                @if (Model?.CartItems?.Count > 0)
+                                {
+                                    <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                        <input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
+                                        <input type="hidden" name="Amount" value="@grandTotal" />
+                                        <input type="hidden" name="OrderDescription" value="Payment for order at EShopper" />
+                                        <input type="hidden" name="OrderType" value="other" />
+                                        <input type="hidden" name="Email" value="@userInfo?.ACC_Email" />
+                                        <input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone" />
+                                        <button class="btn btn-success" type="submit">Pay with VnPay</button>
+                                    </form>
+                                    <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
+                                        <input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName" />
+                                        <input type="hidden" name="Amount" value="@Model?.GrandTotal" />
+                                        <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                                        <input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
+                                        <button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
+                                    </form>
+                                }
                             }
                             else
                             {
                                 <a disabled class="btn btn-success btn-checkout"
                                    onclick="return confirm('Confirmed to checkout?');"
-								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
+                                   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
                                 <p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
-
-								<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
-									<input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName"/>
-									<input type="hidden" name="Amount" value="@Model?.GrandTotal" />
-									<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
-									<input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
-									<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
-								</form>
                             }
                         }
-					</div>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -253,27 +265,21 @@
 		//delete shipping cost
 		$(".btn-apply-coupon").click(function () {
 			var coupon_value = $(".coupon-value").val();
-			//alert(coupon_value);
 			$.ajax({
 				type: "POST",
 				url: "@Url.Action("GetCoupon", "Cart")",
 				data: { coupon_value: coupon_value },
 				success: function (result) {
 					if (result.success) {
-
 						Swal.fire(result.message);
 						location.reload();
 					} else {
-
 						Swal.fire(result.message);
 					}
 				}
-
 			});
 		});
-	</script>
 
-	<script>
 		$(document).ready(function () {
 			$(".btn-add-shipping").click(function () {
 				var tinh = $("#tinh").find('option:selected').text();
@@ -286,40 +292,35 @@
 						type: "POST",
 						url: "@Url.Action("GetShipping", "Cart")",
 						data: { tinh: tinh, quan: quan, phuong: phuong },
-
 						success: function (result) {
-							// Handle successful update
 							if (result) {
 								location.reload();
 							}
 						}
 					});
 				}
-			})
+			});
 
 			//delete shipping cost
 			$(".btn-delete-shipping").click(function () {
 				$.ajax({
 					type: "POST",
-					url: "@Url.Action("RemoveShippingCookie", "Cart")", // Replace with your controller and action name
+					url: "@Url.Action("RemoveShippingCookie", "Cart")",
 					success: function (result) {
 						if (result.success) {
-							// Handle successful removal (e.g., update UI or redirect)
 							Swal.fire("Remove shipping cost successfully.");
 							location.reload();
 						} else {
-							// Handle error (optional)
 							Swal.fire("Remove shipping cost unsuccessfully.");
 						}
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
-						// Handle AJAX errors (optional)
 						console.error("Error removing cookie:", errorThrown);
 					}
 				});
 			});
 
-			//Lấy tỉnh thành
+			//Get provinces
 			$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
 				if (data_tinh.error == 0) {
 					$.each(data_tinh.data, function (key_tinh, val_tinh) {
@@ -327,7 +328,7 @@
 					});
 					$("#tinh").change(function (e) {
 						var idtinh = $(this).val();
-						//Lấy quận huyện
+						//Get districts
 						$.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
 							if (data_quan.error == 0) {
 								$("#quan").html('<option value="0">District</option>');
@@ -335,7 +336,7 @@
 								$.each(data_quan.data, function (key_quan, val_quan) {
 									$("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name_en + '</option>');
 								});
-								//Lấy phường xã
+								//Get wards
 								$("#quan").change(function (e) {
 									var idquan = $(this).val();
 									$.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
@@ -347,12 +348,9 @@
 										}
 									});
 								});
-
 							}
-						}); //end $.getJson
-
+						});
 					});
-
 				}
 			});
 		});
