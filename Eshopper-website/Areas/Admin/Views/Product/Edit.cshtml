@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Product";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 @section Headers {
@@ -87,8 +88,9 @@
                                     <label asp-for="PRO_Price" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_Price" class="form-control" />
+                                    <input asp-for="PRO_Price" pattern="[0-9.,]+" class="form-control typing-price" maxlength="7" data-price-display="price-display-sale" />
                                     <span asp-validation-for="PRO_Price" class="text-danger"></span>
+                                    <div id="price-display-sale" class="text-muted mt-1">@Model.PRO_Price.ToString("C0", culture)</div>
                                 </div>
                             </div>
                             <div class="row align-items-center mb-4">
@@ -130,8 +132,9 @@
                                     <label asp-for="PRO_CapitalPrice" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_CapitalPrice" class="form-control" />
+                                    <input asp-for="PRO_CapitalPrice" pattern="[0-9.,]+" class="form-control typing-price" maxlength="7" data-price-display="price-display-capital" />
                                     <span asp-validation-for="PRO_CapitalPrice" class="text-danger"></span>
+                                    <div id="price-display-capital" class="text-muted mt-1">@Model.PRO_CapitalPrice.ToString("C0", culture)</div>
                                 </div>
                             </div>
                             <div class="row align-items-center mb-4">
@@ -208,5 +211,31 @@
                 }
             }
         }
+    </script>
+
+    <script>
+        $(".typing-price").on("keyup", function () {
+            var currency_input = $(this).val();
+            var displayElement = $("#" + $(this).data("price-display"));
+
+            if (!isNaN(currency_input) && currency_input.trim() !== "") {
+                try {
+                    var numericValue = Number(currency_input);
+                    if (numericValue >= 0) {
+                        var formattedPrice = new Intl.NumberFormat('vi-VN', { 
+                            style: 'currency', 
+                            currency: 'VND' 
+                        }).format(numericValue);
+                        displayElement.html(formattedPrice);
+                    } else {
+                        displayElement.html("Please enter a valid positive number");
+                    }
+                } catch (error) {
+                    displayElement.html("Invalid number format");
+                }
+            } else {
+                displayElement.html("");
+            }
+        });
     </script>
 }

@@ -1,7 +1,6 @@
-﻿namespace Eshopper_website.Areas.Admin.Repository
+﻿namespace Eshopper_website.Areas.Admin.Repository;
+
+public interface IEmailSender
 {
-    public interface IEmailSender
-    {
-        Task SendEmailAsync(string email, string subject, string body); // Subject : tiêu đề 
-    }
+    Task SendEmailAsync(string email, string subject, string message);
 }

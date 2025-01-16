@@ -1,5 +1,9 @@
 @model IEnumerable<Product>
 
+@{
+	var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
 <div class="col-sm-3">
 	@Html.Partial("_SidebarPartial")
 </div>
@@ -12,25 +16,24 @@
 		{
 			<div class="col-sm-4">
 				<div class="product-image-wrapper">
-					<a>
-						<div class="single-products">
-							<div class="productinfo text-center">
-								<img src="~/images/product-details/1.jpeg" alt="@item.PRO_Name" width="100%" />
-								<h2>@item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</h2>
-								<p>@item.PRO_Name</p>
-								<p>Danh mục : @item?.Category?.CAT_Name </p>
-								<p>Thương hiệu : @item?.Brand?.BRA_Name</p>
-								<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-							</div>
-							@* <div class="product-overlay">
-								<div class="overlay-content">
-									<h2>$56</h2>
-									<p>Easy Polo Black Edition</p>
-									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-								</div>
-							</div> *@
+					<div class="single-products">
+						<div class="productinfo text-center">
+							<a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">
+								<img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name" width="100%" />
+								@{
+									var price = item?.PRO_Price ?? 0;
+									var formattedPrice = price.ToString("C0", culture);
+								}
+								<h2>@formattedPrice</h2>
+								<p>@item?.PRO_Name</p>
+								<p>Category: @item?.Category?.CAT_Name </p>
+								<p>Brand: @item?.Brand?.BRA_Name</p>
+							</a>
+							<a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart">
+								<i class="fa fa-shopping-cart"></i>Add to cart
+							</a>
 						</div>
-					</a>
+					</div>
 					<div class="choose">
 						<ul class="nav nav-pills nav-justified">
 							<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>

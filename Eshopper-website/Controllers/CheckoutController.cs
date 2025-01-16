@@ -2,6 +2,7 @@
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Services.VNPay;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Enum.Order;
 using Eshopper_website.Utils.Extension;
@@ -37,7 +38,7 @@ namespace Eshopper_website.Controllers
                 return RedirectToAction("Login", "User", new { Area = "Admin" });
             }
 
-            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new();
+            List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? [];
             decimal grandTotal = 0;
             foreach (var item in cartItems)
             {
@@ -54,19 +55,18 @@ namespace Eshopper_website.Controllers
             var shippingPriceCookie = Request.Cookies["ShippingPrice"];
             decimal shippingPrice = 0;
 
-            if (shippingPriceCookie != null)
+            if (!string.IsNullOrEmpty(shippingPriceCookie))
             {
-              var shippingPriceJson = shippingPriceCookie;
-              shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
+                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceCookie);
             }
             //Nhận coupon code
             var CouponCode = Request.Cookies["CouponTitle"];
 
-			      var orderItem = new Order()
+            var orderItem = new account()
             {
                 MEM_ID = userInfo.MEM_ID,
                 ORD_OrderCode = ordercode,
-                ORD_Description = $"Order had been ordered by ${userInfo.ACC_Username}.",
+                ORD_Description = $"Order had been ordered by {userInfo.ACC_Username}.",
                 ORD_Status = OrderStatusEnum.Pending,
                 ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
                 ORD_ShippingCost = shippingPrice,

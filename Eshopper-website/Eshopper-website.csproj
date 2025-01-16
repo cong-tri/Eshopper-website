@@ -29,7 +29,6 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Models\Momo\" />
     <Folder Include="Services\Momo\" />
-    <Folder Include="Utils\RazorExtension\" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace FruitShop.Areas.Admin.DTOs.request
+namespace Eshopper_website.Areas.Admin.DTOs.request
 {
     public class ProductDTO
     {

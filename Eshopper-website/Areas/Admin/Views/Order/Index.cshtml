@@ -1,7 +1,8 @@
-﻿@model IEnumerable<Eshopper_website.Models.Order>
+﻿@model IEnumerable<Eshopper_website.Models.account>
 
 @{
     ViewData["Title"] = "Order";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <!--begin::App Content Header-->
@@ -83,7 +84,7 @@
                                                 @Html.DisplayFor(modelItem => item.ORD_Status)
                                             </td>
                                             <td>
-                                                @item.ORD_ShippingCost.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+                                                @item.ORD_ShippingCost.ToString("C0", culture)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.ORD_CouponCode)
@@ -92,7 +93,7 @@
                                                 @Html.DisplayFor(modelItem => item.ORD_PaymentMethod)
                                             </td>
                                             <td>
-                                                @item.ORD_TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+                                                @item.ORD_TotalPrice.ToString("C0", culture)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Member!.MEM_Email)

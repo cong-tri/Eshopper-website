@@ -32,6 +32,6 @@ namespace Eshopper_website.Models
 		public virtual Product? Product { get; set; }
 
         [ForeignKey("ORD_ID")]
-        public virtual Order? Order { get; set; }
+        public virtual account? Order { get; set; }
     }
 }

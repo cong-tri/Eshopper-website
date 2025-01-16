@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Product";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 
     Paginate pager = new Paginate();
     int pageNo = 0;
@@ -101,7 +102,7 @@
                                                 @Html.DisplayFor(modelItem => item.PRO_Status)
                                             </td>
                                             <td>
-                                                @item.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+                                                @item.PRO_Price.ToString("C0", culture)
                                             </td>
                                             <td><b>@item.PRO_Sold</b></td>
                                             <td>
