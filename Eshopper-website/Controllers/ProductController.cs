@@ -21,14 +21,9 @@ namespace Eshopper_website.Controllers
 			return View();
 		}
 
-		[HttpGet]
-		public async Task<ActionResult> Search(string searchTerm)
+		[HttpPost]
+		public async Task<IActionResult> Search(string searchTerm)
 		{
-			if (string.IsNullOrEmpty(searchTerm)) {
-
-				return View(searchTerm);
-			}
-
 			var products = await _context.Products
 				.Include(x => x.Category)
 				.Include(x => x.Brand)
@@ -36,7 +31,6 @@ namespace Eshopper_website.Controllers
 				.ToListAsync();
 
 			ViewBag.Keyword = searchTerm;
-
 			return View(products);
 		}
 

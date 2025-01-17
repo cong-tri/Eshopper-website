@@ -144,10 +144,11 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-3">
-						<form asp-controller="Product" asp-action="Search" method="post">
+                    <div class="col-sm-3">
+                        @* asp-controller="Product" asp-action="Search" *@
+						<form id="formSearch" method="post">
 							<div class="search_box pull-right">
-								<input type="text" placeholder="Search" name="searchTerm" />
+								<input type="search" placeholder="Search" id="searchTerm" name="searchTerm" />
 								<button class="btn btn-warning" type="submit">Search</button>
 							</div>
 						</form>
@@ -327,7 +328,25 @@
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('#formSearch').submit(function () {
+				var search = $('#searchTerm').val();
 
+				$.ajax({
+					type: "POST",
+					url: "@Url.Action("Search", "Product")",
+					data: { searchTerm: search },
+					success: function () {
+						alert("Success");
+					},
+					error: function () {
+						alert("Error");
+					}
+				});
+			});
+		});
+	</script>
 @* 	<script>
 		// Auto hide alerts after 3 seconds
 		$(document).ready(function () {

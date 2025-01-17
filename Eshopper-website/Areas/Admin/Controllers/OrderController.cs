@@ -55,8 +55,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving orders");
-                TempData["error"] = "Có lỗi xảy ra khi tải danh sách đơn hàng";
-                return View(new List<account>());
+                TempData["error"] = "Having error when load data order.";
+                return View(new List<Order>());
             }
         }
 
@@ -123,13 +123,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                 var newOrder = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == order.ORD_ID);
 
-                await _emailSender.SendEmailAsync(
-                    userInfo?.ACC_Email!,
-                    "YOUR ORDER STATUS HAVE BEEN UPDATED",
-                    $@"
-                        Your order: {newOrder?.ORD_OrderCode} have been {newOrder?.ORD_Status}. </br>
-                    "
-                    );
+                //await _emailSender.SendEmailAsync(
+                //    userInfo?.ACC_Email!,
+                //    "YOUR ORDER STATUS HAVE BEEN UPDATED",
+                //    $@"
+                //        Your order: {newOrder?.ORD_OrderCode} have been {newOrder?.ORD_Status}. </br>
+                //    "
+                //    );
 
                 return Ok(new { success = true, message = "Order status updated successfully" });
             }

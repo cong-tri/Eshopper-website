@@ -8,18 +8,6 @@ namespace Eshopper_website.Models
 	[Table("Orders")]
 	public class Order : BaseModel
 	{
-		//public Order() { }
-
-		//public Order(int memId, string orderCode, string description)
-		//{
-		//	MEM_ID = memId;
-		//	ORD_OrderCode = orderCode;
-		//	ORD_Description = description;
-		//	CreatedDate = DateTime.Now;
-		//	ORD_Status = OrderStatusEnum.Pending;
-		//	ORD_PaymentMethod = OrderPaymentMethodEnum.Cash;
-		//}
-
 		[Key]
 		public int ORD_ID { get; set; }
 

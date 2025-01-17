@@ -4,7 +4,7 @@ namespace Eshopper_website.Areas.Admin.Repository
 {
     public static class EmailTemplates
     {
-        public static string GetOrderConfirmationEmail(account order)
+        public static string GetOrderConfirmationEmail(Order order)
         {
             if (order != null)
             {

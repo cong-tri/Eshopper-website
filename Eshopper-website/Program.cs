@@ -58,21 +58,21 @@ namespace Eshopper_website
                 {
                     options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
                     options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
-                })
-				.AddJwtBearer(options =>
-				{
-					var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-					options.TokenValidationParameters = new TokenValidationParameters
-					{
-						ValidateIssuer = true,
-						ValidateAudience = true,
-						ValidateLifetime = true,
-						ValidateIssuerSigningKey = true,
-						ValidIssuer = jwtSettings["Issuer"],
-						ValidAudience = jwtSettings["Audience"],
-						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-					};
-				});
+                });
+				//.AddJwtBearer(options =>
+				//{
+				//	var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+				//	options.TokenValidationParameters = new TokenValidationParameters
+				//	{
+				//		ValidateIssuer = true,
+				//		ValidateAudience = true,
+				//		ValidateLifetime = true,
+				//		ValidateIssuerSigningKey = true,
+				//		ValidIssuer = jwtSettings["Issuer"],
+				//		ValidAudience = jwtSettings["Audience"],
+				//		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+				//	};
+				//});
 
             builder.Services.AddAuthorization();
 
@@ -114,7 +114,9 @@ namespace Eshopper_website
 
             WebApplication app = builder.Build();
             
-            app.UseCookiePolicy();
+            //app.UseCookiePolicy();
+
+            //app.UseStatusCodePagesWithRedirects("/Home/Error404?statuscode={0}");
             app.UseSession();
 
             // Configure the HTTP request pipeline.
@@ -122,7 +124,7 @@ namespace Eshopper_website
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHttpsRedirection();

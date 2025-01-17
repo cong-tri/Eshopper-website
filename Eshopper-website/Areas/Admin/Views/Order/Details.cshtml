@@ -1,8 +1,8 @@
-﻿@model Eshopper_website.Models.account
+﻿@model Eshopper_website.Models.Order
 @using Eshopper_website.Utils.Enum.Order
 
 @{
-    ViewData["Title"] = "Chi tiết đơn hàng";
+    ViewData["Title"] = "Order - Details";
     var index = 1;
     var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
@@ -60,10 +60,10 @@
                                         <td>@Model.ORD_OrderCode</td>
                                         <td>@Model.ORD_Description</td>
                                         <td>
-                                            <span class="badge @(Model.ORD_Status == OrderStatusEnum.Completed ? "bg-success" : 
-                                                               Model.ORD_Status == OrderStatusEnum.Cancelled ? "bg-danger" : 
-                                                               Model.ORD_Status == OrderStatusEnum.Processing ? "bg-primary" : 
-                                                               Model.ORD_Status == OrderStatusEnum.WaitingForPayment ? "bg-warning" : "bg-secondary")">
+                                            <span class="badge @(Model.ORD_Status == OrderStatusEnum.Confirmed ? "bg-success" : 
+                                                               Model.ORD_Status == OrderStatusEnum.Canceled ? "bg-danger" : 
+                                                               Model.ORD_Status == OrderStatusEnum.Pending ? "bg-primary" : 
+                                                               Model.ORD_Status == OrderStatusEnum.AwaitingShipment ? "bg-warning" : "bg-secondary")">
                                                 @Model.ORD_Status
                                             </span>
                                         </td>
@@ -80,13 +80,13 @@
                                         <td colspan="8">Tổng tiền: </td>
                                         <td>@Model.ORD_TotalPrice.ToString("C0", culture)</td>
                                     </tr>
-                                    @if (Model.ModifiedDate.HasValue)
+                                    @* @if (Model.ModifiedDate.HasValue)
                                     {
                                         <tr>
                                             <td colspan="4">Cập nhật lần cuối:</td>
                                             <td colspan="5">@Model.ModifiedDate.Value.ToString("dd/MM/yyyy HH:mm") bởi @(string.IsNullOrEmpty(Model.ModifiedBy) ? "Unknown" : Model.ModifiedBy)</td>
                                         </tr>
-                                    }
+                                    } *@
                                     <tr>
                                         <td colspan="9">
                                             <div class="form-group">
@@ -161,50 +161,80 @@
                 var status = $(this).val();
                 var id = $('#ORD_ID').val();
 
-                // Confirm before updating
-                Swal.fire({
-                    title: 'Xác nhận cập nhật',
-                    text: 'Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Cập nhật',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: "POST",
-                            url: "@Url.Action("UpdateOrder", "Order")",
-                            data: { statusEnum: status, id: id },
-                            success: function (result) {
-                                if (result.success) {
-                                    Swal.fire({
-                                        title: 'Thành công',
-                                        text: result.message,
-                                        icon: 'success'
-                                    }).then(() => {
-                                        location.reload();
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Lỗi',
-                                        text: result.message,
-                                        icon: 'error'
-                                    });
-                                }
-                            },
-                            error: function() {
-                                Swal.fire({
-                                    title: 'Lỗi',
-                                    text: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng',
-                                    icon: 'error'
-                                });
-                            }
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateOrder", "Order")",
+                    data: { statusEnum: status, id: id },
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'Thành công',
+                                text: result.message,
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: result.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng',
+                            icon: 'error'
                         });
-                    } else {
-                        // Reset the dropdown to the previous value
-                        $(this).val('@Model.ORD_Status');
                     }
                 });
+
+                // Confirm before updating
+                // Swal.fire({
+                //     title: 'Xác nhận cập nhật',
+                //     text: 'Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng?',
+                //     icon: 'warning',
+                //     showCancelButton: true,
+                //     confirmButtonText: 'Cập nhật',
+                //     cancelButtonText: 'Hủy'
+                // }).then((result) => {
+                //     if (result.isConfirmed) {
+                //         $.ajax({
+                //             type: "POST",
+                //             url: "@Url.Action("UpdateOrder", "Order")",
+                //             data: { statusEnum: status, id: id },
+                //             success: function (result) {
+                //                 if (result.success) {
+                //                     Swal.fire({
+                //                         title: 'Thành công',
+                //                         text: result.message,
+                //                         icon: 'success'
+                //                     }).then(() => {
+                //                         location.reload();
+                //                     });
+                //                 } else {
+                //                     Swal.fire({
+                //                         title: 'Lỗi',
+                //                         text: result.message,
+                //                         icon: 'error'
+                //                     });
+                //                 }
+                //             },
+                //             error: function() {
+                //                 Swal.fire({
+                //                     title: 'Lỗi',
+                //                     text: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng',
+                //                     icon: 'error'
+                //                 });
+                //             }
+                //         });
+                //     } else {
+                //         // Reset the dropdown to the previous value
+                //         $(this).val('@Model.ORD_Status');
+                //     }
+                // });
             });
         });
     </script>

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Eshopper_website.Models.account>
+﻿@using Eshopper_website.Utils.Enum.Order
+@model IEnumerable<Eshopper_website.Models.Order>
 
 @{
     ViewData["Title"] = "Order";
@@ -81,7 +82,12 @@
                                                 @Html.DisplayFor(modelItem => item.ORD_OrderCode)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.ORD_Status)
+                                                <span class="badge @(item.ORD_Status == OrderStatusEnum.Confirmed ? "bg-success" :
+                                                               item.ORD_Status == OrderStatusEnum.Canceled ? "bg-danger" :
+                                                               item.ORD_Status == OrderStatusEnum.Pending ? "bg-primary" :
+                                                               item.ORD_Status == OrderStatusEnum.AwaitingShipment ? "bg-warning" : "bg-secondary")">
+                                                    @item.ORD_Status
+                                                </span>
                                             </td>
                                             <td>
                                                 @item.ORD_ShippingCost.ToString("C0", culture)

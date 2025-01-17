@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using Eshopper_website.Utils.Constant;
 using Microsoft.Extensions.Configuration;
 
 namespace Eshopper_website.Areas.Admin.Repository;
@@ -23,7 +24,7 @@ public class EmailSender : IEmailSender
             throw new ArgumentNullException("EmailConfiguration:Password");
     }
 
-    public async Task SendEmailAsync(string email, string subject, string message)
+    public async Task SendEmailAsync(string email, string subject, string body)
     {
         try
         {
