@@ -1,7 +1,9 @@
 ﻿@model Eshopper_website.Models.Product
 
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "Product - Edit";
+    ViewData["Active"] = "Product";
+
     var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
@@ -61,7 +63,7 @@
                                     <label asp-for="PRO_Name" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_Name" class="form-control" />
+                                    <input asp-for="PRO_Name" class="form-control" maxlength="50"/>
                                     <span asp-validation-for="PRO_Name" class="text-danger"></span>
                                 </div>
                             </div>
@@ -72,15 +74,6 @@
                                 <div class="col">
                                     <textarea asp-for="PRO_Description" class="form-control"></textarea>
                                     <span asp-validation-for="PRO_Description" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="row align-items-center mb-4">
-                                <div class="col-3">
-                                    <label asp-for="PRO_Slug" class="control-label"></label>
-                                </div>
-                                <div class="col">
-                                    <input asp-for="PRO_Slug" class="form-control" />
-                                    <span asp-validation-for="PRO_Slug" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row align-items-center mb-4">
@@ -119,11 +112,7 @@
                                     <label asp-for="PRO_Status" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    @Html.DropDownListFor(
-                                        model => model.PRO_Status, (IEnumerable<SelectListItem>)ViewData["ProductStatus"],
-                                        "Select Status",
-                                        new { @class = "form-select" }
-                                    )
+                                    <select asp-for="PRO_Status" class="form-select" asp-items="ViewBag.ProductStatus"></select>
                                     <span asp-validation-for="PRO_Status" class="text-danger"></span>
                                 </div>
                             </div>

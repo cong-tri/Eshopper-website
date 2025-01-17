@@ -1,7 +1,8 @@
 ﻿@model Eshopper_website.Models.Product
 
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "Product - Create";
+    ViewData["Active"] = "Product";
 }
 
 @section Headers {
@@ -70,15 +71,6 @@
                                 <div class="col">
                                     <textarea asp-for="PRO_Description" class="form-control" rows="5"></textarea>
                                     <span asp-validation-for="PRO_Description" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="row align-items-center mb-4">
-                                <div class="col-3">
-                                    <label asp-for="PRO_Slug" class="control-label"></label>
-                                </div>
-                                <div class="col">
-                                    <input asp-for="PRO_Slug" class="form-control" />
-                                    <span asp-validation-for="PRO_Slug" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row align-items-center mb-4">

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
-using Azure.Core;
-using System.Reflection;
 using Eshopper_website.Areas.Admin.DTOs.request;
+using Eshopper_website.Utils.Extension;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -62,6 +56,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] BlogDTO request)
         {
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
             var blog = new Blog
             {
                 BLG_ID = request.BLG_ID,
@@ -70,12 +66,15 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 BLG_PublishedAt = request.BLG_PublishedAt,
                 BLG_Status = request.BLG_Status,
                 BLG_Title = request.BLG_Title,
-                BLG_Slug = request.BLG_Slug,
+                BLG_Slug = SlugHelper.GenerateSlug(request.BLG_Title, request.BLG_ID),
+                CreatedBy = userInfo?.ACC_Username,
+                CreatedDate = DateTime.Now,
             };
 
             if (ModelState.IsValid)
             {
                 string? newImageFileName = null;
+
                 if (request.BLG_Image != null)
                 {
                     var extension = Path.GetExtension(request.BLG_Image.FileName);
@@ -83,7 +82,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     var filePath = Path.Combine(_hostEnv.WebRootPath, "images", "blog", newImageFileName);
                     request.BLG_Image.CopyTo(new FileStream(filePath, FileMode.Create));
                 }
+
                 if (newImageFileName != null) blog.BLG_Image = newImageFileName;
+
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -114,6 +115,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [FromForm] BlogDTO request)
         {
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
             if (id != request.BLG_ID)
             {
                 return NotFound();
@@ -130,15 +133,16 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 try
                 {
                     blogExisting.BLG_Status = request.BLG_Status;
-                    blogExisting.BLG_Slug = request.BLG_Slug;
+                    blogExisting.BLG_Slug = SlugHelper.GenerateSlug(request.BLG_Title, request.BLG_ID);
                     blogExisting.BLG_ID = request.BLG_ID;
                     blogExisting.BLG_AuthorName = request.BLG_AuthorName;
                     blogExisting.BLG_Content = request.BLG_Content;
                     blogExisting.BLG_Title = request.BLG_Title;
                     blogExisting.BLG_PublishedAt = request.BLG_PublishedAt;
                     blogExisting.UpdatedDate = DateTime.Now;
-                    //blogExisting.CreatedBy = username
-                    //blogExisting.UpdatedBy = username
+                    blogExisting.CreatedBy = userInfo.ACC_Username;
+                    blogExisting.UpdatedBy = userInfo.ACC_Username;
+                    blogExisting.UpdatedDate = DateTime.Now;
 
                     if (request.BLG_Image != null)
                     {

@@ -24,7 +24,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
         // GET: Admin/Brand
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Brands.OrderBy(x => x.BRA_DisplayOrder).ToListAsync());
+            return View(await _context.Brands.AsNoTracking()
+                .Include(x => x.Products).OrderBy(x => x.BRA_DisplayOrder).ToListAsync());
         }
 
         // GET: Admin/Brand/Details/5

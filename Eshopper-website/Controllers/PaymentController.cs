@@ -1,4 +1,6 @@
-﻿using Eshopper_website.Models.VNPay;
+﻿using Eshopper_website.Models;
+using Eshopper_website.Models.VNPay;
+using Eshopper_website.Services.Momo;
 using Eshopper_website.Services.VNPay;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +15,29 @@ namespace Eshopper_website.Controllers
 {
     public class PaymentController : Controller
     {
-        public readonly IVnPayService _vnPayService;
+        private readonly IVnPayService _vnPayService;
+        private readonly IMomoService _momoService;
         public readonly EShopperContext _context;
 
-        public PaymentController(IVnPayService vnPayService, EShopperContext context)
-        {
+        public PaymentController(IVnPayService vnPayService, IMomoService momoService, EShopperContext context)
+        {    
             _context = context;
             _vnPayService = vnPayService;
+            _momoService = momoService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePaymentMomo(OrderInfo model)
+        {
+            var response = await _momoService.CreatePaymentAsync(model);
+            return Redirect(response.PayUrl!);
+        }
+
+        [HttpGet]
+        public IActionResult PaymentCallBackMomo()
+        {
+            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
+            return View(response);
         }
 
         [HttpPost]
@@ -146,7 +164,7 @@ namespace Eshopper_website.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PaymentCallback()
+        public async Task<IActionResult> PaymentCallbackVnpay()
         {
             try
             {
@@ -211,5 +229,6 @@ namespace Eshopper_website.Controllers
                 return RedirectToAction("Index", "Cart");
             }
         }
+
     }
 }

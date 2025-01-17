@@ -4,30 +4,10 @@ namespace Eshopper_website.Areas.Admin.Repository
 {
     public static class EmailTemplates
     {
-        public static string GetOrderConfirmationEmail(account order)
+        public static string GetOrderConfirmationEmail(Order order)
         {
-            var index = 1;
-            //var orderDetail = "";
-
             if (order != null)
             {
-                //foreach(var item in order.OrderDetails as List<OrderDetail> ?? [])
-                //{
-                //    orderDetail += $@"
-                //    <tr>
-                //        <td>{index}</td>                        
-                //        <td>
-                //            <img src='~/images/product-details/{item?.Product?.PRO_Image}' alt='{item?.Product?.PRO_Name}' width='100px'/>
-                //        </td>
-                //        <td>{item?.Product?.PRO_Name}</td>
-                //        <td>{item?.ORDE_Quantity}</td>                        
-                //        <td>{item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))}</td>
-                //        <td>{(item.ORDE_Quantity * item.ORDE_Price).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en - US"))}</td>
-                //    </tr>
-                //    ";
-                //    index++;
-                //}
-
                return $@"
                     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                         <h2 style='color: #333;'>Order Confirmed #{order.ORD_OrderCode}</h2>

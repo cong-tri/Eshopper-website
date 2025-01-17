@@ -23,9 +23,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         // GET: Admin/Category
-        public async Task<IActionResult> Index(int pg = 1)
+        public async Task<ActionResult> Index(int pg = 1)
         {
-            List <Category> category = _context.Categories.OrderBy(x => x.CAT_DisplayOrder).ToList();
+            List <Category> category = await _context.Categories
+                .AsNoTracking()
+                .Include(x => x.Products)
+                .OrderBy(x => x.CAT_DisplayOrder).ToListAsync();
 
             const int pageSize = 10;
             if (pg > 1)
@@ -171,7 +174,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 .FirstOrDefaultAsync(m => m.CAT_ID == id);
             if (category == null)
             {
-                TempData["error"] = $"Category with Name '{category.CAT_Name}' was not found.";
+                TempData["error"] = $"Category with Name '{category?.CAT_Name}' was not found.";
                 return NotFound();
             }
 

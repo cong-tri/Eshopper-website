@@ -50,7 +50,7 @@
                             <label asp-for="MEM_LastName" class="control-label"></label>
                         </div>
                         <div class="col-sm">
-                            <input asp-for="MEM_LastName" class="form-control" />
+                            <input asp-for="MEM_LastName" class="form-control" maxlength="20"/>
                             <span asp-validation-for="MEM_LastName" class="text-danger"></span>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                             <label asp-for="MEM_FirstName" class="control-label"></label>
                         </div>
                         <div class="col-sm">
-                            <input asp-for="MEM_FirstName" class="form-control" />
+                            <input asp-for="MEM_FirstName" class="form-control" maxlength="20" />
                             <span asp-validation-for="MEM_FirstName" class="text-danger"></span>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                             <label asp-for="MEM_Phone" class="control-label"></label>
                         </div>
                         <div class="col-sm">
-                            <input asp-for="MEM_Phone" class="form-control" />
+                            <input asp-for="MEM_Phone" type="tel" class="form-control" maxlength="12" />
                             <span asp-validation-for="MEM_Phone" class="text-danger"></span>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                             <label asp-for="MEM_Email" class="control-label"></label>
                         </div>
                         <div class="col-sm">
-                            <input asp-for="MEM_Email" type="email" class="form-control" />
+                            <input asp-for="MEM_Email" type="email" class="form-control" maxlength="30"/>
                             <span asp-validation-for="MEM_Email" class="text-danger"></span>
                         </div>
                     </div>

@@ -1,9 +1,12 @@
 ﻿@model Eshopper_website.Models.Blog
 
 @{
-    ViewData["Title"] = "Blog";
+    ViewData["Title"] = "Blog - Edit";
+    ViewData["Active"] = "Blog";
 }
-
+@section Headers {
+    <link rel="stylesheet" href="~/lib/ckeditor5/ckeditor5.css" />
+}
 <div class="app-content-header">
     <!--begin::Container-->
     <div class="container-fluid">
@@ -39,7 +42,7 @@
                                         <label asp-for="BLG_Title" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="BLG_Title" class="form-control w-100" maxlength="255"/>
+                                        <input asp-for="BLG_Title" class="form-control w-100" maxlength="100"/>
                                         <span asp-validation-for="BLG_Title" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -50,7 +53,7 @@
                                         <label asp-for="BLG_Slug" class="control-label"></label>
                                     </div>
                                     <div class="col-sm">
-                                        <input asp-for="BLG_Slug" class="form-control" maxlength="255"/>
+                                        <input asp-for="BLG_Slug" class="form-control" maxlength="100" readonly/>
                                         <span asp-validation-for="BLG_Slug" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -121,6 +124,42 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "/lib/ckeditor5/ckeditor5.js",
+                "ckeditor5/": "/lib/ckeditor5/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font,
+            Underline,
+            Alignment
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create(document.querySelector('#BLG_Content'), {
+                plugins: [Essentials, Paragraph, Bold, Italic, Font, Underline, Alignment],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'underline', 'alignment'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
     <script>
         window.onload = () => {
             document.getElementById("BLG_Image").onchange = (e) => {

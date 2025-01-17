@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 
 namespace Eshopper_website.Controllers
 {
@@ -93,6 +91,15 @@ namespace Eshopper_website.Controllers
             {
               return NotFound();
             }
+
+			if (product == null) 
+			{ 
+				return NotFound();
+			}
+			if (carts == null)
+			{
+				return NotFound();
+			}
 
             CartItem? cartItems = carts.Where(x => x.PRO_ID == Id).FirstOrDefault();
 
@@ -289,8 +296,6 @@ namespace Eshopper_website.Controllers
           {
             return Ok(new { success = false, message = "Coupon not existed" });
           }
-
-          return Json(new { CouponTitle = couponTitle });
         }
 
         [HttpPost]

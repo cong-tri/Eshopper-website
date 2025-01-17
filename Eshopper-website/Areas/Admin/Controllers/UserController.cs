@@ -2,12 +2,12 @@ using Eshopper_website.Areas.Admin.DTOs.request;
 using Eshopper_website.Areas.Admin.Repository;
 using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
+using Eshopper_website.Services.Recaptcha;
 using Eshopper_website.Utils.Enum;
 using Eshopper_website.Utils.Enum.Member;
 using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -28,13 +28,20 @@ namespace Eshopper_website.Areas.Admin.Controllers
         private readonly EShopperContext _context;
         private readonly Appsettings _appsettings;
         private readonly IEmailSender _emailSender;
-        private readonly IWebHostEnvironment _hostEnv;
-        public UserController(EShopperContext context, IOptions<Appsettings> options, IEmailSender emailSender,IWebHostEnvironment hostEnv)
+        private readonly IConfiguration _configuration;
+        private readonly IOptions<Appsettings> _options;
+        //private readonly IRecaptchaService _recaptchaService;
+        public UserController(
+            EShopperContext context, IOptions<Appsettings> options, 
+            IEmailSender emailSender, IConfiguration configuration
+            //IRecaptchaService recaptchaService
+            )
         {
             _context = context;
-            _appsettings = options.Value;
+			_appsettings = options.Value;
             _emailSender = emailSender;
-            _hostEnv = hostEnv;
+            _configuration = configuration;
+            //_recaptchaService = recaptchaService; 
         }
         public IActionResult Index()
         {
@@ -69,52 +76,52 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         }
 
                         // ============== generate token ===========================
-                        List<Claim> claimData = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Sid, account.ACC_ID.ToString()),
-                            new Claim(ClaimTypes.Name, account.ACC_Username),
-                            new Claim(ClaimTypes.Role, member.ACR_ID.ToString()),
-                            new Claim(ClaimTypes.Email, account.ACC_Email),
-                            new Claim(ClaimTypes.MobilePhone, account.ACC_Phone),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
+                        //List<Claim> claimData = new List<Claim>
+                        //{
+                        //    new Claim(ClaimTypes.Sid, account.ACC_ID.ToString()),
+                        //    new Claim(ClaimTypes.Name, account.ACC_Username),
+                        //    new Claim(ClaimTypes.Role, member.ACR_ID.ToString()),
+                        //    new Claim(ClaimTypes.Email, account.ACC_Email),
+                        //    new Claim(ClaimTypes.MobilePhone, account.ACC_Phone),
+                        //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        //};
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appsettings.Key));
-                        var signingCredential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appsettings.Key));
+                        //var signingCredential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(
-                            issuer: _appsettings.Issuer,
-                            audience: _appsettings.Audience,
-                            expires: DateTime.Now.AddDays(7),
-                            claims: claimData,
-                            signingCredentials: signingCredential
-                        );
+                        //var token = new JwtSecurityToken(
+                        //    issuer: _appsettings.Issuer,
+                        //    audience: _appsettings.Audience,
+                        //    expires: DateTime.Now.AddDays(7),
+                        //    claims: claimData,
+                        //    signingCredentials: signingCredential
+                        //);
 
-                        var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
-                        // ============== /generate token ===========================
+                        //var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+                        //// ============== /generate token ===========================
 
-                        if (token != null)
-                        {
-                            Response.Cookies.Append<String>("UserToken", tokenStr, new CookieOptions
-                            {
-                                Expires = DateTimeOffset.UtcNow.AddDays(7),
-                                HttpOnly = true,
-                                IsEssential = true
-                            });
+                        //if (token != null)
+                        //{
+                        //    Response.Cookies.Append<String>("UserToken", tokenStr, new CookieOptions
+                        //    {
+                        //        Expires = DateTimeOffset.UtcNow.AddDays(7),
+                        //        HttpOnly = true,
+                        //        IsEssential = true
+                        //    });
 
-                            var newStatusLogin = new AccountStatusLogin
-                            {
-                                ACC_ID = account.ACC_ID,
-                                ACSL_JwtToken = tokenStr,
-                                ACSL_Status = AccountStatusLoginEnum.Active,
-                                ACSL_DatetimeLogin = DateTime.Now,
-                                ACSL_ExpiredDatetimeLogin = DateTime.Now.AddDays(7),
-                                CreatedDate = DateTime.Now,
-                            };
+                        //    var newStatusLogin = new AccountStatusLogin
+                        //    {
+                        //        ACC_ID = account.ACC_ID,
+                        //        ACSL_JwtToken = tokenStr,
+                        //        ACSL_Status = AccountStatusLoginEnum.Active,
+                        //        ACSL_DatetimeLogin = DateTime.Now,
+                        //        ACSL_ExpiredDatetimeLogin = DateTime.Now.AddDays(7),
+                        //        CreatedDate = DateTime.Now,
+                        //    };
 
-                            _context.AccountStatusLogins.Add(newStatusLogin);
-                            _context.SaveChangesAsync();
-                        }
+                        //    _context.AccountStatusLogins.Add(newStatusLogin);
+                        //    _context.SaveChangesAsync();
+                        //}
 
                         HttpContext.Session.Set<UserInfo>("userInfo", user);
                     }
@@ -131,11 +138,28 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (!String.IsNullOrEmpty(login.UserName) && !String.IsNullOrEmpty(login.Password))
             {
-                var account = await _context.Accounts.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.ACC_Username == login.UserName &&
-                        x.ACC_Password == login.Password);
+                //var reCaptchaToken = Request.Form["g-recaptcha-response"].ToString();
+                //var reCaptchaValid = await _recaptchaService.VerifyToken(reCaptchaToken);
+                //if (!reCaptchaValid)
+                //{
+                //    ViewBag.ReCaptchaError = string.IsNullOrEmpty(_recaptchaService.LastError)
+                //        ? "Vui lòng xác nhận bạn không phải là robot"
+                //        : _recaptchaService.LastError;
+                //    return View(login);
+                //}
 
-                if (account != null && account.ACC_Status == AccountStatusEnum.Active)
+                if (login.UserName.Contains(" ") || login.Password.Contains(" "))
+                {
+                    ViewData["Message"] = "Username or password should not contain blank spaces!";
+                    return View(login);
+                }
+
+                var account = await _context.Accounts.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.ACC_Username == login.UserName);
+
+                if (account != null &&
+                    BCrypt.Net.BCrypt.Verify(login.Password, account.ACC_Password) 
+                    && account.ACC_Status == AccountStatusEnum.Active)
                 {
                     var member = await _context.Members.AsNoTracking().Where(x => x.ACC_ID == account.ACC_ID).FirstOrDefaultAsync();
 
@@ -154,52 +178,52 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         }
 
                         // ============== generate token ===========================
-                        List<Claim> claimData = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Sid, account.ACC_ID.ToString()),
-                            new Claim(ClaimTypes.Name, account.ACC_Username),
-                            new Claim(ClaimTypes.Role, member.ACR_ID.ToString()),
-                            new Claim(ClaimTypes.Email, account.ACC_Email),
-                            new Claim(ClaimTypes.MobilePhone, account.ACC_Phone),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
+                        //List<Claim> claimData = new List<Claim>
+                        //{
+                        //    new Claim(ClaimTypes.Sid, account.ACC_ID.ToString()),
+                        //    new Claim(ClaimTypes.Name, account.ACC_Username),
+                        //    new Claim(ClaimTypes.Role, member.ACR_ID.ToString()),
+                        //    new Claim(ClaimTypes.Email, account.ACC_Email),
+                        //    new Claim(ClaimTypes.MobilePhone, account.ACC_Phone),
+                        //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        //};
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appsettings.Key));
-                        var signingCredential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appsettings.Key));
+                        //var signingCredential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(
-                            issuer: _appsettings.Issuer,
-                            audience: _appsettings.Audience,
-                            expires: DateTime.Now.AddDays(7),
-                            claims: claimData,
-                            signingCredentials: signingCredential
-                        );
+                        //var token = new JwtSecurityToken(
+                        //    issuer: _appsettings.Issuer,
+                        //    audience: _appsettings.Audience,
+                        //    expires: DateTime.Now.AddDays(7),
+                        //    claims: claimData,
+                        //    signingCredentials: signingCredential
+                        //);
 
-                        var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
-                        // ============== /generate token ===========================
+                        //var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+                        //// ============== /generate token ===========================
 
-                        if (token != null)
-                        {
-                            Response.Cookies.Append<String>("UserToken", tokenStr, new CookieOptions
-                            {
-                                Expires = DateTimeOffset.UtcNow.AddDays(7),
-                                HttpOnly = true,
-                                IsEssential = true
-                            });
+                        //if (token != null)
+                        //{
+                        //    Response.Cookies.Append<String>("UserToken", tokenStr, new CookieOptions
+                        //    {
+                        //        Expires = DateTimeOffset.UtcNow.AddDays(7),
+                        //        HttpOnly = true,
+                        //        IsEssential = true
+                        //    });
 
-                            var newStatusLogin = new AccountStatusLogin
-                            {
-                                ACC_ID = account.ACC_ID,
-                                ACSL_JwtToken = tokenStr,
-                                ACSL_Status = AccountStatusLoginEnum.Active,
-                                ACSL_DatetimeLogin = DateTime.Now,
-                                ACSL_ExpiredDatetimeLogin = DateTime.Now.AddDays(7),
-                                CreatedDate = DateTime.Now,
-                            };
+                        //    var newStatusLogin = new AccountStatusLogin
+                        //    {
+                        //        ACC_ID = account.ACC_ID,
+                        //        ACSL_JwtToken = tokenStr,
+                        //        ACSL_Status = AccountStatusLoginEnum.Active,
+                        //        ACSL_DatetimeLogin = DateTime.Now,
+                        //        ACSL_ExpiredDatetimeLogin = DateTime.Now.AddDays(7),
+                        //        CreatedDate = DateTime.Now,
+                        //    };
 
-                            _context.AccountStatusLogins.Add(newStatusLogin);
-                            await _context.SaveChangesAsync();
-                        }
+                        //    _context.AccountStatusLogins.Add(newStatusLogin);
+                        //    await _context.SaveChangesAsync();
+                        //}
 
                         HttpContext.Session.Set<UserInfo>("userInfo", user);
 
@@ -229,6 +253,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                //if (!IsValidRecaptcha(Request.Headers["g-recaptcha-response"]))
+                //{
+                //    ViewData["Message"] = "ReCaptcha invalid";
+                //    return View(register);
+                //}
+
                 if (register.UserName.Contains(" "))
                 {
                     ViewData["Message"] = "Username should not contain blank spaces!";
@@ -262,32 +292,28 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 var newAccount = new Account
                 {
                     ACC_Username = register.UserName,
-                    ACC_Password = register.Password,
+                    ACC_Password = BCrypt.Net.BCrypt.HashPassword(register.Password),
                     ACC_Email = register.Email,
                     ACC_Phone = register.Phone,
                     ACC_DisplayName = register.DisplayName,
                     ACC_Status = AccountStatusEnum.Inactive,
-                    CreatedDate = DateTime.Now
-                };
-
-                _context.Accounts.Add(newAccount);
-                await _context.SaveChangesAsync();
-
-                var newMember = new Member
-                {
-                    ACC_ID = newAccount.ACC_ID,
-                    ACR_ID = 1,
-                    MEM_Email = newAccount.ACC_Email,
-                    MEM_Phone = newAccount.ACC_Phone,
-                    MEM_Gender = MemberGenderEnum.Other,
                     CreatedDate = DateTime.Now,
-                    MEM_Status = MemberStatusEnum.Inactive,
                 };
-                _context.Members.Add(newMember);
-                await _context.SaveChangesAsync();
+                //TempData["PendingAccount"] = newAccount;
+                HttpContext.Session.Set<Account>("accountConfirmOTP", newAccount);
+                // Generate OTP (6-digit number)
+                var random = new Random();
+                var otp = random.Next(100000, 999999).ToString();
+                //TempData["OTP"] = otp;
+                HttpContext.Session.Set<String>("OTPtoken", otp);
 
-                ViewData["Message"] = "Registration successful! You can now log in.";
-                return RedirectToAction("Login");
+                await _emailSender.SendEmailAsync(newAccount.ACC_Email, 
+                    "OTP TOKEN TO AUTHORIZE",
+                    $@"Token have been sent to your email: {newAccount.ACC_Email}. Your OTP token: {otp}"
+                );
+
+                ViewData["Message"] = "Create new account successful! You must be confirm otp code to finish.";
+                return RedirectToAction("ConfirmOTP");
             }
             else
             {
@@ -309,10 +335,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 });
             }
             await HttpContext.SignOutAsync();
-            //Response.Cookies.Delete("UserToken");
-            //Response.Cookies.Delete("UserCredential");
-            //Response.Cookies.Delete("ShippingPrice");
-            //Response.Cookies.Delete("CouponTitle");
 
             HttpContext.Response.Clear();
             HttpContext.Session.Clear();
@@ -404,6 +426,20 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 TempData["success"] = "Login successfully.";
             }
 
+			return RedirectToAction("Index", "Home", new { Area = "" });
+		}
+
+        public IActionResult ConfirmOTP()
+        {
+            var pendingAccount = HttpContext.Session.Get<Account>("accountConfirmOTP");
+
+            if (pendingAccount == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            ViewData["EmailReiceive"] = pendingAccount.ACC_Email;
+
             return RedirectToAction("Index", "Home", new { Area = "" });
         }
 
@@ -413,6 +449,59 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmOTP(string otp)
+        {
+            if (string.IsNullOrEmpty(otp) || otp.Length != 6 || !otp.All(char.IsDigit))
+            {
+                ViewData["Message"] = "OTP must be 6 digits.";
+                return View();
+            }
+
+            var storedOTP = HttpContext.Session.Get<String>("OTPtoken");
+            var pendingAccount = HttpContext.Session.Get<Account>("accountConfirmOTP");
+
+            if (storedOTP == null || pendingAccount == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            if (otp == storedOTP)
+            {
+                _context.Accounts.Add(pendingAccount);
+                await _context.SaveChangesAsync();
+
+                var newAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.ACC_ID == pendingAccount.ACC_ID);
+                // Create member
+                var newMember = new Member
+                {
+                    ACC_ID = newAccount!.ACC_ID,
+                    ACR_ID = 1,
+                    MEM_Email = newAccount.ACC_Email,
+                    MEM_Phone = newAccount.ACC_Phone,
+                    MEM_Gender = MemberGenderEnum.Other,
+                    CreatedDate = DateTime.Now,
+                    MEM_Status = MemberStatusEnum.Active,
+                };
+                _context.Members.Add(newMember);
+                await _context.SaveChangesAsync();
+
+                // Update account status to active
+                newAccount.ACC_Status = AccountStatusEnum.Active;
+                _context.Accounts.Update(pendingAccount);
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("OTPtoken");
+                HttpContext.Session.Remove("accountConfirmOTP");
+
+                TempData["success"] = "Registration successful! You can now log in.";
+                return RedirectToAction("Login");
+            }
+
+            ViewData["Message"] = "Invalid OTP. Please try again.";
+            return View();
+        }
+
         public async Task<IActionResult> ForgotPass([FromForm] string email)
         {
             try
@@ -462,26 +551,28 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        private static string CreateMD5(string input)
-        {
-            using (var md5 = MD5.Create())
-            {
-                var inputBytes = Encoding.UTF8.GetBytes(input);
-                var hashBytes = md5.ComputeHash(inputBytes);
+        //private static string CreateMD5(string input)
+        //{
+        //    using (var md5 = MD5.Create())
+        //    {
+        //        var inputBytes = Encoding.UTF8.GetBytes(input);
+        //        var hashBytes = md5.ComputeHash(inputBytes);
 
-                // Convert the byte array to hexadecimal string
-                var sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
-            }
-        }
+        //        // Convert the byte array to hexadecimal string
+        //        var sb = new StringBuilder();
+        //        for (int i = 0; i < hashBytes.Length; i++)
+        //        {
+        //            sb.Append(hashBytes[i].ToString("X2"));
+        //        }
+        //        return sb.ToString();
+        //    }
+        //}
+
         public IActionResult NewPass()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> NewPass([FromForm] NewPassDTO request)
         {
@@ -518,6 +609,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
             return View(request);
         }
+
         [HttpGet]
         public async Task<IActionResult> UpdateProfileAdmin()
         {
@@ -551,6 +643,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
             return View(profileDTO);
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateProfileAdmin([FromForm] ProfileDTO profileDTO)
         {
@@ -601,6 +694,5 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
         }
     }
-
 }
 

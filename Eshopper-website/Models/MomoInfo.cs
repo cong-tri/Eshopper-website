@@ -12,11 +12,11 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter order id")]
 		[DisplayName("Order ID")]
-		public required int ORD_ID { get; set; }
+		public required string OrderId { get; set; }
 
 		[Required(ErrorMessage = "Please enter order info"), MinLength(5), MaxLength(255)]
-		[DisplayName("Order Description")]
-		public required string ORD_Description { get; set; }
+		[DisplayName("Order Info")]
+		public required string OrderInfo { get; set; }
 
 		[Required(ErrorMessage = "Please enter fullname"), MinLength(5), MaxLength(255)]
 		[DisplayName("FullName")]
@@ -31,6 +31,6 @@ namespace Eshopper_website.Models
 		public required DateTime MOMO_DatePaid { get; set; } = DateTime.Now;
 
 		[ForeignKey("ORD_ID")]
-		public virtual account? Order { get; set; }
+		public virtual Order? Order { get; set; }
 	}
 }

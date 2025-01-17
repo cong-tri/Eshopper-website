@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Eshopper_website.Models.DataContext;
 using Microsoft.EntityFrameworkCore;
-using Eshopper_website.Models;
 
 namespace Eshopper_website.Controllers
 {
@@ -19,18 +18,25 @@ namespace Eshopper_website.Controllers
 			var blogs = await _context.Blogs
 				.OrderByDescending(b => b.BLG_PublishedAt)
 				.ToListAsync();
-			return View(blogs);
+			ViewData["Blogs"] = blogs;
+			return View();
 		}
 
-		public async Task<IActionResult> Details(int? id)
+		public async Task<IActionResult> Details(string? slug)
 		{
-			if (id == null)
+			if (String.IsNullOrEmpty(slug))
 			{
-				return NotFound();
-			}
+                var blogs = await _context.Blogs
+                .OrderByDescending(b => b.BLG_PublishedAt)
+                .ToListAsync();
+
+                ViewData["Blogs"] = blogs;
+
+				return View("Index");
+            }
 
 			var blog = await _context.Blogs
-				.FirstOrDefaultAsync(m => m.BLG_ID == id);
+				.FirstOrDefaultAsync(m => m.BLG_Slug == slug);
 
 			if (blog == null)
 			{

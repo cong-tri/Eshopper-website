@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using Eshopper_website.Utils.Constant;
 using Microsoft.Extensions.Configuration;
 
 namespace Eshopper_website.Areas.Admin.Repository;
@@ -23,30 +24,31 @@ public class EmailSender : IEmailSender
             throw new ArgumentNullException("EmailConfiguration:Password");
     }
 
-    public async Task SendEmailAsync(string email, string subject, string message)
+    public async Task SendEmailAsync(string email, string subject, string body)
     {
-        using var client = new SmtpClient(_smtpServer, _port)
+        try
         {
-            EnableSsl = _enableSsl,
-            Credentials = new NetworkCredential(_userName, _password)
-        };
+            var client = new SmtpClient(EShopperConstant.serverMailHost, EShopperConstant.serverMailPort)
+            {
+                Port = EShopperConstant.serverMailPort,
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(EShopperConstant.sendEmail, EShopperConstant.sendAppPassword)
+            };
 
-        var mailMessage = new MailMessage
-        {
-            From = new MailAddress(_userName, "EShopper"),
-            Subject = subject,
-            Body = message,
-            IsBodyHtml = true
-        };
-        mailMessage.To.Add(email);
+            var msg = new MailMessage()
+            {
+                From = new MailAddress(EShopperConstant.sendEmail, "EShopper"),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true,
+            };
+            msg.To.Add(email);
 
-        try 
-        {
-            await client.SendMailAsync(mailMessage);
+            await client.SendMailAsync(msg);
         }
         catch (Exception ex)
         {
-            // Log error
             throw new Exception($"Failed to send email: {ex.Message}");
         }
     }

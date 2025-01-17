@@ -53,7 +53,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(int Id)
         {
-            Shipping shipping = await _context.Shippings.FindAsync(Id);
+            var shipping = await _context.Shippings.FindAsync(Id);
+
+            if (shipping == null)
+            {
+                return NotFound();
+            }
 
             _context.Shippings.Remove(shipping);
             await _context.SaveChangesAsync();

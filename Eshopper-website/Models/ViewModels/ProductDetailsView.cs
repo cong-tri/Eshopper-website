@@ -5,15 +5,10 @@ namespace Eshopper_website.Models.ViewModels
 {
     public class ProductDetailsView
     {
-        public Product ProductDetail { get; set; }
-        public string Comment { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public ICollection<Rating> Ratings { get; set; }
-
-        public ProductDetailsView()
-        {
-            Ratings = new List<Rating>();
-        }
+        public Product? ProductDetail { get; set; }
+        public string? Comment { get; set; }
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public ICollection<Rating> Ratings { get; set; } = [];
     }
 }

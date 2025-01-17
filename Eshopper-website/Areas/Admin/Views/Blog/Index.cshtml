@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Blog";
+    ViewData["Active"] = "Blog";
 }
 
 <div class="app-content-header">
@@ -35,89 +36,66 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tbl" class="table table-hover table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_Slug)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_Image)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_AuthorName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_PublishedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BLG_Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedBy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BLG_Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BLG_Slug)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BLG_Content)
-            </td>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.BLG_Title)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.BLG_Image)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.BLG_AuthorName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.BLG_PublishedAt)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.BLG_Status)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedBy)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BLG_Title)
+                                            </td>
                                             <td>
                                                 <img src="~/images/blog/@item.BLG_Image" width="200px" alt="@item.BLG_Slug" />
                                             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BLG_AuthorName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BLG_PublishedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BLG_Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedBy)
-            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BLG_AuthorName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BLG_PublishedAt)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BLG_Status)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                                            </td>
                                             <td class="text-nowrap">
                                                 <a class="me-1 text-success" asp-action="Edit" asp-route-id="@item.BLG_ID"><i class="fa-regular fa-pen-to-square"></i></a> |
                                                 <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.BLG_ID"><i class="fa-regular fa-circle-info"></i></a> |
                                                 <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.BLG_ID"><i class="fa-regular fa-trash-xmark"></i></a>
                                             </td>
-        </tr>
-}
-    </tbody>
-</table>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -47,7 +47,7 @@ namespace Eshopper_website.Models
         [DisplayName("Status")]
         public required AccountStatusEnum ACC_Status { get; set; } = AccountStatusEnum.Inactive;
 
-        public virtual ICollection<account>? Orders { get; set; }
+        //public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<Member>? Members { get; set; }
         public virtual ICollection<AccountStatusLogin>? AccountStatusLogins { get; set; }
         public virtual ICollection<AccountLogin>? AccountLogins { get; set; }

@@ -1,47 +1,91 @@
 @model IEnumerable<Product>
+    @{
+        var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    }
+    <style>
+        .product-actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
 
-@{
-	var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-}
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: #fff;
+            color: #666;
+            border: 1px solid #ddd;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
 
-<div class="col-sm-3">
-	@Html.Partial("_SidebarPartial")
-</div>
+            .action-btn:hover {
+                color: #FE980F;
+                border-color: #FE980F;
+            }
 
-<div class="col-sm-9 padding-right">
-	<div class="features_items">
-		<!--features_items-->
-		<h2 class="title text-center">Features Items</h2>
-		@foreach (var item in Model)
-		{
-			<div class="col-sm-4">
-				<div class="product-image-wrapper">
-					<div class="single-products">
-						<div class="productinfo text-center">
-							<a asp-action="Details" asp-controller="Product" asp-route-Id="@item?.PRO_ID">
-								<img src="~/images/product-details/@item.PRO_Image" alt="@item.PRO_Name" width="100%" />
-								@{
-									var price = item?.PRO_Price ?? 0;
-									var formattedPrice = price.ToString("C0", culture);
-								}
-								<h2>@formattedPrice</h2>
-								<p>@item?.PRO_Name</p>
-								<p>Category: @item?.Category?.CAT_Name </p>
-								<p>Brand: @item?.Brand?.BRA_Name</p>
-							</a>
-							<a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart">
-								<i class="fa fa-shopping-cart"></i>Add to cart
-							</a>
-						</div>
-					</div>
-					<div class="choose">
-						<ul class="nav nav-pills nav-justified">
-							<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-							<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		}
-	</div><!--features_items-->
-</div>
+            .action-btn i {
+                font-size: 13px;
+            }
+    </style>
+
+
+
+    <div class="col-sm-3">
+        @Html.Partial("_SidebarPartial")
+    </div>
+
+    <div class="col-sm-9 padding-right">
+        <div class="features_items">
+            <!--features_items-->
+            <h2 class="title text-center">Features Items</h2>
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-4">
+                    <div class="product-image-wrapper">
+                        <a>
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <a asp-action="Details" asp-controller="Product" asp-route-Slug="@item?.PRO_Slug">
+                                        <img src="~/images/product-details/@item?.PRO_Image" alt="@item?.PRO_Name" width="100%" height="250px" />
+                                        <h2>@item?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</h2>
+                                        <p>@item?.PRO_Name</p>
+                                        <p>Danh mục : @item?.Category?.CAT_Name </p>
+                                        <p>Thương hiệu : @item?.Brand?.BRA_Name</p>
+                                        @if (item?.PRO_Quantity > 0)
+                                        {
+                                            <a asp-action="Add" asp-controller="Cart" asp-route-id="@item?.PRO_ID" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" disabled class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Out of Stock</button>
+                                        }
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="product-actions">
+                            <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                <input type="hidden" name="productId" value="@item?.PRO_ID" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-heart"></i>
+                                </button>
+                            </form>
+                            <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
+                                <input type="hidden" name="productId" value="@item?.PRO_ID" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-exchange"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div><!--features_items-->
+    </div>

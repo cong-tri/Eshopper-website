@@ -3,10 +3,16 @@ using Eshopper_website.Models.DataContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Eshopper_website.Services.VNPay;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Eshopper_website.Services.GHN;
+using Eshopper_website.Models.GHN;
+using Eshopper_website.Models.Momo;
+using Eshopper_website.Services.Momo;
+using Eshopper_website.Models.Recaptcha;
+using Eshopper_website.Services.Recaptcha;
+
 using Eshopper_website.Models;
 
 namespace Eshopper_website
@@ -17,6 +23,20 @@ namespace Eshopper_website
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //connect MOMO API
+            builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+            builder.Services.AddScoped<IMomoService, MomoService>();
+
+            // Add GHN Services
+            builder.Services.Configure<GHN_Setting>(builder.Configuration.GetSection("GHNSettings"));
+            builder.Services.AddScoped<IGHNService, GHNService>();
+
+            // connect Recaptcha Google
+            //builder.Services.Configure<Recaptcha_Setting>(builder.Configuration.GetSection("ReCaptchaSetting"));
+            //builder.Services.AddHttpClient<IRecaptchaService, RecaptchaService>();
+
+            //connect VnPay API
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
           
             // Add services to the container.
             builder.Services.AddDbContext<EShopperContext>(opt =>
@@ -38,25 +58,37 @@ namespace Eshopper_website
                 {
                     options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
                     options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
-                })
-				.AddJwtBearer(options =>
-				{
-					var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-					options.TokenValidationParameters = new TokenValidationParameters
-					{
-						ValidateIssuer = true,
-						ValidateAudience = true,
-						ValidateLifetime = true,
-						ValidateIssuerSigningKey = true,
-						ValidIssuer = jwtSettings["Issuer"],
-						ValidAudience = jwtSettings["Audience"],
-						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-					};
-				});
+                });
+				//.AddJwtBearer(options =>
+				//{
+				//	var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+				//	options.TokenValidationParameters = new TokenValidationParameters
+				//	{
+				//		ValidateIssuer = true,
+				//		ValidateAudience = true,
+				//		ValidateLifetime = true,
+				//		ValidateIssuerSigningKey = true,
+				//		ValidIssuer = jwtSettings["Issuer"],
+				//		ValidAudience = jwtSettings["Audience"],
+				//		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+				//	};
+				//});
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.ContractResolver = null;
+                    //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                });
+                //.AddJsonOptions(options =>
+                //{
+                //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                //    //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                //});
 
             builder.Services.AddDistributedMemoryCache();
 
@@ -76,17 +108,15 @@ namespace Eshopper_website
             //    options.MinimumSameSitePolicy = SameSiteMode.Lax;
             //});
 
-
-            //connect VnPay API
-            builder.Services.AddScoped<IVnPayService, VnPayService>();
-
             builder.Services.Configure<EmailConfiguration>(
                 builder.Configuration.GetSection("EmailConfiguration"));
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
             WebApplication app = builder.Build();
             
-            app.UseCookiePolicy();
+            //app.UseCookiePolicy();
+
+            //app.UseStatusCodePagesWithRedirects("/Home/Error404?statuscode={0}");
             app.UseSession();
 
             // Configure the HTTP request pipeline.
@@ -94,7 +124,7 @@ namespace Eshopper_website
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHttpsRedirection();
@@ -110,6 +140,16 @@ namespace Eshopper_website
             app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "blog",
+                pattern: "blog/{Slug?}",
+                defaults: new { controller = "Blog", action = "Details" });
+
+            app.MapControllerRoute(
+                name: "product",
+                pattern: "product/{Slug?}",
+                defaults: new { controller = "Product", action = "Details" });
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

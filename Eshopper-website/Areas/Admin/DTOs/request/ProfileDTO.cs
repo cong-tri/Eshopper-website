@@ -9,9 +9,11 @@ namespace Eshopper_website.Areas.Admin.DTOs.request
         public int MEM_ID { get; set; }
 
         [DisplayName("Display Name")]
+
         public required string ACC_DisplayName { get; set; }
 
         [DisplayName("Phone")]
+
         public required string MEM_Phone { get; set; }
 
         [DisplayName("Email")]

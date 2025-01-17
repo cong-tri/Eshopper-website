@@ -14,10 +14,5 @@ namespace Eshopper_website.Utils.Extension
             var value = cookies[key];
             return value == null ? default : JsonSerializer.Deserialize<T>(value);
         }
-
-        //public static void Remove<T>(this IResponseCookies cookies, string key)
-        //{
-        //    cookies.Delete(key);
-        //}
     }
 }

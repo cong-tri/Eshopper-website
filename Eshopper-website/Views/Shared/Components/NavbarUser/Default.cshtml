@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Menu>
+
+@foreach (var item in Model)
+{
+	if (item.MEN_Title.Equals("About Us"))
+	{
+		<li><a asp-action="AboutUs" asp-controller="Home">About Us</a></li>
+	}
+	else if (item.MEN_Title.Equals("Contact"))
+	{
+		<li><a asp-action="@item.MEN_Title" asp-controller="Home">@item.MEN_Title</a></li>
+	}
+	else
+	{
+		<li><a asp-action="Index" asp-controller="@item.MEN_Controller">@item.MEN_Title</a></li>
+	}
+}

@@ -1,27 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Enum.Order;
-using Microsoft.AspNetCore.Authorization;
+using Eshopper_website.Services.GHN;
+using Eshopper_website.Models.GHN;
+using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Models;
+using NuGet.Protocol;
+using Eshopper_website.Models.GHN.Response;
+using Microsoft.Extensions.Options;
+using Eshopper_website.Areas.Admin.Repository;
+using NuGet.Protocol.Plugins;
+using Eshopper_website.Utils.Extension;
+
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
     public class OrderController : Controller
     {
         private readonly EShopperContext _context;
+        private readonly IGHNService _ghnService;
+        private readonly IOptions<GHN_Setting> _options;
+        private readonly IEmailSender _emailSender;
         private readonly ILogger<OrderController> _logger;
 
-        public OrderController(EShopperContext context, ILogger<OrderController> logger)
+        public OrderController(
+            EShopperContext context, 
+            IGHNService ghnService,
+            IOptions<GHN_Setting> options, 
+            IEmailSender emailSender, 
+            ILogger<OrderController> logger)
         {
             _context = context;
+            _ghnService = ghnService;
+            _options = options;
+            _emailSender = emailSender;
             _logger = logger;
         }
 
@@ -40,8 +55,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving orders");
-                TempData["error"] = "Có lỗi xảy ra khi tải danh sách đơn hàng";
-                return View(new List<account>());
+                TempData["error"] = "Having error when load data order.";
+                return View(new List<Order>());
             }
         }
 
@@ -54,34 +69,69 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            var order = await _context.Orders
+                .Include(o => o.Member)
+                .Include(x => x.OrderDetails)
+                .FirstOrDefaultAsync(m => m.ORD_ID == id);
+
+            ViewData["OrderDetails"] = await _context.OrderDetails
+                .Include(x => x.Product)
+                .Include(x => x.Order)
+                .Where(x => x.ORD_ID == id)
+                .ToListAsync();
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["orderStatus"] = Enum.GetValues(typeof(OrderStatusEnum))
+                .Cast<OrderStatusEnum>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }).ToList();
+
+            return View(order);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrder(int id, OrderStatusEnum statusEnum)
+        {
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == id);
+
+            if (order == null)
+            {
+                _logger.LogWarning("Order not found with ID: {OrderId}", id);
+                return NotFound();
+            }
+
+            order.ORD_Status = statusEnum;
+
             try
             {
-                var order = await _context.Orders
-                    .Include(o => o.Member)
-                    .Include(x => x.OrderDetails)
-                    .FirstOrDefaultAsync(m => m.ORD_ID == id);
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
 
-                if (order == null)
-                {
-                    _logger.LogWarning("Order not found with ID: {OrderId}", id);
-                    return NotFound();
-                }
+                var newOrder = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == order.ORD_ID);
 
-                ViewData["OrderDetails"] = await _context.OrderDetails
-                    .Include(x => x.Product)
-                    .Include(x => x.Order)
-                    .Where(x => x.ORD_ID == id)
-                    .ToListAsync();
+                //await _emailSender.SendEmailAsync(
+                //    userInfo?.ACC_Email!,
+                //    "YOUR ORDER STATUS HAVE BEEN UPDATED",
+                //    $@"
+                //        Your order: {newOrder?.ORD_OrderCode} have been {newOrder?.ORD_Status}. </br>
+                //    "
+                //    );
 
-                ViewData["orderStatus"] = Enum.GetValues(typeof(OrderStatusEnum))
-                    .Cast<OrderStatusEnum>()
-                    .Select(e => new SelectListItem
-                    {
-                        Value = ((int)e).ToString(),
-                        Text = e.ToString()
-                    }).ToList();
-
-                return View(order);
+                return Ok(new { success = true, message = "Order status updated successfully" });
             }
             catch (Exception ex)
             {
@@ -91,43 +141,100 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateOrder(int id, OrderStatusEnum statusEnum)
-        {
-            try
-            {
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == id);
-
-                if (order == null)
-                {
-                    _logger.LogWarning("Order not found for update with ID: {OrderId}", id);
-                    return NotFound();
-                }
-
-                var oldStatus = order.ORD_Status;
-                order.ORD_Status = statusEnum;
-                order.ModifiedDate = DateTime.Now;
-                order.ModifiedBy = User.Identity?.Name ?? "Unknown";
-
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation(
-                    "Order {OrderId} status updated from {OldStatus} to {NewStatus} by {User}",
-                    id, oldStatus, statusEnum, User.Identity?.Name
-                );
-
-                return Ok(new { success = true, message = "Cập nhật trạng thái đơn hàng thành công" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating order status for ID: {OrderId}", id);
-                return StatusCode(500, new { success = false, message = "Có lỗi xảy ra khi cập nhật trạng thái đơn hàng" });
-            }
-        }
-
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.ORD_ID == id);
+        }
+
+        [HttpGet]
+        public IActionResult CreateGHNOrder()
+        {
+            ViewData["OrderCodes"] = new SelectList(
+                _context.Orders.AsNoTracking()
+                .Where(x => x.ORD_Status == OrderStatusEnum.Confirmed
+                && x.OrderDetails!.Count != 0 && x.ORD_IsGHN == OrderIsGHNEnum.Inactive
+                ), 
+                "ORD_OrderCode", "ORD_OrderCode"
+            );
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateGHNOrder(GHNOrderView viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var orderExisting = await _context.Orders.AsNoTracking()
+                    .Include(x => x.OrderDetails!)
+                    .ThenInclude(x => x.Product)
+                    .ThenInclude(x => x!.Category)
+                    .FirstOrDefaultAsync(x => x.ORD_OrderCode == viewModel.ClientOrderCode);
+
+                if (orderExisting == null) 
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    var order = new GHN_Order
+                    {
+                        FromName = "EShopper Electronics",
+                        FromPhone = "0326034561",
+                        FromAddress = "999 Lê Đức Thọ, Phường 16, Quận Gò Vấp, Hồ Chí Minh, VietNam",
+                        FromDistrictName = "Quận Gò Vấp",
+                        FromProviceName = "HCM",
+                        FromWardName = "Phường 16",
+                        ToName = viewModel.ToName,
+                        ToPhone = viewModel.ToPhone,
+                        ToAddress = viewModel.ToAddress,
+                        ToWardCode = viewModel.ToWardCode,
+                        ToDistrictId = viewModel.ToDistrictId,
+                        ClientOrderCode = orderExisting.ORD_OrderCode,
+                        CodAmount = ((int)orderExisting.ORD_TotalPrice),
+                        Weight = viewModel.Weight,
+                        Length = viewModel.Length,
+                        Width = viewModel.Width,
+                        Height = viewModel.Height,
+                        PickShift = [2],
+                        Content = orderExisting.ORD_Description,
+                        Items = orderExisting.OrderDetails!.Select(i => new GHN_OrderItem
+                        {
+                            Name = i.Product!.PRO_Name,
+                            Quantity = i.ORDE_Quantity,
+                            Price = ((int)i.ORDE_Price),
+                            Code = i.Product.PRO_Slug,
+                            Level1 = i.Product?.Category?.CAT_Name
+                        }).ToList()
+                    };
+
+                    var response = await _ghnService.CreateOrderAsync(order);
+
+                    if (response.Code != 200)
+                    {
+                        return BadRequest(new { error = response.Message });
+                    }
+
+                    TempData["success"] = "Order created successfully!";
+
+                    orderExisting.ORD_IsGHN = OrderIsGHNEnum.Active;
+                    _context.Orders.Update(orderExisting);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = "Failed to create order: " + ex.Message;
+                    return View(viewModel);
+                }
+            }
+            else
+            {
+                TempData["error"] = "Have error when create order ghn!";
+                return View(viewModel);
+            }
         }
     }
 }

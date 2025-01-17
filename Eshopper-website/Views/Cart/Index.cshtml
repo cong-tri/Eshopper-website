@@ -117,27 +117,6 @@
 								</td>
 							</tr>
 						}
-						<tr>
-							<td colspan="5">
-								<p>Subtotal: $@Model.GrandTotal</p>
-								@if (!string.IsNullOrEmpty(Context.Session.GetString("CouponCode")))
-								{
-									<p>Discount: -$@Context.Session.GetDecimal("DiscountAmount")</p>
-									<p>Final Total: $@(Model.GrandTotal - Context.Session.GetDecimal("DiscountAmount"))</p>
-								}
-								else
-								{
-									<p>Final Total: $@Model.GrandTotal</p>
-								}
-							</td>
-							<td class="text-center">
-								<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
-								<a asp-action="Checkout" asp-controller="Cart" class="btn btn-success">Checkout</a>
-							</td>
-							<td>
-								<a asp-action="Checkout" asp-controller="Checkout" class="btn btn-success">Checkout</a>
-                            </td>
-						</tr>
 					}
 					else
 					{
@@ -233,38 +212,47 @@
 						<li>Shipping Cost <span>@shippingCost.ToString("C0", culture)</span></li>
 						<li>Total <span>@grandTotal.ToString("C0", culture)</span></li>
 					</ul>
-					<div style="margin-left: 4rem">
-						<a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
+                    <div style="margin-left: 4rem">
+                        <a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
 
-						@if (userInfo != null)
-						{
-							@if (shippingCost > 0)
-							{
-								<a class="btn btn-success btn-checkout"
-								   onclick="return confirm('Confirmed to checkout?');"
-								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
-							}
-							else
-							{
-								<a disabled class="btn btn-success btn-checkout"
-								   onclick="return confirm('Confirmed to checkout?');"
-								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
-								<p><span class="text text-danger">Calculate shipping cost to checkout.</span></p>
-							}
-						}
-						@if (Model?.CartItems?.Count > 0)
-						{
-							<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
-								<input type="hidden" name="Name" value="@userInfo?.ACC_Username"/>
-								<input type="hidden" name="Amount" value="@grandTotal"/>
-								<input type="hidden" name="OrderDescription" value="Payment for order at EShopper"/>
-								<input type="hidden" name="OrderType" value="other"/>
-								<input type="hidden" name="Email" value="@userInfo?.ACC_Email"/>
-								<input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone"/>
-								<button class="btn btn-success" type="submit">Pay with VnPay</button>
-							</form>
-						}
-					</div>
+                        @if (userInfo != null)
+                        {
+                            @if (shippingCost > 0)
+                            {
+                                <a class="btn btn-success btn-checkout"
+                                   onclick="return confirm('Confirmed to checkout?');"
+                                   asp-action="Checkout" asp-controller="Checkout">
+                                    Checkout
+                                </a>
+                                @if (Model?.CartItems?.Count > 0)
+                                {
+                                    <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                        <input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
+                                        <input type="hidden" name="Amount" value="@grandTotal" />
+                                        <input type="hidden" name="OrderDescription" value="Payment for order at EShopper" />
+                                        <input type="hidden" name="OrderType" value="other" />
+                                        <input type="hidden" name="Email" value="@userInfo?.ACC_Email" />
+                                        <input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone" />
+                                        <button class="btn btn-success" type="submit">Pay with VnPay</button>
+                                    </form>
+                                    <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
+                                        <input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName" />
+                                        <input type="hidden" name="Amount" value="@Model?.GrandTotal" />
+                                        <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                                        <input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
+                                        <button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
+                                    </form>
+                                }
+                            }
+                            else
+                            {
+                                <a disabled class="btn btn-success btn-checkout"
+                                   onclick="return confirm('Confirmed to checkout?');"
+                                   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
+                                <p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
+                            }
+                        }
+                    </div>
 				</div>
 			</div>
 		</div>

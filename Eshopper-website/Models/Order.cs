@@ -6,20 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Eshopper_website.Models
 {
 	[Table("Orders")]
-	public class account : BaseModel
+	public class Order : BaseModel
 	{
-		public account() { }
-
-		public account(int memId, string orderCode, string description)
-		{
-			MEM_ID = memId;
-			ORD_OrderCode = orderCode;
-			ORD_Description = description;
-			CreatedDate = DateTime.Now;
-			ORD_Status = OrderStatusEnum.Pending;
-			ORD_PaymentMethod = OrderPaymentMethodEnum.Cash;
-		}
-
 		[Key]
 		public int ORD_ID { get; set; }
 
@@ -61,14 +49,15 @@ namespace Eshopper_website.Models
 		[DisplayName("Total Price")]
 		public decimal ORD_TotalPrice { get; set; }
 
-		[DisplayName("Last Modified")]
-		public DateTime? ModifiedDate { get; set; }
+        [DisplayName("Shipping Address")]
+        [MaxLength(120, ErrorMessage = "Shipping address cannot exceed 120 characters!")]
+        public string? ORD_ShipAddress { get; set; }
 
-		[DisplayName("Modified By")]
-		[MaxLength(255)]
-		public string? ModifiedBy { get; set; }
+        [DisplayName("Is GHN")]
+        public OrderIsGHNEnum ORD_IsGHN { get; set; } = OrderIsGHNEnum.Inactive;
 
-		[ForeignKey("MEM_ID")]
+        [ForeignKey("MEM_ID")]
+
 		public virtual Member? Member { get; set; }
 
 		public virtual ICollection<OrderDetail>? OrderDetails { get; set; }

@@ -27,26 +27,31 @@ namespace Eshopper_website.Controllers
 
             var wishlistItems = await _context.Wishlists.AsNoTracking()
                 .Include(x => x.Product)
-                .FirstOrDefaultAsync(x => x.MEM_ID == userInfo.MEM_ID);
+                .ThenInclude(x => x.Brand)
+                .Include(x => x.Product)
+                .ThenInclude(x => x.Category)
+                .Where(x => x.MEM_ID == userInfo.MEM_ID).ToListAsync();
 
-            return View(wishlistItems);
+            ViewData["Wishlists"] = wishlistItems;
+
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> AddToWishlist(int productId, string returnUrl = null)
         {
-			var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
 
-			if (userInfo == null)
-			{
-				return RedirectToAction("Login", "User", new { Area = "Admin" });
-			}
+            if (userInfo == null)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
 
-			// Check if product exists
-			var product = await _context.Products.FindAsync(productId);
+            // Check if product exists
+            var product = await _context.Products.FindAsync(productId);
             if (product == null)
             {
-                TempData["Error"] = "Product not found!";
+                TempData["error"] = "Product not found!";
                 return RedirectToAction("Index", "Product");
             }
 
@@ -58,16 +63,20 @@ namespace Eshopper_website.Controllers
                 var wishlistItem = new Wishlist
                 {
                     PRO_ID = productId,
-                    MEM_ID = userInfo.MEM_ID
+                    MEM_ID = userInfo.MEM_ID,
+                    CreatedBy = userInfo.ACC_Username,
+                    UpdatedBy = userInfo.ACC_Username,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
                 };
 
                 _context.Wishlists.Add(wishlistItem);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Product has been added to your wishlist successfully!";
+                TempData["success"] = "Product has been added to your wishlist successfully!";
             }
             else
             {
-                TempData["Info"] = "This product is already in your wishlist!";
+                TempData["error"] = "This product is already in your wishlist!";
             }
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))

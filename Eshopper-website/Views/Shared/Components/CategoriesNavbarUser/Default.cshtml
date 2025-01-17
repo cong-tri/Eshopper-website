@@ -1,0 +1,5 @@
+﻿@model IEnumerable<Category>
+@foreach (var item in Model)
+{
+	<li><a asp-action="Index" asp-controller="Category" asp-route-slug="@item.CAT_Slug">@item.CAT_Name</a></li>
+}

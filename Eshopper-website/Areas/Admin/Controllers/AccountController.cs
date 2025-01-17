@@ -11,44 +11,53 @@ using Eshopper_website.Areas.Admin.Repository;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
-[Area("Admin")]
+    [Area("Admin")]
 public class AccountController : Controller
 {
-    private readonly EShopperContext _context;
+        private readonly EShopperContext _context;
 
         public AccountController(EShopperContext context)
-    {
-        _context = context;
-    }
-
-    // GET: Admin/Account
-    public async Task<IActionResult> Index()
-    {
-        return View(await _context.Accounts.ToListAsync());
-    }
-    // GET: Admin/Account/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
         {
-            return NotFound();
+            _context = context;
         }
 
-        var account = await _context.Accounts
-            .FirstOrDefaultAsync(m => m.ACC_ID == id);
-        if (account == null)
+        // GET: Admin/Account
+        public async Task<IActionResult> Index()
         {
-            return NotFound();
+            return View(await _context.Accounts.ToListAsync());
+        }
+        // GET: Admin/Account/Details/5
+        public async Task<IActionResult> NewPass(string returnUrl)
+        {
+            return View(await _context.Accounts.ToListAsync());
+        }
+        public async Task<IActionResult> FogetPass(string returnUrl)
+        {
+            return View(await _context.Accounts.ToListAsync());
+        }
+        // GET: Admin/Account/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var account = await _context.Accounts
+                .FirstOrDefaultAsync(m => m.ACC_ID == id);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return View(account);
         }
 
-        return View(account);
-    }
-
-    // GET: Admin/Account/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
+        // GET: Admin/Account/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
     // POST: Admin/Account/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.

@@ -1,6 +1,9 @@
-﻿@{
+﻿@inject IConfiguration configuration
+@{
     Layout = null;
+    var siteKey = configuration["ReCaptchaSetting:SiteKey"];
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <!--begin::Head-->
@@ -19,6 +22,7 @@
     <link rel="stylesheet" href="~/admin/plugins/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/admin/css/adminlte.css" />
     <link rel="stylesheet" href="~/admin/css/custom.css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="register-page bg-body-secondary">
     <div class="register-box">
@@ -31,17 +35,18 @@
             <div class="card-body register-card-body rounded">
                 <p class="register-box-msg text-danger">@ViewData["Message"]</p>
                 <form asp-action="Register" asp-area="Admin" asp-controller="User">
+                    @* <input type="hidden" id="reCaptchaTokenInputId" asp-for="ReCaptchaToken" /> *@
                     <div class="row align-items-center mb-4">
                         <div class="col-md input-group">
                             <div class="form-floating">
-                                <input id="username" name="UserName" type="text" class="form-control">
+                                <input id="username" name="UserName" type="text" class="form-control" maxlength="20">
                                 <label for="username">Username</label>
                             </div>
                             <div class="input-group-text"> <i class="fa-light fa-user"></i> </div>
                         </div>
                         <div class="col-md input-group">
                             <div class="form-floating">
-                                <input id="displayname" name="DisplayName" type="text" class="form-control">
+                                <input id="displayname" name="DisplayName" type="text" class="form-control" maxlength="50">
                                 <label for="displayname">Name</label>
                             </div>
                             <div class="input-group-text"> <i class="fa-light fa-file-signature"></i> </div>
@@ -50,14 +55,14 @@
                     <div class="row align-items-center mb-4">
                         <div class="col-md input-group">
                             <div class="form-floating">
-                                <input id="phone" name="Phone" type="tel" class="form-control">
+                                <input id="phone" name="Phone" type="tel" class="form-control" maxlength="12">
                                 <label for="phone">Phone</label>
                             </div>
                             <div class="input-group-text"> <i class="fa-thin fa-mobile"></i> </div>
                         </div>
                         <div class="col-md input-group">
                             <div class="form-floating">
-                                <input id="email" name="Email" type="email" class="form-control">
+                                <input id="email" name="Email" type="email" class="form-control" maxlength="30">
                                 <label for="email">Email</label>
                             </div>
                             <div class="input-group-text"> <i class="fa-regular fa-at"></i> </div>
@@ -65,29 +70,29 @@
                     </div>
                     <div class="input-group mb-4">
                         <div class="form-floating">
-                            <input id="password" name="Password" type="password" class="form-control">
+                            <input id="password" name="Password" type="password" class="form-control" maxlength="20">
                             <label for="password">Password</label>
                         </div>
                         <div class="input-group-text"> <i class="fa-thin fa-lock"></i> </div>
                     </div>
                     <div class="input-group mb-4">
                         <div class="form-floating">
-                            <input id="confirmedpassword" name="ConfirmedPassword" type="password" class="form-control">
+                            <input id="confirmedpassword" name="ConfirmedPassword" type="password" class="form-control" maxlength="20">
                             <label for="confirmedpassword">ConfirmedPassword</label>
                         </div>
                         <div class="input-group-text"> <i class="fa-thin fa-lock"></i> </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="">
+                            @* <div id="html_element"></div> *@
+                            <div class="g-recaptcha" data-sitekey="@siteKey"></div>
+                        </div>
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-success w-100">Sign Up</button>
                     </div>
                 </form>
-                <div class="social-auth-links text-center mb-3 d-grid gap-2">
-                    <p>- OR -</p> <a href="#" class="btn btn-primary">
-                        <i class="bi bi-facebook me-2"></i> Sign up using Facebook
-                    </a> <a href="#" class="btn btn-danger">
-                        <i class="bi bi-google me-2"></i> Sign up using Google+
-                    </a>
-                </div>
                 <p class="text-center"> <a asp-action="Login" asp-controller="User" asp-area="Admin">Have already account? Go to sign in.</a> </p>
             </div> 
 
@@ -97,6 +102,21 @@
     <script src="~/admin/js/bootstrap.bundle.min.js"></script>
     <script src="~/admin/js/adminlte.js"></script>
     <script src="~/admin/plugins/jquery/jquery-3.7.1.min.js"></script>
+@*     <script type="text/javascript">
+        var onloadCallback = function () {
+            grecaptcha.render('html_element', {
+                'sitekey': '@siteKey'
+            });
+        };
+        function onSubmit(event) {
+            var token = grecaptcha.getResponse();
+            document.getElementById("reCaptchaTokenInputId").value = token;
+        }
+    </script> *@
+
+   @*  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async defer>
+    </script> *@
     <script>
         //===================== begin::OverlayScrollbars Configure =====================
         const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";

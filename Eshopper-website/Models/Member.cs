@@ -19,11 +19,11 @@ namespace Eshopper_website.Models
         [DisplayName("Role ID")]
         public required int ACR_ID { get; set; } = 1;
 
-		[MaxLength(255, ErrorMessage = "Lastname cannot exceed 255 characters!")]
+		[MaxLength(20, ErrorMessage = "Lastname cannot exceed 20 characters!")]
 		[DisplayName("Lastname")]
         public string? MEM_LastName { get; set; } = string.Empty;
 
-		[MaxLength(255, ErrorMessage = "Firstname cannot exceed 255 characters!")]
+		[MaxLength(20, ErrorMessage = "Firstname cannot exceed 20 characters!")]
 		[DisplayName("Firstname")]
         public string? MEM_FirstName {  get; set; } = string.Empty;
 
@@ -34,14 +34,14 @@ namespace Eshopper_website.Models
         [Required(ErrorMessage = "Please enter phone number!")]
 		[DataType(DataType.PhoneNumber, ErrorMessage = "Please enter the correct format phone number!")]
 		[MinLength(10, ErrorMessage = "Phone must be at least 10 characters long!")]
-		[MaxLength(11, ErrorMessage = "Phone cannot exceed 11 characters!")]
+		[MaxLength(12, ErrorMessage = "Phone cannot exceed 12 characters!")]
 		[DisplayName("Phone")]
         public required string MEM_Phone { get; set; }
 
         [Required(ErrorMessage = "Please enter email!")]
 		[DataType(DataType.EmailAddress, ErrorMessage = "Please enter the correct format email!")]
 		[MinLength(10, ErrorMessage = "Email must be at least 10 characters long!")]
-		[MaxLength(255, ErrorMessage = "Email cannot exceed 255 characters!")]
+		[MaxLength(30, ErrorMessage = "Email cannot exceed 30 characters!")]
 		[DisplayName("Email")]
         public required string MEM_Email {  get; set; }
 
@@ -61,7 +61,7 @@ namespace Eshopper_website.Models
 
         public virtual ICollection<Wishlist>? Wishlists { get; set; }
         public virtual ICollection<Compare>? Compares { get; set; }
-        public virtual ICollection<account>? Orders { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
         
     }
 }

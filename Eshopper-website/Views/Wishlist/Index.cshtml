@@ -1,7 +1,8 @@
-@model IEnumerable<Eshopper_website.Models.Wishlist>
+@model Eshopper_website.Models.Wishlist
 
 @{
     ViewData["Title"] = "Wishlist";
+    var wishlist = ViewData["Wishlists"] as List<Wishlist> ?? [];
 }
 
 <section id="cart_items">
@@ -13,7 +14,7 @@
             </ol>
         </div>
 
-        @if (!Model.Any())
+        @if (wishlist.Count == 0)
         {
             <div class="alert alert-info">
                 Your wishlist is empty. <a asp-controller="Product" asp-action="Index">Continue shopping</a>
@@ -33,34 +34,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in wishlist)
                         {
                             <tr>
                                 <td class="cart_product">
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.PRO_ID">
-                                        <img src="~/images/product-details/@item.Product.PRO_Image" alt="@item.Product.PRO_Name" style="width:110px;height:110px;" />
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item?.PRO_ID">
+                                        <img src="~/images/product-details/@item?.Product?.PRO_Image" alt="@item?.Product?.PRO_Name" style="width:110px;height:110px;" />
                                     </a>
                                 </td>
                                 <td class="cart_description">
-                                    <h4><a asp-controller="Product" asp-action="Details" asp-route-id="@item.PRO_ID">@item.Product.PRO_Name</a></h4>
-                                    <p>Brand: @item.Product.Brand?.BRA_Name</p>
-                                    <p>Category: @item.Product.Category?.CAT_Name</p>
+                                    <h4><a asp-controller="Product" asp-action="Details" asp-route-id="@item?.PRO_ID">@item?.Product?.PRO_Name</a></h4>
+                                    <p>Brand: @item?.Product?.Brand?.BRA_Name</p>
+                                    <p>Category: @item?.Product?.Category?.CAT_Name</p>
                                 </td>
                                 <td class="cart_price">
-                                    <p>$@item.Product.PRO_Price</p>
+                                    <p>@item?.Product?.PRO_Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</p>
                                 </td>
                                 <td class="cart_delete">
                                     <form asp-action="RemoveFromWishlist" method="post" style="display: inline;">
-                                        <input type="hidden" name="wishId" value="@item.WISH_ID" />
+                                        <input type="hidden" name="wishId" value="@item?.WISH_ID" />
                                         <button type="submit" class="cart_quantity_delete" title="Remove from Wishlist">
                                             <i class="fa fa-times"></i>
-                                        </button>
-                                    </form>
-                                    <form asp-controller="Cart" asp-action="Add" method="post" style="display: inline;">
-                                        <input type="hidden" name="id" value="@item.PRO_ID" />
-                                        <input type="hidden" name="quantity" value="1" />
-                                        <button type="submit" class="btn btn-default add-to-cart">
-                                            <i class="fa fa-shopping-cart"></i>Add to cart
                                         </button>
                                     </form>
                                 </td>
