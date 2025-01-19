@@ -14,6 +14,9 @@ using Eshopper_website.Models.Recaptcha;
 using Eshopper_website.Services.Recaptcha;
 
 using Eshopper_website.Models;
+using System.Configuration;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Eshopper_website.Areas.Admin.Models.SendEmail;
 
 namespace Eshopper_website
 {
@@ -42,6 +45,7 @@ namespace Eshopper_website
             builder.Services.AddDbContext<EShopperContext>(opt =>
 			    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.Configure<MailConfig>(builder.Configuration.GetSection("EmailConfiguration"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             builder.Services.Configure<Appsettings>(builder.Configuration.GetSection("JwtSettings"));
@@ -56,8 +60,19 @@ namespace Eshopper_website
             .AddCookie()
                 .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
                 {
-                    options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
-                    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+					IConfigurationSection googleConfig = builder.Configuration.GetSection("Authentication:Google");
+
+                    //options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+                    //options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+                    options.ClientId = googleConfig["ClientId"];
+                    options.ClientSecret = googleConfig["ClientSecret"];
+                })
+                .AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
+                {
+                    IConfigurationSection facebookConfig = builder.Configuration.GetSection("Authentication:Facebook");
+                    options.AppId = facebookConfig["AppId"];
+                    options.AppSecret = facebookConfig["AppSecret"];
+                    options.CallbackPath = "/dang-nhap-tu-facebook";
                 });
 				//.AddJwtBearer(options =>
 				//{
@@ -112,11 +127,12 @@ namespace Eshopper_website
                 builder.Configuration.GetSection("EmailConfiguration"));
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-            WebApplication app = builder.Build();
-            
-            //app.UseCookiePolicy();
+            var app = builder.Build();
+
+            app.UseCookiePolicy();
 
             //app.UseStatusCodePagesWithRedirects("/Home/Error404?statuscode={0}");
+
             app.UseSession();
 
             // Configure the HTTP request pipeline.
@@ -137,22 +153,26 @@ namespace Eshopper_website
 
             app.UseAuthorization();
 
+            app.UseCors("CorsPolicy");
+
             app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
             app.MapControllerRoute(
                 name: "blog",
                 pattern: "blog/{Slug?}",
                 defaults: new { controller = "Blog", action = "Details" });
 
-            app.MapControllerRoute(
-                name: "product",
-                pattern: "product/{Slug?}",
-                defaults: new { controller = "Product", action = "Details" });
+            //app.MapControllerRoute(
+            //    name: "product",
+            //    pattern: "product/{Slug?}",
+            //    defaults: new { controller = "Product", action = "Details" });
 
-            app.MapControllerRoute(
+			app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.Run();
         }
     }

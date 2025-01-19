@@ -1,6 +1,7 @@
 ﻿using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Models.ViewModels;
+using Eshopper_website.Utils.Extension;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,26 +18,32 @@ namespace Eshopper_website.Controllers
 
 		public IActionResult Index()
 		{
-			ViewData["products"] = _context.Products.Include(x => x.Category).Include(x => x.Brand).ToList();
+			ViewData["products"] = _context.Products.AsNoTracking()
+				.Include(x => x.Category)
+				.Include(x => x.Brand)
+				.ToList();
 			return View();
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Search(string searchTerm)
+		public async Task<IActionResult> Search(string? SearchTerm)
 		{
-			var products = await _context.Products
+            var products = await _context.Products
 				.Include(x => x.Category)
 				.Include(x => x.Brand)
-				.Where(p => p.PRO_Name.Contains(searchTerm) || p.PRO_Description.Contains(searchTerm))
+				.Where(x => x.PRO_Name.Contains(SearchTerm) || x.PRO_Description.Contains(SearchTerm))
 				.ToListAsync();
 
-			ViewBag.Keyword = searchTerm;
+			ViewData["searchTerm"] = SearchTerm;
+
 			return View(products);
 		}
 
 		public IActionResult Details(string? Slug)
 		{
-			if (String.IsNullOrEmpty(Slug))
+            var user = HttpContext.Session.Get<UserInfo>("userInfo");
+
+            if (String.IsNullOrEmpty(Slug))
 			{
                 ViewData["products"] = _context.Products.Include(x => x.Category).Include(x => x.Brand).ToList();
                 return View("Index");
@@ -45,7 +52,9 @@ namespace Eshopper_website.Controllers
 			var productsById = _context.Products
 				.Include(p => p.Brand)
 				.Include(p => p.Category)
-				.Include(p => p.Ratings)
+                .Include(p => p.Ratings)
+				.Include(p => p.Wishlists)
+				.Include(p => p.Compares)
 				.FirstOrDefault(p => p.PRO_Slug == Slug);
 
 			if (productsById == null)
@@ -75,9 +84,9 @@ namespace Eshopper_website.Controllers
 			return View(viewModel);
 		}
 
-		public async Task<IActionResult> CommentProduct(Rating rating)
+        public async Task<IActionResult> CommentProduct(Rating rating)
 		{
-			if (ModelState.IsValid)
+            if (ModelState.IsValid)
 			{
 				var ratingEntity = new Rating
 				{
@@ -91,8 +100,8 @@ namespace Eshopper_website.Controllers
 				_context.Ratings.Add(ratingEntity);
 				await _context.SaveChangesAsync();
 				TempData["success"] = "Thêm đánh giá thành công";
-				return Redirect(Request.Headers["Referer"]);
-			}
+				return Redirect("Details");
+            }
 			else
 			{
 				TempData["error"] = "Model co 1 vai loi";

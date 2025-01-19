@@ -236,7 +236,7 @@
                                         <button class="btn btn-success" type="submit">Pay with VnPay</button>
                                     </form>
                                     <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
-                                        <input type="hidden" name="FullName" value="@userInfo.ACC_DisplayName" />
+                                        <input type="hidden" name="FullName" value="@userInfo?.ACC_DisplayName" />
                                         <input type="hidden" name="Amount" value="@Model?.GrandTotal" />
                                         <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
                                         <input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
@@ -247,7 +247,6 @@
                             else
                             {
                                 <a disabled class="btn btn-success btn-checkout"
-                                   onclick="return confirm('Confirmed to checkout?');"
                                    asp-action="Checkout" asp-controller="Checkout">Checkout</a>
                                 <p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
                             }
@@ -285,8 +284,12 @@
 				var tinh = $("#tinh").find('option:selected').text();
 				var quan = $("#quan").find('option:selected').text();
 				var phuong = $("#phuong").find('option:selected').text();
-				if (tinh == '' || quan == '' || phuong == '') {
-					Swal.fire("Please not empty.");
+
+				console.log(tinh, quan, phuong)
+
+				if (tinh == 'City' || quan == 'District' || phuong == 'Ward') {
+					Swal.error("Please not empty.");
+					return;
 				} else {
 					$.ajax({
 						type: "POST",
@@ -294,7 +297,8 @@
 						data: { tinh: tinh, quan: quan, phuong: phuong },
 						success: function (result) {
 							if (result) {
-								location.reload();
+								Swal.fire("Submit shipping cost successfully.");
+								// location.reload();
 							}
 						}
 					});
@@ -309,9 +313,9 @@
 					success: function (result) {
 						if (result.success) {
 							Swal.fire("Remove shipping cost successfully.");
-							location.reload();
+							// location.reload();
 						} else {
-							Swal.fire("Remove shipping cost unsuccessfully.");
+							Swal.error("Remove shipping cost unsuccessfully.");
 						}
 					},
 					error: function (jqXHR, textStatus, errorThrown) {

@@ -24,18 +24,18 @@ namespace Eshopper_website.Controllers
         {
             List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
 
-          var shippingPriceCookie = Request.Cookies["ShippingPrice"];
-          decimal shippingPrice = 0;
+            var shippingPriceCookie = Request.Cookies["ShippingPrice"];
+            decimal shippingPrice = 0;
 
-          if (shippingPriceCookie != null)
-          {
-            var shippingPriceJson = shippingPriceCookie;
-            shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
-          }
+            if (shippingPriceCookie != null)
+            {
+                var shippingPriceJson = shippingPriceCookie;
+                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
+            }
 
-          var coupon_code = Request.Cookies["CouponTitle"];
+            var coupon_code = Request.Cookies["CouponTitle"];
 
-          CartItemView cartItemView = new()
+            CartItemView cartItemView = new()
             {
                 CartItems = cartItems,
                 GrandTotal = cartItems.Sum(x => x.PRO_Quantity * x.PRO_Price) + shippingPrice,

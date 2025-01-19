@@ -53,7 +53,7 @@
                             }
                             <form asp-action="ConfirmOTP" asp-controller="User" asp-area="Admin" method="post">
                                 @* @Html.AntiForgeryToken() *@
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="otp">
                                         <h4>Please enter the one time password <br> to verify your account</h4>
                                         <div>
@@ -72,6 +72,7 @@
                                            required />
                                 </div>
                                 <button type="submit" class="btn btn-primary">Verify OTP</button>
+                                <button type="button" class="btn btn-primary">Resend OTP</button>
                             </form>
                         </div> 
                     </div>

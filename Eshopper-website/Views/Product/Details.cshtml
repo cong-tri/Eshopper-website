@@ -1,10 +1,13 @@
 @using Eshopper_website.Models.ViewModels
 @using System.Linq
 @using System.Collections.Generic
+@using Eshopper_website.Utils.Extension
 
 @model ProductDetailsView
 
 @{
+    var userInfo = Context.Session.Get<UserInfo>("userInfo");
+
     ViewData["Title"] = "Detail Product";
     var products = ViewData["relantedProduct"] as List<Product>;
 
@@ -211,7 +214,7 @@
                 <!--product-details-->
                 <div class="col-sm-5">
                     <div class="view-product">
-                        <img src="~/images/product-details/@Model?.ProductDetail.PRO_Image" alt="@Model?.ProductDetail?.PRO_Name" />
+                        <img src="~/images/product-details/@Model?.ProductDetail?.PRO_Image" alt="@Model?.ProductDetail?.PRO_Name" />
                     </div>
                 </div>
 
@@ -240,7 +243,7 @@
                             <span>@formattedPrice</span>
                             <label>Quantity: </label>
                             <input type="number" value="1" min="1" max="@Model?.ProductDetail?.PRO_Quantity" />
-                            @if (Model?.ProductDetail.PRO_Quantity > 0)
+                            @if (Model?.ProductDetail?.PRO_Quantity > 0)
                             {
                                 <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
                                     <i class="fa fa-shopping-cart"></i>
@@ -455,9 +458,9 @@
                             <!-- Write Review Form -->
                             <div class="write-review">
                                 <h4>Write Your Review</h4>
-                                <form id="reviewForm" autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="post">
-                                    <input asp-for="ProductDetail.PRO_ID" type="hidden" name="PRO_ID" />
-                                    
+                                <form id="reviewForm" autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="POST">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input asp-for="ProductDetail!.PRO_ID" type="hidden" name="PRO_ID" />
                                     <div class="form-group">
                                         <label>Your Rating</label>
                                         <div class="rating-stars">
@@ -478,18 +481,18 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="text" name="RAT_Name" class="form-control" placeholder="Your Name" required minlength="5" maxlength="255" />
+                                        <input type="text" name="RAT_Name" class="form-control" placeholder="Your Name" required minlength="5" maxlength="20" />
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="email" name="RAT_Email" class="form-control" placeholder="Email Address" required minlength="10" maxlength="255" />
+                                        <input type="email" name="RAT_Email" class="form-control" placeholder="Email Address" required minlength="8" maxlength="40" />
                                     </div>
 
                                     <div class="form-group">
                                         <textarea name="RAT_Comment" class="form-control" placeholder="Your Review" minlength="5" maxlength="255" rows="5"></textarea>
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary" >
                                         Submit Review
                                     </button>
                                 </form>
@@ -530,6 +533,10 @@
 </section>
 
 @section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
     <script>
         document.getElementById('reviewSort').addEventListener('change', function () {
             const reviewsList = document.getElementById('reviewsList');

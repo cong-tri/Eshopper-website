@@ -100,6 +100,11 @@
 									<li><a asp-action="Index" asp-controller="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 									<li><a asp-controller="Account" asp-action="Index">Hello, @userInfo.ACC_DisplayName</a></li>
+									<li>
+										<a asp-action="Logout" asp-controller="User" asp-area="Admin">
+											<i class="fa fa-sign-out" aria-hidden="true"></i>
+										</a>
+									</li>
 								}
 								else
 								{
@@ -146,7 +151,7 @@
 					</div>
                     <div class="col-sm-3">
                         @* asp-controller="Product" asp-action="Search" *@
-						<form id="formSearch" method="post">
+						<form asp-action="Search" asp-controller="Product" method="POST">
 							<div class="search_box pull-right">
 								<input type="search" placeholder="Search" id="searchTerm" name="searchTerm" />
 								<button class="btn btn-warning" type="submit">Search</button>
@@ -328,25 +333,6 @@
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
-	<script>
-		$(document).ready(function () {
-			$('#formSearch').submit(function () {
-				var search = $('#searchTerm').val();
-
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("Search", "Product")",
-					data: { searchTerm: search },
-					success: function () {
-						alert("Success");
-					},
-					error: function () {
-						alert("Error");
-					}
-				});
-			});
-		});
-	</script>
 @* 	<script>
 		// Auto hide alerts after 3 seconds
 		$(document).ready(function () {
