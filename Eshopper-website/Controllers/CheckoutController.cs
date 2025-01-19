@@ -75,9 +75,11 @@ namespace Eshopper_website.Controllers
                 ORD_Status = OrderStatusEnum.Pending,
                 ORD_PaymentMethod = OrderPaymentMethodEnum.Cash,
                 ORD_ShippingCost = shippingPrice,
-                CreatedBy = userInfo.ACC_Username,
                 ORD_CouponCode = CouponCode,
                 ORD_TotalPrice = cartItemView.GrandTotal + shippingPrice,
+                ORD_ShipAddress = "",
+                ORD_IsGHN = OrderIsGHNEnum.Inactive,
+                CreatedBy = userInfo.ACC_Username,
                 CreatedDate = DateTime.Now,
             };
 

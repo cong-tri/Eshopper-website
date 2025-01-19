@@ -23,6 +23,7 @@ namespace Eshopper_website.Controllers
             var products = _context.Products.Include(x => x.Category).Include(x => x.Brand).ToList();
             var banners = _context.Banners.OrderBy(x => x.BAN_DisplayOrder).ToList();
             ViewData["Banner"] = banners;
+
             return View(products);
         }
 

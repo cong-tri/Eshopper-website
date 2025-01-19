@@ -19,6 +19,11 @@ using Eshopper_website.Areas.Admin.Repository;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Azure.Core;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Microsoft.AspNetCore.Http;
+using static System.Net.WebRequestMethods;
+using System.Security.Principal;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -304,15 +309,28 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 // Generate OTP (6-digit number)
                 var random = new Random();
                 var otp = random.Next(100000, 999999).ToString();
-                //TempData["OTP"] = otp;
-                HttpContext.Session.Set<String>("OTPtoken", otp);
 
-                await _emailSender.SendEmailAsync(newAccount.ACC_Email, 
+                Response.Cookies.Append<String>("OTPtoken", otp, new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(2),
+                    HttpOnly = true,
+                    IsEssential = true
+                });
+
+                //HttpContext.Session.Set<String>("OTPtoken", otp);
+
+                var response = await _emailSender.SendEmailAsync(newAccount.ACC_Email, 
                     "OTP TOKEN TO AUTHORIZE",
                     $@"Token have been sent to your email: {newAccount.ACC_Email}. Your OTP token: {otp}"
                 );
 
-                ViewData["Message"] = "Create new account successful! You must be confirm otp code to finish.";
+                if (response.Code == 404)
+                {
+                    ViewData["Message"] = response.Message;
+                    return RedirectToAction("Register");
+                }
+
+                ViewData["Message"] = "You must be confirm otp code to finish.";
                 return RedirectToAction("ConfirmOTP");
             }
             else
@@ -438,9 +456,20 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 return RedirectToAction("Register");
             }
 
+            var cookieOptions = new CookieOptions();
+            if (Request.Cookies.TryGetValue("OTPtoken", out string? cookieValue))
+            {
+                if (DateTime.UtcNow > cookieOptions.Expires)
+                {
+                    ViewData["Message"] = "OTP has expired. Please request a new one.";
+                    Response.Cookies.Delete("OTPtoken");
+                    return View();
+                }
+            }
+
             ViewData["EmailReiceive"] = pendingAccount.ACC_Email;
 
-            return RedirectToAction("Index", "Home", new { Area = "" });
+            return View();
         }
 
         public IActionResult ForgotPass()
@@ -458,12 +487,24 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 return View();
             }
 
-            var storedOTP = HttpContext.Session.Get<String>("OTPtoken");
+            var storedOTP = Request.Cookies.Get<String>("OTPtoken");
             var pendingAccount = HttpContext.Session.Get<Account>("accountConfirmOTP");
+
+            var cookieOptions = new CookieOptions();
 
             if (storedOTP == null || pendingAccount == null)
             {
                 return RedirectToAction("Register");
+            }
+
+            if (Request.Cookies.TryGetValue("OTPtoken", out string? cookieValue))
+            {
+                if (DateTime.UtcNow > cookieOptions.Expires)
+                {
+                    ViewData["Message"] = "OTP has expired. Please request a new one.";
+                    Response.Cookies.Delete("OTPtoken");
+                    return View();
+                }
             }
 
             if (otp == storedOTP)
@@ -500,6 +541,32 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
             ViewData["Message"] = "Invalid OTP. Please try again.";
             return View();
+        }
+
+        public async Task<IActionResult> ResendOTPCode(string email)
+        {
+            var random = new Random();
+            var otp = random.Next(100000, 999999).ToString();
+
+            Response.Cookies.Append<String>("OTPtoken", otp, new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddMinutes(2),
+                HttpOnly = true,
+                IsEssential = true
+            });
+
+            var response = await _emailSender.SendEmailAsync(email,
+            "OTP TOKEN TO AUTHORIZE",
+            $@"Token have been sent to your email: {email}. Your OTP token: {otp}"
+                );
+
+            if (response.Code == 404)
+            {
+                ViewData["Message"] = response.Message;
+                throw new Exception(response.Message);
+            }
+
+            return Redirect("ConfirmOTP");
         }
 
         public async Task<IActionResult> ForgotPass([FromForm] string email)
@@ -550,23 +617,6 @@ namespace Eshopper_website.Areas.Admin.Controllers
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-
-        //private static string CreateMD5(string input)
-        //{
-        //    using (var md5 = MD5.Create())
-        //    {
-        //        var inputBytes = Encoding.UTF8.GetBytes(input);
-        //        var hashBytes = md5.ComputeHash(inputBytes);
-
-        //        // Convert the byte array to hexadecimal string
-        //        var sb = new StringBuilder();
-        //        for (int i = 0; i < hashBytes.Length; i++)
-        //        {
-        //            sb.Append(hashBytes[i].ToString("X2"));
-        //        }
-        //        return sb.ToString();
-        //    }
-        //}
 
         public IActionResult NewPass()
         {
@@ -691,6 +741,123 @@ namespace Eshopper_website.Areas.Admin.Controllers
             {
                 TempData["error"] = "An error occurred while updating the profile!";
                 return RedirectToAction("UpdateProfileAdmin");
+            }
+        }
+
+        public async Task LoginByFacebook()
+        {
+            await HttpContext.ChallengeAsync(FacebookDefaults.AuthenticationScheme,
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("FacebookResponse")
+                });
+        }
+
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+
+            if (!result.Succeeded)
+            {
+                return RedirectToAction("Login", "User", new { Area = "Admin" });
+            }
+
+            var claims = result?.Principal?.Identities?.FirstOrDefault()?.Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+
+            var loginProvider = result?.Principal?.Identity?.AuthenticationType;
+
+            //var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var providerDisplayName = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var providerKey = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var accountLogin = await _context.AccountLogins
+                .AsNoTracking()
+                .Where(x => x.LoginProvider == loginProvider || x.ProviderKey == providerKey)
+                .FirstOrDefaultAsync();
+            
+            if (accountLogin == null)
+            {
+                var accountLoginGoogle = await _context.AccountLogins
+                .AsNoTracking()
+                .Where(x => x.ProviderDisplayName == providerDisplayName)
+                .FirstOrDefaultAsync();
+
+                //var account = await _context.Accounts.AsNoTracking()
+                //    .Where(x => x.ACC_ID == accountLoginGoogle!.ACC_ID)
+                //    .FirstOrDefaultAsync();
+
+                var member = await _context.Members.AsNoTracking()
+                    .Include(x => x.Account)
+                    .Where(x => x.ACC_ID == accountLoginGoogle!.ACC_ID)
+                    .FirstOrDefaultAsync();
+
+                if (member != null && member?.Account?.ACC_Status != AccountStatusEnum.Inactive 
+                    || accountLoginGoogle != null)
+                {
+                    if (accountLoginGoogle?.ProviderDisplayName == providerDisplayName)
+                    {
+                        var user = new UserInfo(member!.Account!, member!.ACR_ID, member!.MEM_ID);
+
+                        if (accountLoginGoogle?.LoginProvider != loginProvider && accountLoginGoogle?.ProviderKey != providerKey)
+                        {
+                            var newAccountLogin = new AccountLogin()
+                            {
+                                ACC_ID = member!.ACC_ID,
+                                LoginProvider = loginProvider ?? "",
+                                ProviderKey = providerKey ?? "",
+                                ProviderDisplayName = providerDisplayName ?? "",
+                                CreatedBy = member?.Account?.ACC_Username,
+                                CreatedDate = DateTime.Now,
+                                UpdatedBy = member?.Account?.ACC_Username,
+                                UpdatedDate = DateTime.Now,
+                            };
+
+                            _context.AccountLogins.Add(newAccountLogin);
+                            await _context.SaveChangesAsync();
+
+                            HttpContext.Session.Set<UserInfo>("userInfo", user);
+                            TempData["success"] = "Login with Facebook Success!";
+
+                            return RedirectToAction("Index", "Home", new { Area = "" });
+                        }
+                        else
+                        {
+                            HttpContext.Session.Set<UserInfo>("userInfo", user);
+                            TempData["success"] = "Login with Facebook Success!";
+
+                            return RedirectToAction("Index", "Home", new { Area = "" });
+                        }
+                    }
+                    else
+                    {
+                        TempData["error"] = "Account have to login with Google first, then can login to Facebook!";
+                        return RedirectToAction("Login", "User", new { Area = "Admin" });
+                    }
+                }
+                else
+                {
+                    TempData["error"] = "Account not found!";
+                    return RedirectToAction("Login", "User", new { Area = "Admin" });
+                }
+            }
+            else
+            {
+                var member = await _context.Members.AsNoTracking()
+                    .Include(x => x.Account)
+                    .Where(x => x.ACC_ID == accountLogin!.ACC_ID)
+                    .FirstOrDefaultAsync();
+
+                var user = new UserInfo(member!.Account!, member!.ACR_ID, member!.MEM_ID);
+                HttpContext.Session.Set<UserInfo>("userInfo", user);
+
+                TempData["success"] = "Login with Facebook Success!";
+                return RedirectToAction("Index", "Home", new { Area = "" });
             }
         }
     }
