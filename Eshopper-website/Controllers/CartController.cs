@@ -231,7 +231,7 @@ namespace Eshopper_website.Controllers
           }
           else
           {
-            shippingPrice = 50000;
+            shippingPrice = 30000;
           }
           var shippingPriceJson = JsonConvert.SerializeObject(shippingPrice);
           try

@@ -114,7 +114,7 @@ namespace Eshopper_website
                 options.Cookie.IsEssential = true;
                 options.Cookie.Path = "/";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SameSite = SameSiteMode.Strict;
             });
 
             //builder.Services.Configure<CookiePolicyOptions>(options =>

@@ -163,7 +163,9 @@ namespace Eshopper_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateGHNOrder(GHNOrderView viewModel)
         {
-            if (ModelState.IsValid)
+			var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+
+			if (ModelState.IsValid)
             {
                 var orderExisting = await _context.Orders.AsNoTracking()
                     .Include(x => x.OrderDetails!)
@@ -211,18 +213,31 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                     var response = await _ghnService.CreateOrderAsync(order);
 
-                    if (response.Code != 200)
+                    if (response.code != 200 && response.data == null)
                     {
-                        return BadRequest(new { error = response.Message });
+                        return BadRequest(new { error = response.message });
                     }
 
-                    TempData["success"] = "Order created successfully!";
+                    //orderExisting.ORD_IsGHN = OrderIsGHNEnum.Active;
+                    //_context.Orders.Update(orderExisting);
+                    //await _context.SaveChangesAsync();
 
-                    orderExisting.ORD_IsGHN = OrderIsGHNEnum.Active;
-                    _context.Orders.Update(orderExisting);
-                    await _context.SaveChangesAsync();
+					var newOrderGHN = new OrderGHN()
+					{
+						OrderCode = response.data.order_code,
+						SortCode = response.data.sort_code,
+						TotalFee = (int)response.data.total_fee,
+						TransType = response.data.trans_type,
+						ExpectedDeliveryTime = response.data.expected_delivery_time,
+						CreatedBy = userInfo.ACC_DisplayName,
+						CreatedDate = DateTime.Now,
+					};
 
-                    return Ok(response);
+					_context.OrderGHNs.Add(newOrderGHN);
+					await _context.SaveChangesAsync();
+
+                    TempData["success"] = "Order GHN created successfully!";
+					return Ok(response);
                 }
                 catch (Exception ex)
                 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Eshopper_website.Models.GHN;
+using Microsoft.EntityFrameworkCore;
 
 namespace Eshopper_website.Models.DataContext
 {
@@ -30,5 +31,7 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Compare> Compares { get; set; }
         public DbSet<MomoInfo> Momos { get; set; }
         public DbSet<Statistical> Statisticals { get; set; }
-    }
+		public DbSet<Payment> Payments { get; set; }
+		public DbSet<OrderGHN> OrderGHNs { get; set; }
+	}
 }

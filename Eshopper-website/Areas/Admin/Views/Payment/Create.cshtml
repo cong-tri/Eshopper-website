@@ -1,0 +1,92 @@
+﻿@model Eshopper_website.Models.Payment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Payment</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">Add new payment method</h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="PAY_Name" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="PAY_Name" class="form-control w-100" maxlength="15" />
+                                        <span asp-validation-for="PAY_Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="PAY_Description" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <input asp-for="PAY_Description" type="text" maxlength="50" class="form-control"/>
+                                        <span asp-validation-for="PAY_Description" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-3">
+                                        <label asp-for="PAY_Status" class="control-label"></label>
+                                    </div>
+                                    <div class="col-sm">
+                                        <select asp-for="PAY_Status" class="form-select">
+                                            <option value="" selected>Choose Status</option>
+                                            <option value="1">Active</option>
+                                            <option value="2">In Active</option>
+                                            <option value="3">Maintenance</option>
+                                        </select>
+                                        <span asp-validation-for="PAY_Status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Add new" class="btn btn-primary w-100" />
+                            </div>
+                        </form>
+                    </div> <!-- /.card-body -->
+                    <div class="card-footer">
+                        <a class="text-success" role="button" asp-action="Index"><i class="fa-solid fa-right-to-bracket"></i> <span class="ms-2">Back to List</span></a>
+                    </div>
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

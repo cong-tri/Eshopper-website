@@ -9,10 +9,15 @@
     var userInfo = Context.Session.Get<UserInfo>("userInfo");
 
     ViewData["Title"] = "Detail Product";
-    var products = ViewData["relantedProduct"] as List<Product>;
+
+    var detailProduct = Model.ProductDetail;
+    var wishlists = Model?.ProductDetail?.Wishlists;
+    var compares = Model?.ProductDetail?.Compares;
+
+    var products = ViewData["relantedProduct"] as List<Product> ?? [];
 
     var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-    var ratings = Model?.ProductDetail?.Ratings as IEnumerable<Rating> ?? Enumerable.Empty<Rating>();
+    var ratings = detailProduct?.Ratings as IEnumerable<Rating> ?? Enumerable.Empty<Rating>();
 }
 <style>
     .review-summary {
@@ -214,7 +219,7 @@
                 <!--product-details-->
                 <div class="col-sm-5">
                     <div class="view-product">
-                        <img src="~/images/product-details/@Model?.ProductDetail?.PRO_Image" alt="@Model?.ProductDetail?.PRO_Name" />
+                        <img src="~/images/product-details/@detailProduct?.PRO_Image" alt="@detailProduct?.PRO_Name" />
                     </div>
                 </div>
 
@@ -234,18 +239,18 @@
                             </form>
                         </span> *@
                         
-                        <h2>@Model?.ProductDetail?.PRO_Name</h2>
+                        <h2>@detailProduct?.PRO_Name</h2>
                         <span>
                             @{
-                                var price = Model?.ProductDetail?.PRO_Price ?? 0;
+                                var price = detailProduct?.PRO_Price ?? 0;
                                 var formattedPrice = price.ToString("C0", culture);
                             }
                             <span>@formattedPrice</span>
                             <label>Quantity: </label>
-                            <input type="number" value="1" min="1" max="@Model?.ProductDetail?.PRO_Quantity" />
-                            @if (Model?.ProductDetail?.PRO_Quantity > 0)
+                            <input type="number" value="1" min="1" max="@detailProduct?.PRO_Quantity" />
+                            @if (detailProduct?.PRO_Quantity > 0)
                             {
-                                <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@Model?.ProductDetail?.PRO_ID">
+                                <a class="btn btn-fefault cart" asp-action="Add" asp-controller="Cart" asp-route-id="@detailProduct?.PRO_ID">
                                     <i class="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </a>
@@ -259,26 +264,73 @@
                         </span>
 
                         <div class="product-actions">
-                            <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
-                                <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
-                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fa fa-heart"></i> Add to Wishlist
-                                </button>
-                            </form>
-                            <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
-                                <input type="hidden" name="productId" value="@Model?.ProductDetail?.PRO_ID" />
-                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fa fa-exchange"></i> Add to Compare
-                                </button>
-                            </form>
+                            @if(userInfo != null)
+                            {
+                                var wishlistByMember = wishlists?
+                                .Where(x => x.MEM_ID == userInfo.MEM_ID)
+                                .FirstOrDefault();
+
+                                var compareByMember = compares?
+                                .Where(x => x.MEM_ID == userInfo.MEM_ID)
+                                .FirstOrDefault();
+
+                                if (wishlistByMember != null)
+                                {
+                                    <button type="button" disabled class="btn btn-default">
+                                        <i class="fa fa-heart"></i> Already in your Wishlist
+                                    </button>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                        <input type="hidden" name="productId" value="@detailProduct?.PRO_ID" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-heart"></i> Add to Wishlist
+                                        </button>
+                                    </form>
+                                }
+
+                                if (compareByMember != null)
+                                {
+                                    <button type="button" disabled class="btn btn-default">
+                                        <i class="fa fa-exchange"></i> Already in your Compare
+                                    </button>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
+                                        <input type="hidden" name="productId" value="@detailProduct?.PRO_ID" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-exchange"></i> Add to Compare
+                                        </button>
+                                    </form>
+                                }
+                            }
+                            else
+                            {
+                                <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display: inline;">
+                                    <input type="hidden" name="productId" value="@detailProduct?.PRO_ID" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-heart"></i> Add to Wishlist
+                                    </button>
+                                </form>
+                                <form asp-controller="Compare" asp-action="AddToCompare" method="post" style="display: inline;">
+                                    <input type="hidden" name="productId" value="@detailProduct?.PRO_ID" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-exchange"></i> Add to Compare
+                                    </button>
+                                </form>
+                            }
                         </div>
-                        <p><b>Availability:</b> @Model?.ProductDetail?.PRO_Status</p>
-                        <p><b>Quantities in Stock:</b> @Model?.ProductDetail?.PRO_Quantity</p>
+                        <p><b>Availability:</b> @detailProduct?.PRO_Status</p>
+                        <p><b>Quantities in Stock:</b> @detailProduct?.PRO_Quantity</p>
                         <p><b>Condition:</b> New</p>
-                        <p><b>Brand: </b> @Model?.ProductDetail?.Brand?.BRA_Name</p>
-                        <p><b>Category: </b> @Model?.ProductDetail?.Category?.CAT_Name</p>
+                        <p><b>Brand: </b> @detailProduct?.Brand?.BRA_Name</p>
+                        <p><b>Category: </b> @detailProduct?.Category?.CAT_Name</p>
 
                     </div><!--/product-information-->
                 </div>
@@ -296,7 +348,7 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade" id="details">
-                        @Html.Raw(@Model?.ProductDetail?.PRO_Description)
+                        @Html.Raw(@detailProduct?.PRO_Description)
                     </div>
 
                     <div class="tab-pane fade" id="companyprofile">

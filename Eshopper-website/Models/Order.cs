@@ -42,7 +42,7 @@ namespace Eshopper_website.Models
 
 		[Required(ErrorMessage = "Please enter payment method!")]
 		[DisplayName("Payment Method")]
-		public OrderPaymentMethodEnum ORD_PaymentMethod { get; set; } = OrderPaymentMethodEnum.Cash;
+		public int ORD_PaymentMethod { get; set; }
 
 		[Required(ErrorMessage = "Please enter order total price!")]
 		[Range(1, 100000000, ErrorMessage = "Total price must be a positive number!")]

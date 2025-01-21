@@ -2,18 +2,17 @@
 {
     public class GHN_Order_Response
     {
-        public int Code { get; set; }
-        public string? Message { get; set; }
-        public GHNOrderResponseData? Data { get; set; }
+        public int code { get; set; }
+        public string? message { get; set; }
+        public GHNOrderResponseData? data { get; set; }
     }
 
     public class GHNOrderResponseData
     {
-        public string? OrderCode { get; set; }
-        public string? SortCode { get; set; }
-        public string? TransactionId { get; set; }
-        public double TotalFee { get; set; }
-        public double ExpectedDeliveryTime { get; set; }
-        public string? OrderUrl { get; set; }
+        public string? order_code { get; set; }
+        public string? sort_code { get; set; }
+        public double total_fee { get; set; }
+        public DateTime expected_delivery_time { get; set; }
+        public string? trans_type { get; set; }
     }
 }

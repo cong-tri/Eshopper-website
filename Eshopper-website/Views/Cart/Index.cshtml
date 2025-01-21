@@ -127,6 +127,15 @@
 						</tr>
 					}
 				</tbody>
+				@if (Model?.CartItems?.Count > 0)
+				{
+					<tfoot>
+						<tr>
+							<td colspan="5"></td>
+							<td style="text-align: center"><a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a></td>
+						</tr>
+					</tfoot>
+				}
 			</table>
 		</div>
 	</div>
@@ -143,56 +152,6 @@
 				<div class="coupon-section" style="margin: 20px 0;">
 					<input type="text" class="form-control" id="couponCode" name="couponCode" placeholder="Enter coupon code" style="margin-bottom: 10px;">
 					<button type="button" class="btn btn-primary" onclick="applyCoupon()" style="padding: 8px 20px;">Apply Coupon</button>
-				</div>
-				<div class="chose_area">
-					<ul class="user_option">
-						<li>
-							<input type="checkbox">
-							<label>Use Coupon Code</label>
-						</li>
-						<li>
-							<input type="checkbox">
-							<label>Use Gift Voucher</label>
-						</li>
-						<li>
-							<input type="checkbox">
-							<label>Estimate Shipping & Taxes</label>
-						</li>
-					</ul>
-					<ul class="user_info">
-						<li class="single_field">
-							<label>City</label>
-							<select id="tinh" name="tinh" class="form-select" title="Choose City">
-								<option value="">City</option>
-							</select>
-						</li>
-						<li class="single_field">
-							<label>District</label>
-							<select class="css_select form-select" id="quan" name="quan" title="Choose District">
-								<option value="">District</option>
-							</select>
-						</li>
-						<li class="single_field zip-field">
-							<label>Ward</label>
-							<select class="css_select form-select" id="phuong" name="phuong" title="Choose Ward">
-								<option value="">Ward</option>
-							</select>
-						</li>
-					</ul>
-					@if (shippingCost > 0)
-					{
-						<ul>
-							<li>
-								<p>Shipping Cost: @shippingCost.ToString("C0", culture)</p>
-								<a style="cursor:pointer" class="btn-delete-shipping">Remove Ship Cost</a>
-							</li>
-						</ul>
-					}
-					<ul>
-						<li>
-							<button type="button" class="btn btn-primary btn-add-shipping">Calculate Ship Cost</button>
-						</li>
-					</ul>
 				</div>
 				@if (!string.IsNullOrEmpty(Context.Session.GetString("CouponCode")))
 				{
@@ -212,46 +171,53 @@
 						<li>Shipping Cost <span>@shippingCost.ToString("C0", culture)</span></li>
 						<li>Total <span>@grandTotal.ToString("C0", culture)</span></li>
 					</ul>
-                    <div style="margin-left: 4rem">
-                        <a asp-action="Clear" asp-controller="Cart" class="btn btn-danger">Clear</a>
+					<div style="margin-left: 4rem;">
+						<a asp-action="Index" class="btn btn-success" asp-controller="Product">Continue to Shipping</a>
+						@if (Model?.CartItems?.Count > 0)
+						{
+							<a asp-action="Index" class="btn btn-primary" asp-controller="Checkout">Go to checkout</a>
+						}
+					</div>
+					@* <div class="mb-3" style="margin-left: 4rem">
+                        <h3>Payment With:</h3>
 
                         @if (userInfo != null)
-                        {
-                            @if (shippingCost > 0)
-                            {
-                                <a class="btn btn-success btn-checkout"
-                                   onclick="return confirm('Confirmed to checkout?');"
-                                   asp-action="Checkout" asp-controller="Checkout">
-                                    Checkout
-                                </a>
-                                @if (Model?.CartItems?.Count > 0)
-                                {
-                                    <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
-                                        <input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
-                                        <input type="hidden" name="Amount" value="@grandTotal" />
-                                        <input type="hidden" name="OrderDescription" value="Payment for order at EShopper" />
-                                        <input type="hidden" name="OrderType" value="other" />
-                                        <input type="hidden" name="Email" value="@userInfo?.ACC_Email" />
-                                        <input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone" />
-                                        <button class="btn btn-success" type="submit">Pay with VnPay</button>
-                                    </form>
-                                    <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
-                                        <input type="hidden" name="FullName" value="@userInfo?.ACC_DisplayName" />
-                                        <input type="hidden" name="Amount" value="@Model?.GrandTotal" />
-                                        <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
-                                        <input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
-                                        <button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
-                                    </form>
-                                }
-                            }
-                            else
-                            {
-                                <a disabled class="btn btn-success btn-checkout"
-                                   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
-                                <p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
-                            }
-                        }
-                    </div>
+						{
+							@if (shippingCost > 0)
+							{
+								<a class="btn btn-success btn-checkout"
+								   onclick="return confirm('Confirmed to checkout?');"
+								   asp-action="Checkout" asp-controller="Checkout">
+									Ship Cost
+								</a>
+								@if (Model?.CartItems?.Count > 0)
+								{
+									<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" style="display: inline-block">
+										<input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
+										<input type="hidden" name="Amount" value="@grandTotal" />
+										<input type="hidden" name="OrderDescription" value="Payment for order at EShopper" />
+										<input type="hidden" name="OrderType" value="other" />
+										<input type="hidden" name="Email" value="@userInfo?.ACC_Email" />
+										<input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone" />
+										<button class="btn btn-success" type="submit">Pay with VnPay</button>
+									</form>
+									<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" style="display: inline-block">
+										<input type="hidden" name="FullName" value="@userInfo?.ACC_DisplayName" />
+										<input type="hidden" name="Amount" value="@Model?.GrandTotal" />
+										<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+										<input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
+										<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
+									</form>
+								}
+							}
+							else
+							{
+								<a disabled class="btn btn-success btn-checkout"
+								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
+								<p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
+							}
+						}
+					</div> *@
 				</div>
 			</div>
 		</div>
@@ -279,84 +245,84 @@
 			});
 		});
 
-		$(document).ready(function () {
-			$(".btn-add-shipping").click(function () {
-				var tinh = $("#tinh").find('option:selected').text();
-				var quan = $("#quan").find('option:selected').text();
-				var phuong = $("#phuong").find('option:selected').text();
+		// $(document).ready(function () {
+		// 	$(".btn-add-shipping").click(function () {
+		// 		var tinh = $("#tinh").find('option:selected').text();
+		// 		var quan = $("#quan").find('option:selected').text();
+		// 		var phuong = $("#phuong").find('option:selected').text();
 
-				console.log(tinh, quan, phuong)
+		// 		console.log(tinh, quan, phuong)
 
-				if (tinh == 'City' || quan == 'District' || phuong == 'Ward') {
-					Swal.error("Please not empty.");
-					return;
-				} else {
-					$.ajax({
-						type: "POST",
-						url: "@Url.Action("GetShipping", "Cart")",
-						data: { tinh: tinh, quan: quan, phuong: phuong },
-						success: function (result) {
-							if (result) {
-								Swal.fire("Submit shipping cost successfully.");
-								// location.reload();
-							}
-						}
-					});
-				}
-			});
+		// 		if (tinh == 'City' || quan == 'District' || phuong == 'Ward') {
+		// 			Swal.fire("Please not empty.");
+		// 			return;
+		// 		} else {
+		// 			$.ajax({
+		// 				type: "POST",
+		// 				url: "@Url.Action("GetShipping", "Cart")",
+		// 				data: { tinh: tinh, quan: quan, phuong: phuong },
+		// 				success: function (result) {
+		// 					if (result) {
+		// 						Swal.fire("Submit shipping cost successfully.");
+		// 						// location.reload();
+		// 					}
+		// 				}
+		// 			});
+		// 		}
+		// 	});
 
-			//delete shipping cost
-			$(".btn-delete-shipping").click(function () {
-				$.ajax({
-					type: "POST",
-					url: "@Url.Action("RemoveShippingCookie", "Cart")",
-					success: function (result) {
-						if (result.success) {
-							Swal.fire("Remove shipping cost successfully.");
-							// location.reload();
-						} else {
-							Swal.error("Remove shipping cost unsuccessfully.");
-						}
-					},
-					error: function (jqXHR, textStatus, errorThrown) {
-						console.error("Error removing cookie:", errorThrown);
-					}
-				});
-			});
+		// 	//delete shipping cost
+		// 	$(".btn-delete-shipping").click(function () {
+		// 		$.ajax({
+		// 			type: "POST",
+		// 			url: "@Url.Action("RemoveShippingCookie", "Cart")",
+		// 			success: function (result) {
+		// 				if (result.success) {
+		// 					Swal.fire("Remove shipping cost successfully.");
+		// 					// location.reload();
+		// 				} else {
+		// 					Swal.error("Remove shipping cost unsuccessfully.");
+		// 				}
+		// 			},
+		// 			error: function (jqXHR, textStatus, errorThrown) {
+		// 				console.error("Error removing cookie:", errorThrown);
+		// 			}
+		// 		});
+		// 	});
 
-			//Get provinces
-			$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
-				if (data_tinh.error == 0) {
-					$.each(data_tinh.data, function (key_tinh, val_tinh) {
-						$("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name_en + '</option>');
-					});
-					$("#tinh").change(function (e) {
-						var idtinh = $(this).val();
-						//Get districts
-						$.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
-							if (data_quan.error == 0) {
-								$("#quan").html('<option value="0">District</option>');
-								$("#phuong").html('<option value="0">Ward</option>');
-								$.each(data_quan.data, function (key_quan, val_quan) {
-									$("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name_en + '</option>');
-								});
-								//Get wards
-								$("#quan").change(function (e) {
-									var idquan = $(this).val();
-									$.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
-										if (data_phuong.error == 0) {
-											$("#phuong").html('<option value="0">Ward</option>');
-											$.each(data_phuong.data, function (key_phuong, val_phuong) {
-												$("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name_en + '</option>');
-											});
-										}
-									});
-								});
-							}
-						});
-					});
-				}
-			});
-		});
+		// 	//Get provinces
+		// 	$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+		// 		if (data_tinh.error == 0) {
+		// 			$.each(data_tinh.data, function (key_tinh, val_tinh) {
+		// 				$("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name_en + '</option>');
+		// 			});
+		// 			$("#tinh").change(function (e) {
+		// 				var idtinh = $(this).val();
+		// 				//Get districts
+		// 				$.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+		// 					if (data_quan.error == 0) {
+		// 						$("#quan").html('<option value="0">District</option>');
+		// 						$("#phuong").html('<option value="0">Ward</option>');
+		// 						$.each(data_quan.data, function (key_quan, val_quan) {
+		// 							$("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name_en + '</option>');
+		// 						});
+		// 						//Get wards
+		// 						$("#quan").change(function (e) {
+		// 							var idquan = $(this).val();
+		// 							$.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+		// 								if (data_phuong.error == 0) {
+		// 									$("#phuong").html('<option value="0">Ward</option>');
+		// 									$.each(data_phuong.data, function (key_phuong, val_phuong) {
+		// 										$("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name_en + '</option>');
+		// 									});
+		// 								}
+		// 							});
+		// 						});
+		// 					}
+		// 				});
+		// 			});
+		// 		}
+		// 	});
+		// });
 	</script>
 }

@@ -143,13 +143,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 return View(product);
             }
             
-            if (product.PRO_Price > 1000000)
+            if (product.PRO_Price > 100000000)
             {
-                ModelState.AddModelError("PRO_Price", "Product price cannot exceed $1,000,000");
+                ModelState.AddModelError("PRO_Price", "Product price cannot exceed $100,000,000");
                 return View(product);
             }
             
-            if (product.PRO_CapitalPrice > 500000)
+            if (product.PRO_CapitalPrice > 100000000)
             {
                 ModelState.AddModelError("PRO_CapitalPrice", "Capital price cannot exceed $500,000");
                 return View(product);
@@ -191,11 +191,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
             }
 
             var product = await _context.Products.FindAsync(id);
+
             if (product == null)
             {
-                TempData["error"] = "Failed to add product something wrong!";
+                TempData["error"] = "Product not found!";
                 return NotFound();
             }
+
             ViewData["ProductStatus"] = Enum.GetValues(typeof(ProductStatusEnum))
                 .Cast<ProductStatusEnum>()
                 .Select(e => new SelectListItem
@@ -223,6 +225,30 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                if (request.PRO_Price <= request.PRO_CapitalPrice)
+                {
+                    ModelState.AddModelError("PRO_Price", "Price must be higher than Capital Price");
+                    return View(request);
+                }
+
+                if (request.PRO_Quantity < 20 && request.PRO_Status != ProductStatusEnum.LowStock)
+                {
+                    ModelState.AddModelError("PRO_Status", "Products with quantity less than 20 must have 'LowStock' status");
+                    return View(request);
+                }
+
+                if (request.PRO_Price > 100000000)
+                {
+                    ModelState.AddModelError("PRO_Price", "Product price cannot exceed $100,000,000");
+                    return View(request);
+                }
+
+                if (request.PRO_CapitalPrice > 100000000)
+                {
+                    ModelState.AddModelError("PRO_CapitalPrice", "Capital price cannot exceed $500,000");
+                    return View(request);
+                }
+
                 try
                 {
                     var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
@@ -269,6 +295,8 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                     _context.Update(existingProduct);
                     await _context.SaveChangesAsync();
+
+                    TempData["success"] = "Update product successfully!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -278,15 +306,14 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     }
                     else
                     {
+                        TempData["error"] = "Failed to update product something wrong !";
                         throw;
                     }
                 }
-                TempData["error"] = "Failed to add category something wrong !";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BRA_ID"] = new SelectList(_context.Brands, "BRA_ID", "BRA_Name", request.BRA_ID);
             ViewData["CAT_ID"] = new SelectList(_context.Categories, "CAT_ID", "CAT_Name", request.CAT_ID);
-            TempData["error"] = "Failed to add category something wrong !";
             return View(request);
         }
 

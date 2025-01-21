@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Eshopper_website.Models.GHN.OrderGHN>
+
+@{
+    ViewData["Title"] = "Order GHN";
+    ViewData["Active"] = "OrderGHN";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">Order GHN</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">List Orders GHN</h3></div>
+                            <div class="col-md-auto">
+                                @* <a class="btn btn-success" asp-action="CreateGHNOrder" asp-controller="Order" asp-area="Admin">Add new GHN order</a> *@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-hovered table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.OrderCode)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SortCode)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.TotalFee)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.TransType)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ExpectedDeliveryTime)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedBy)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.OrderCode
+                                            </td>
+                                            <td>
+                                                @item.SortCode
+                                            </td>
+                                            <td>
+                                                @item.TotalFee.ToString("C0", culture)
+                                            </td>
+                                            <td>
+                                                @item.TransType
+                                            </td>
+                                            <td>
+                                                @item.ExpectedDeliveryTime
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                                            </td>
+                                            <td>
+                                                <a class="text-primary" asp-action="Details" asp-route-id="@item?.Id"><i class="fa-regular fa-circle-info"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->
