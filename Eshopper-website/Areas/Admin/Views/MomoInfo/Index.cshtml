@@ -1,8 +1,8 @@
-﻿@model IEnumerable<Eshopper_website.Models.GHN.OrderGHN>
+﻿@model IEnumerable<Eshopper_website.Models.MomoInfo>
 
 @{
-    ViewData["Title"] = "Order GHN";
-    ViewData["Active"] = "OrderGHN";
+    ViewData["Title"] = "Momo Transaction";
+    ViewData["Active"] = "MomoInfo";
     var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
@@ -13,7 +13,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Order GHN</h3>
+                <h3 class="mb-0">Momo Transaction</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -30,7 +30,7 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">List Orders GHN</h3></div>
+                            <div class="col-md"><h3 class="card-title">List Momo Transaction</h3></div>
                             <div class="col-md-auto">
                                 @* <a class="btn btn-success" asp-action="CreateGHNOrder" asp-controller="Order" asp-area="Admin">Add new GHN order</a> *@
                             </div>
@@ -42,25 +42,19 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.OrderCode)
+                                            @Html.DisplayNameFor(model => model.OrderId)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.SortCode)
+                                            @Html.DisplayNameFor(model => model.OrderInfo)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.TotalFee)
+                                            @Html.DisplayNameFor(model => model.MOMO_FullName)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.TransType)
+                                            @Html.DisplayNameFor(model => model.MOMO_Amount)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.ExpectedDeliveryTime)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.CreatedDate)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.CreatedBy)
+                                            @Html.DisplayNameFor(model => model.MOMO_DatePaid)
                                         </th>
                                     </tr>
                                 </thead>
@@ -69,25 +63,19 @@
                                     {
                                         <tr>
                                             <td>
-                                                @item.OrderCode
+                                                @item.OrderId
                                             </td>
                                             <td>
-                                                @item.SortCode
+                                                @item.OrderInfo
                                             </td>
                                             <td>
-                                                @item.TotalFee.ToString("C0", culture)
+                                                @item.MOMO_FullName
                                             </td>
                                             <td>
-                                                @item.TransType
+                                                @item.MOMO_Amount.ToString("C0", culture)
                                             </td>
                                             <td>
-                                                @item.ExpectedDeliveryTime
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                                                @item.MOMO_DatePaid
                                             </td>
                                         </tr>
                                     }
