@@ -167,7 +167,7 @@ namespace Eshopper_website.Controllers
 
 			switch (request.PaymentMethod)
             {
-                case 1:
+                case 3:
                     orderItem.ORD_Status = OrderStatusEnum.Processing;
                     _context.Orders.Update(orderItem);
                     await _context.SaveChangesAsync();
@@ -187,6 +187,7 @@ namespace Eshopper_website.Controllers
 					var response = await _momoService.CreatePaymentAsync(orderInfo);
 					return Redirect(response.PayUrl!);
 					break;
+
 
                 default:
                     break;

@@ -61,7 +61,7 @@
                         <td class="feature-name"><strong>Price</strong></td>
                         @foreach (var item in Model)
                         {
-                            <td class="product-price">$@item.Product.PRO_Price.ToString("N0")</td>
+                            <td class="product-price">$@item.Product.PRO_Price.ToString("C0")</td>
                         }
                     </tr>
                     <tr>
