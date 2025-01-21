@@ -1,11 +1,12 @@
 ﻿@using Eshopper_website.Models.ViewModels
 @using Eshopper_website.Utils.Extension
+@using System.Globalization
 
 @model CartItemView
 @{
 	ViewData["Title"] = "Cart";
 	var userInfo = Context.Session.Get<UserInfo>("userInfo");
-	var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+	var culture = CultureInfo.GetCultureInfo("vi-VN");
 	
 	// Calculate amounts in VND (whole numbers)
 	var subTotal = Model?.CartItems?.Sum(x => x.PRO_Quantity * x.PRO_Price) ?? 0;
@@ -178,151 +179,94 @@
 							<a asp-action="Index" class="btn btn-primary" asp-controller="Checkout">Go to checkout</a>
 						}
 					</div>
-					@* <div class="mb-3" style="margin-left: 4rem">
-                        <h3>Payment With:</h3>
-
-                        @if (userInfo != null)
-						{
-							@if (shippingCost > 0)
-							{
-								<a class="btn btn-success btn-checkout"
-								   onclick="return confirm('Confirmed to checkout?');"
-								   asp-action="Checkout" asp-controller="Checkout">
-									Ship Cost
-								</a>
-								@if (Model?.CartItems?.Count > 0)
-								{
-									<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" style="display: inline-block">
-										<input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
-										<input type="hidden" name="Amount" value="@grandTotal" />
-										<input type="hidden" name="OrderDescription" value="Payment for order at EShopper" />
-										<input type="hidden" name="OrderType" value="other" />
-										<input type="hidden" name="Email" value="@userInfo?.ACC_Email" />
-										<input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone" />
-										<button class="btn btn-success" type="submit">Pay with VnPay</button>
-									</form>
-									<form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment" style="display: inline-block">
-										<input type="hidden" name="FullName" value="@userInfo?.ACC_DisplayName" />
-										<input type="hidden" name="Amount" value="@Model?.GrandTotal" />
-										<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
-										<input type="hidden" name="OrderInfo" value="Payment via MoMo at EShopper" />
-										<button class="btn btn-danger" name="PayUrl" type="submit">Pay with MoMo</button>
-									</form>
-								}
-							}
-							else
-							{
-								<a disabled class="btn btn-success btn-checkout"
-								   asp-action="Checkout" asp-controller="Checkout">Checkout</a>
-								<p><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
-							}
-						}
-					</div> *@
+					@if (Model?.CartItems?.Count > 0)
+					{
+						<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" style="display: inline-block">
+							<input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
+							<input type="hidden" name="Amount" value="@grandTotal" />
+							<input type="hidden" name="OrderDescription" value="Thanh toán đơn hàng tại EShopper" />
+							<input type="hidden" name="OrderType" value="other" />
+							<input type="hidden" name="Email" value="@userInfo?.ACC_Email" />
+							<input type="hidden" name="PhoneNumber" value="@userInfo?.ACC_Phone" />
+							<input type="hidden" name="PaymentMethod" value="vn_pay_qr" />
+							<div class="payment-info">
+								<div id="payment-timer" class="text-center mb-2">15:00</div>
+								<button class="btn btn-success" type="submit">
+									<i class="fa fa-qrcode me-2"></i>Thanh toán QR VNPay
+								</button>
+							</div>
+						</form>
+					}
 				</div>
 			</div>
 		</div>
 	</div>
 </section><!--/#do_action-->
 
-@section Scripts{
-	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.all.min.js"></script>
-	<script>
-		//delete shipping cost
-		$(".btn-apply-coupon").click(function () {
-			var coupon_value = $(".coupon-value").val();
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("GetCoupon", "Cart")",
-				data: { coupon_value: coupon_value },
-				success: function (result) {
-					if (result.success) {
-						Swal.fire(result.message);
-						location.reload();
-					} else {
-						Swal.fire(result.message);
-					}
-				}
-			});
-		});
-
-		// $(document).ready(function () {
-		// 	$(".btn-add-shipping").click(function () {
-		// 		var tinh = $("#tinh").find('option:selected').text();
-		// 		var quan = $("#quan").find('option:selected').text();
-		// 		var phuong = $("#phuong").find('option:selected').text();
-
-		// 		console.log(tinh, quan, phuong)
-
-		// 		if (tinh == 'City' || quan == 'District' || phuong == 'Ward') {
-		// 			Swal.fire("Please not empty.");
-		// 			return;
-		// 		} else {
-		// 			$.ajax({
-		// 				type: "POST",
-		// 				url: "@Url.Action("GetShipping", "Cart")",
-		// 				data: { tinh: tinh, quan: quan, phuong: phuong },
-		// 				success: function (result) {
-		// 					if (result) {
-		// 						Swal.fire("Submit shipping cost successfully.");
-		// 						// location.reload();
-		// 					}
-		// 				}
-		// 			});
-		// 		}
-		// 	});
-
-		// 	//delete shipping cost
-		// 	$(".btn-delete-shipping").click(function () {
-		// 		$.ajax({
-		// 			type: "POST",
-		// 			url: "@Url.Action("RemoveShippingCookie", "Cart")",
-		// 			success: function (result) {
-		// 				if (result.success) {
-		// 					Swal.fire("Remove shipping cost successfully.");
-		// 					// location.reload();
-		// 				} else {
-		// 					Swal.error("Remove shipping cost unsuccessfully.");
-		// 				}
-		// 			},
-		// 			error: function (jqXHR, textStatus, errorThrown) {
-		// 				console.error("Error removing cookie:", errorThrown);
-		// 			}
-		// 		});
-		// 	});
-
-		// 	//Get provinces
-		// 	$.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
-		// 		if (data_tinh.error == 0) {
-		// 			$.each(data_tinh.data, function (key_tinh, val_tinh) {
-		// 				$("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name_en + '</option>');
-		// 			});
-		// 			$("#tinh").change(function (e) {
-		// 				var idtinh = $(this).val();
-		// 				//Get districts
-		// 				$.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
-		// 					if (data_quan.error == 0) {
-		// 						$("#quan").html('<option value="0">District</option>');
-		// 						$("#phuong").html('<option value="0">Ward</option>');
-		// 						$.each(data_quan.data, function (key_quan, val_quan) {
-		// 							$("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name_en + '</option>');
-		// 						});
-		// 						//Get wards
-		// 						$("#quan").change(function (e) {
-		// 							var idquan = $(this).val();
-		// 							$.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
-		// 								if (data_phuong.error == 0) {
-		// 									$("#phuong").html('<option value="0">Ward</option>');
-		// 									$.each(data_phuong.data, function (key_phuong, val_phuong) {
-		// 										$("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name_en + '</option>');
-		// 									});
-		// 								}
-		// 							});
-		// 						});
-		// 					}
-		// 				});
-		// 			});
-		// 		}
-		// 	});
-		// });
-	</script>
+@section Scripts {
+    <!-- Core jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" 
+            crossorigin="anonymous"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js" 
+            integrity="sha384-JBkuBQb2sEIbQhGZsH0Fy+dZkTQWPEkH8JaQWbJZg5XYF0Wl4WZQYjp4B8n3XF6" 
+            crossorigin="anonymous"></script>
+    
+    <!-- Payment Timer -->
+    <script src="~/js/payment.js" asp-append-version="true"></script>
+    
+    <!-- Coupon handling -->
+    <script>
+        $(function() {
+            $("#couponCode").on("keyup", function(e) {
+                if (e.key === "Enter") {
+                    applyCoupon();
+                }
+            });
+            
+            window.applyCoupon = function() {
+                var couponCode = $("#couponCode").val();
+                if (!couponCode) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: 'Vui lòng nhập mã giảm giá',
+                        icon: 'error'
+                    });
+                    return;
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetCoupon", "Cart")",
+                    data: { coupon_value: couponCode },
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'Thành công',
+                                text: result.message,
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: result.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: 'Không thể áp dụng mã giảm giá. Vui lòng thử lại sau.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            };
+        });
+    </script>
 }

@@ -83,7 +83,7 @@
                                             </td>
                                             <td>
                                                 <span class="badge @(item.ORD_Status == OrderStatusEnum.Confirmed ? "bg-success" :
-                                                               item.ORD_Status == OrderStatusEnum.Canceled ? "bg-danger" :
+                                                               item.ORD_Status == OrderStatusEnum.Cancelled ? "bg-danger" :
                                                                item.ORD_Status == OrderStatusEnum.Pending ? "bg-primary" :
                                                                item.ORD_Status == OrderStatusEnum.AwaitingShipment ? "bg-warning" : "bg-secondary")">
                                                     @item.ORD_Status

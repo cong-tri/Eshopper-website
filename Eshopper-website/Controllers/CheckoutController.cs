@@ -174,7 +174,7 @@ namespace Eshopper_website.Controllers
 
             switch (request.PaymentMethod)
             {
-                case 1:
+                case 3:
                     orderItem.ORD_Status = OrderStatusEnum.Processing;
                     _context.Orders.Update(orderItem);
                     await _context.SaveChangesAsync();
@@ -207,6 +207,7 @@ namespace Eshopper_website.Controllers
                     };
                     var url = _vnPayService.CreatePaymentUrl(orderVNPay, HttpContext);
                     return Redirect(url);
+
 
                 default:
                     break;

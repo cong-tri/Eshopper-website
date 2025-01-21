@@ -103,7 +103,7 @@
                                     <p class="m-0 survey-head small">Weekend Earnings</p>
                                     <div class="d-flex justify-content-between align-items-end">
                                         <div>
-                                            <h3 class="m-0 h5 survey-value">$5,300</h3>
+                                            <h3 class="m-0 h5 survey-value">5.300.000đ</h3>
                                             <p class="text-success m-0 small">-310 avg. sales</p>
                                         </div>
                                         <div id="earningChart" class="flot-chart"></div>
@@ -117,7 +117,7 @@
                                     <p class="m-0 survey-head small">Total Revenue</p>
                                     <div class="d-flex justify-content-between align-items-end">
                                         <div>
-                                            <h3 class="m-0 h5 survey-value">$9,100</h3>
+                                            <h3 class="m-0 h5 survey-value">9.100.000đ</h3>
                                             <p class="text-danger m-0 small">-310 avg. sales</p>
                                         </div>
                                         <div id="productChart" class="flot-chart"></div>
@@ -131,7 +131,7 @@
                                     <p class="m-0 survey-head small">Today Earnings</p>
                                     <div class="d-flex justify-content-between align-items-end">
                                         <div>
-                                            <h3 class="m-0 h5 survey-value">$4,354</h3>
+                                            <h3 class="m-0 h5 survey-value">4.354.000đ</h3>
                                             <p class="text-success m-0 small">-310 avg. sales</p>
                                         </div>
                                         <div id="orderChart" class="flot-chart"></div>
@@ -194,7 +194,7 @@
                                         </div>
                                     </td>
                                     <td class="py-2">Laptop</td>
-                                    <td class="py-2">$ 1,200</td>
+                                    <td class="py-2">1.200.000đ</td>
                                     <td class="py-2"><span class="badge bg-success">Completed</span></td>
                                 </tr>
                                 <tr>
@@ -209,7 +209,7 @@
                                         </div>
                                     </td>
                                     <td class="py-2">Smartphone</td>
-                                    <td class="py-2">$ 750</td>
+                                    <td class="py-2">750.000đ</td>
                                     <td class="py-2"><span class="badge bg-warning">Pending</span></td>
                                 </tr>
                                 <tr>
@@ -224,7 +224,7 @@
                                         </div>
                                     </td>
                                     <td class="py-2">Headphones</td>
-                                    <td class="py-2">$ 200</td>
+                                    <td class="py-2">200.000đ</td>
                                     <td class="py-2"><span class="badge bg-info">Processing</span></td>
                                 </tr>
                             </tbody>
@@ -357,7 +357,8 @@
                                             if (context.dataset.label === 'Revenue' || context.dataset.label === 'Profit') {
                                                 label += new Intl.NumberFormat('vi-VN', { 
                                                     style: 'currency', 
-                                                    currency: 'VND' 
+                                                    currency: 'VND',
+                                                    maximumFractionDigits: 0
                                                 }).format(context.raw);
                                             } else {
                                                 label += context.raw;
@@ -376,7 +377,7 @@
                                         },
                                         callback: function(value, index, values) {
                                             if (value >= 1000000) {
-                                                return (value/1000000).toFixed(1) + 'M';
+                                                return (value/1000000).toFixed(1) + 'Tr';
                                             } else if (value >= 1000) {
                                                 return (value/1000).toFixed(1) + 'K';
                                             }

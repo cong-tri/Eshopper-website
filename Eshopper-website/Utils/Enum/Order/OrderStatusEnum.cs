@@ -1,16 +1,15 @@
-﻿
-
-using Humanizer;
+﻿using Humanizer;
 
 namespace Eshopper_website.Utils.Enum.Order
 {
     public enum OrderStatusEnum
     {
-        Pending = 1,
-        Confirmed = 2,
-        Processing = 3,
+        Pending = 0,
+        WaitingForPayment = 1,
+        Processing = 2,
+        Confirmed = 3,
         Completed = 4,
-        Canceled = 5,
+        Cancelled = 5,
         Failed = 6,
         OnHold = 7,
         AwaitingShipment = 8,
