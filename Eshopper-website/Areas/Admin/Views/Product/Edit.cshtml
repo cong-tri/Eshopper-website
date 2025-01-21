@@ -81,7 +81,8 @@
                                     <label asp-for="PRO_Price" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_Price" pattern="[0-9.,]+" class="form-control typing-price" maxlength="7" data-price-display="price-display-sale" />
+                                    <input asp-for="PRO_Price" pattern="[0-9.,]+" class="form-control typing-price" min="1" max="100000000"
+                                    maxlength="9" data-price-display="price-display-sale" />
                                     <span asp-validation-for="PRO_Price" class="text-danger"></span>
                                     <div id="price-display-sale" class="text-muted mt-1">@Model.PRO_Price.ToString("C0", culture)</div>
                                 </div>
@@ -103,7 +104,7 @@
                                     <label asp-for="PRO_Quantity" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_Quantity" class="form-control" />
+                                    <input asp-for="PRO_Quantity" class="form-control" min="1" max="200" maxlength="3"/>
                                     <span asp-validation-for="PRO_Quantity" class="text-danger"></span>
                                 </div>
                             </div>
@@ -121,7 +122,8 @@
                                     <label asp-for="PRO_CapitalPrice" class="control-label"></label>
                                 </div>
                                 <div class="col">
-                                    <input asp-for="PRO_CapitalPrice" pattern="[0-9.,]+" class="form-control typing-price" maxlength="7" data-price-display="price-display-capital" />
+                                    <input asp-for="PRO_CapitalPrice" pattern="[0-9.,]+" class="form-control typing-price" min="1" max="100000000"
+                                    maxlength="9" data-price-display="price-display-capital" />
                                     <span asp-validation-for="PRO_CapitalPrice" class="text-danger"></span>
                                     <div id="price-display-capital" class="text-muted mt-1">@Model.PRO_CapitalPrice.ToString("C0", culture)</div>
                                 </div>

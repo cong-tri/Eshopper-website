@@ -36,7 +36,8 @@ namespace Eshopper_website.Models
 		public string? PRO_Slug { get; set; } = string.Empty;
 
 		[Required(ErrorMessage = "Please enter product price!")]
-		[Range(1, 1000000, ErrorMessage = "Product price must be a positive number!")]
+		[DataType(DataType.Currency, ErrorMessage = "Please enter the correct format currency!")]
+		//[Range(1, 100000000, ErrorMessage = "Product price must be a positive number!")]
 		[DisplayName("Price")]
 		public required decimal PRO_Price { get; set; }
 
@@ -58,7 +59,7 @@ namespace Eshopper_website.Models
 		public required ProductStatusEnum PRO_Status { get; set; }
 
 		[Required(ErrorMessage = "Please enter product capital price!")]
-		[Range(1, 500000, ErrorMessage = "Product captital price must be a positive number!")]
+		[Range(1, 100000000, ErrorMessage = "Product captital price must be a positive number!")]
 		[DisplayName("Capital Price")]
 		public required decimal PRO_CapitalPrice { get; set; }
 

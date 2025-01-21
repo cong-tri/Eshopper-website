@@ -79,7 +79,7 @@ namespace Eshopper_website.Controllers
 				Ratings = ratings
 			};
 
-			ViewData["relantedProduct"] = relantedProduct;
+            ViewData["relantedProduct"] = relantedProduct;
 
 			return View(viewModel);
 		}

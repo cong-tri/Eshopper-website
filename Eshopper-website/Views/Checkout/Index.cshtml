@@ -1,1 +1,376 @@
-﻿
+﻿@using Eshopper_website.Utils.Extension
+@model Eshopper_website.Models.ViewModels.CheckoutView
+
+@{
+    ViewData["Title"] = "Checkout";
+    var userInfo = Context.Session.Get<UserInfo>("userInfo");
+    if (userInfo == null && userInfo?.ACR_ID != 2)
+    {
+        Context.Response.Redirect("/Admin/User/Login");
+    }
+
+    @if (Model?.CartItems?.Count == 0)
+    {
+        Context.Response.Redirect("/Cart");
+    }
+
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
+    var cartItems = Model.CartItems as List<CartItem> ?? [];
+
+    var subTotal = cartItems?.Sum(x => x.PRO_Quantity * x.PRO_Price) ?? 0;
+    var shippingCost = Model?.ShippingPrice ?? 0;
+    var grandTotal = subTotal + shippingCost;
+}
+<style>
+	.card{
+		border: 1px solid black;
+		border-radius: 10px;
+        margin-bottom: 5rem;
+	}
+	.card-header{
+		border-bottom: 1px solid black;
+		padding: 2rem;
+        color: #fff;
+        background-color: #fe980f;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
+	.card-body{
+		padding: 2rem;
+	}
+    .card-footer{
+        padding: 2rem;
+        border-top: 1px solid black;
+    }
+
+	input, select, textarea{
+		background: #f0f0e9;
+		border: 0 none;
+		/* margin-bottom: 10px; */
+		padding: 10px;
+		width: 100%;
+		font-weight: 300;
+	}
+</style>
+<section id="cart_items">
+	<div class="container">
+		<div class="breadcrumbs">
+			<ol class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Check out</li>
+			</ol>
+		</div><!--/breadcrums-->
+
+        <div class="card">
+            <div class="card-header">
+                <h4 style="margin: 0">Products</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped table-hovered table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="image">No.</td>
+                            <td class="description">Name</td>
+                            <td class="price">Price</td>
+                            <td class="quantity">Quantity</td>
+                            <td class="total">Total</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (cartItems?.Count > 0)
+                        {
+                            var index = 0;
+
+                            @foreach (var item in cartItems)
+                            {
+                                var itemTotal = (long)(item.PRO_Quantity * item.PRO_Price);
+                                <tr>
+                                    <td>
+                                        <p>@(index + 1)</p>
+                                    </td>
+                                    <td>
+                                        <p>@item.PRO_Name</p>
+                                    </td>
+                                    <td>
+                                        <p>@item?.PRO_Price.ToString("C0", culture)</p>
+                                    </td>
+                                    <td>
+                                        <p>@item?.PRO_Quantity</p>
+                                    </td>
+                                    <td>
+                                        <p>@itemTotal.ToString("C0", culture)</p>
+                                    </td>
+                                </tr>
+
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <h1>Your cart is empty!</h1>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+		<div class="card">
+			<div class="card-header">
+				<h4 style="margin: 0">Infomation Order</h4>
+			</div>
+			<div class="card-body">
+				<div class="shopper-informations">
+					<form asp-action="Checkout" asp-controller="Checkout" method="POST">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<input type="hidden" asp-for="MEM_ID" />
+
+						<div class="row">
+							<div class="col-md-4">
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="FullName" class="form-label"></label>
+                                    <input asp-for="FullName" value="@userInfo?.ACC_DisplayName" readonly placeholder="Your fullname">
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+								
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <input asp-for="Email" type="email" value="@userInfo?.ACC_Email" readonly placeholder="Your email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+								
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="Phone" class="form-label"></label>
+                                    <input asp-for="Phone" type="tel" value="@userInfo?.ACC_Phone" readonly placeholder="Your phone number" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+
+                                <div style="margin-bottom: 1rem;">
+                                    <input asp-for="ShippingPrice" type="hidden" value="@shippingCost" readonly/>
+                                </div>
+							</div>
+
+							<div class="col-md-4">
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="ToProviceId" class="form-label"></label>
+                                    <select asp-for="ToProviceId" class="form-select"></select>
+                                    <span asp-validation-for="ToProviceId" class="text-danger"></span>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="ToDistrictId" class="form-label"></label>
+                                    <select asp-for="ToDistrictId" class="form-select"></select>
+                                    <span asp-validation-for="ToDistrictId" class="text-danger"></span>
+                                </div>
+								
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="ToWardCode" class="form-label"></label>
+                                    <select asp-for="ToWardCode" class="form-select"></select>
+                                    <span asp-validation-for="ToWardCode" class="text-danger"></span>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="ToAddress" class="form-label"></label>
+                                    <input asp-for="ToAddress" type="text" placeholder="Your address" maxlength="100" />
+                                    <span asp-validation-for="ToAddress" class="text-danger"></span>
+                                </div>
+							</div>
+
+							<div class="col-md-4">
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="Note" class="form-label"></label>
+                                    <textarea asp-for="Note" rows="5"></textarea>
+                                </div>
+								
+                                <div style="margin-bottom: 1rem;">
+                                    <label asp-for="PaymentMethod" class="form-label"></label>
+                                    <select asp-for="PaymentMethod" class="form-select" asp-items="ViewBag.Payment"></select>
+                                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                                </div>
+                                
+                                <div>
+                                    @if (shippingCost > 0)
+                                    {
+                                        <button class="btn btn-success" type="submit">Checkout</button>
+                                    }
+                                    else
+                                    {
+                                        <button disabled class="btn btn-success" type="button">Checkout</button>
+                                        <p style="display: inline; margin-left: 2rem;"><span class="text text-danger">Calculator shipping cost to checkout.</span></p>
+                                    }
+                                </div>
+							</div>
+						</div>
+
+                        @* <div>
+                            <label asp-for="CouponCode" class="form-label"></label>
+                            <input asp-for="CouponCode" value="" placeholder="Your Coupon">
+                            <span asp-validation-for="CouponCode" class="text-danger"></span>
+                        </div> *@
+					</form>
+				</div>
+			</div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="from-group" style="display: flex; align-items: center ">
+                            <input type="text" class="form-control" 
+                                id="couponCode" name="couponCode" 
+                                placeholder="Enter coupon code">
+                            <button type="button" class="btn btn-primary" onclick="applyCoupon()"
+                                    style="padding: 8px 20px; margin-left: 1rem;">
+                                Apply Coupon
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-add-shipping" style="margin-top: 1rem;">Calculate Ship Cost</button>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="text-align: right; border-left: 1px solid black">
+                            <p>Sub Total: <span>@subTotal.ToString("C0", culture)</span></p>
+                            <p>Shipping Cost: <span>@shippingCost.ToString("C0", culture)</span></p>
+                            <p>Total: <span>@grandTotal.ToString("C0", culture)</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</section> <!--/#cart_items-->
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadProvinces();
+
+            $('#ToProviceId').change(function () {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    loadDistricts(provinceId);
+                } else {
+                    $('#ToDistrictId').empty().append('<option value="">Choose District</option>');
+                    $('#ToWardCode').empty().append('<option value="">Choose Ward</option>');
+                }
+            });
+
+            $('#ToDistrictId').change(function () {
+                var districtId = $(this).val();
+                if (districtId) {
+                    loadWards(districtId);
+                } else {
+                    $('#ToWardCode').empty().append('<option value="">Choose Ward</option>');
+                }
+            });
+
+            $(".btn-add-shipping").click(function () {
+                var tinh = $("#ToProviceId").find('option:selected').text();
+                var quan = $("#ToDistrictId").find('option:selected').text();
+                var phuong = $("#ToWardCode").find('option:selected').text();
+
+                console.log(tinh, quan, phuong)
+
+                if (tinh == 'Choose Province' || quan == 'Choose District' || phuong == 'Choose Ward') {
+                    Swal.fire("Please not empty.");
+                    return;
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetShipping", "Cart")",
+                        data: { tinh: tinh, quan: quan, phuong: phuong },
+                        success: function (result) {
+                            if (result) {
+                                Swal.fire("Submit shipping cost successfully.");
+                                // location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        function loadProvinces() {
+            $.ajax({
+                url: '/api/ghn/address/province',
+                type: 'GET',
+                success: function (response) {
+                    if (response.code == 200 && response.data) {
+                        var select = $('#ToProviceId');
+                        select.empty();
+                        select.append('<option value="">Choose Province</option>');
+                        $.each(response.data, function (index, item) {
+                            select.append(`<option value="${item.ProvinceID}">${item.ProvinceName}</option>`);
+                        });
+                    } else {
+                        Swal.fire("Cannot load data province!");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Cannot load data province!");
+                }
+            });
+        }
+
+        function loadDistricts(provinceId) {
+            if (!provinceId) {
+                Swal.fire("Please choose province!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/ghn/address/district/' + provinceId,
+                type: 'GET',
+                success: function (response) {
+                    console.log(response)
+                    if (response.code == 200 && response.data) {
+                        var select = $('#ToDistrictId');
+                        select.empty();
+                        select.append('<option value="">Choose District</option>');
+                        $.each(response.data, function (index, item) {
+                            select.append(`<option value="${item.DistrictID}">${item.DistrictName}</option>`);
+                            console.log(item)
+                        });
+                    } else {
+                        Swal.fire("Cannot load data district!");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Cannot load data district!");
+                }
+            });
+        }
+
+        function loadWards(districtId) {
+            if (!districtId) {
+                Swal.fire("Please choose district!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/ghn/address/ward/' + districtId,
+                type: 'GET',
+                success: function (response) {
+                    if (response.code == 200 && response.data) {
+                        var select = $('#ToWardCode');
+                        select.empty();
+                        select.append('<option value="">Choose Ward</option>');
+                        $.each(response.data, function (index, item) {
+                            select.append(`<option value="${item.WardCode}">${item.WardName}</option>`);
+                        });
+                    } else {
+                        Swal.fire("Cannot load data province!");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Please choose province!");
+                }
+            });
+        }
+    </script>
+}
