@@ -61,7 +61,7 @@
                                         <td>@Model.ORD_Description</td>
                                         <td>
                                             <span class="badge @(Model.ORD_Status == OrderStatusEnum.Confirmed ? "bg-success" : 
-                                                               Model.ORD_Status == OrderStatusEnum.Canceled ? "bg-danger" : 
+                                                               Model.ORD_Status == OrderStatusEnum.Cancelled ? "bg-danger" : 
                                                                Model.ORD_Status == OrderStatusEnum.Pending ? "bg-primary" : 
                                                                Model.ORD_Status == OrderStatusEnum.AwaitingShipment ? "bg-warning" : "bg-secondary")">
                                                 @Model.ORD_Status

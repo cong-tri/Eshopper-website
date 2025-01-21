@@ -45,181 +45,106 @@ namespace Eshopper_website.Controllers
         {
             try
             {
+                // Validate amount
+                if (model.Amount <= 0)
+                {
+                    TempData["ErrorMessage"] = "Số tiền phải lớn hơn 0";
+                    return RedirectToAction("Index", "Cart");
+                }
 
-                //// Validate amount
-                //if (model.Amount <= 0)
-                //{
-                //    TempData["ErrorMessage"] = "Số tiền phải lớn hơn 0";
-                //    return RedirectToAction("Index", "Cart");
-                //}
+                var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+                if (userInfo == null)
+                {
+                    TempData["ErrorMessage"] = "Vui lòng đăng nhập để thanh toán";
+                    return RedirectToAction("Login", "Account");
+                }
 
-                //if (model.Amount > 100000000)
-                //{
-                //    TempData["ErrorMessage"] = "Số tiền không được vượt quá 100,000,000 VNĐ";
-                //    return RedirectToAction("Index", "Cart");
-                //}
+                // Convert to integer amount for VNPay (no decimals)
+                var intAmount = (long)(model.Amount * 100); // VNPay requires amount * 100
+                Console.WriteLine($"Amount for VNPay: {intAmount}");
 
-                //var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
-                //if (userInfo == null)
-                //{
-                //    TempData["ErrorMessage"] = "Vui lòng đăng nhập để thanh toán";
-                //    return RedirectToAction("Login", "Account");
-                //}
+                var order = new Order()
+                {
+                    MEM_ID = userInfo.MEM_ID,
+                    ORD_OrderCode = DateTime.Now.Ticks.ToString(), // Use ticks for unique order code
+                    ORD_Description = $"Thanh toán đơn hàng QR VNPay",
+                    ORD_Status = OrderStatusEnum.WaitingForPayment,
+                    ORD_PaymentMethod = (int)OrderPaymentMethodEnum.VNPay,
+                    ORD_TotalPrice = model.Amount,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = userInfo.ACC_Username
+                };
 
-                //// Store original amount for database
-                //decimal originalAmount = model.Amount;
-                //Console.WriteLine($"Original Amount: {originalAmount}");
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
 
-                //// Convert to integer amount for VNPay (no decimals)
-                //var intAmount = (long)Math.Floor(originalAmount);
-                //Console.WriteLine($"Integer Amount: {intAmount}");
+                // Update payment model
+                model.Amount = intAmount;
+                model.OrderDescription = $"Thanh toan don hang: {order.ORD_OrderCode}";
+                model.OrderType = "other";
+                model.Name = userInfo.ACC_DisplayName ?? userInfo.ACC_Username;
 
-                //var shippingPriceCookie = Request.Cookies["ShippingPrice"];
-                //decimal shippingPrice = 0;
+                // Get the base URL of the application
+                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                // Set the return URL explicitly
+                model.ReturnUrl = $"{baseUrl}/Payment/PaymentCallbackVnpay";
 
-                //if (!string.IsNullOrEmpty(shippingPriceCookie))
-                //{
-                //    shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceCookie);
-                //}
-
-                //// Create order
-                //var order = new Order()
-                //{
-                //    MEM_ID = userInfo.MEM_ID,
-                //    ORD_OrderCode = Guid.NewGuid().ToString("N"),
-                //    ORD_Description = $"Order had been ordered by {userInfo.ACC_Username}.",
-                //    ORD_Status = OrderStatusEnum.WaitingForPayment,
-                //    ORD_PaymentMethod = OrderPaymentMethodEnum.VNPay,
-                //    ORD_TotalPrice = originalAmount,
-                //    ORD_ShippingCost = shippingPrice,
-                //    CreatedDate = DateTime.Now,
-                //    CreatedBy = userInfo.ACC_Username
-                //};
-
-                //_context.Orders.Add(order);
-                //await _context.SaveChangesAsync();
-
-                //Console.WriteLine($"Created Order ID: {order.ORD_ID}");
-                //Console.WriteLine($"Order Code: {order.ORD_OrderCode}");
-
-                //// Add order details
-                //List<CartItem> cartItems = HttpContext.Session.Get<List<CartItem>>("Cart") ?? [];
-                //foreach (var item in cartItems)
-                //{
-                //    var orderDetail = new OrderDetail
-                //    {
-                //        ORD_ID = order.ORD_ID,
-                //        PRO_ID = item.PRO_ID,
-                //        ORDE_Quantity = item.PRO_Quantity,
-                //        ORDE_Price = item.PRO_Price,
-                //        CreatedDate = DateTime.Now,
-                //        CreatedBy = userInfo.ACC_Username
-                //    };
-
-                //    var product = await _context.Products.Where(p => p.PRO_ID == item.PRO_ID).FirstOrDefaultAsync();
-
-                //    product!.PRO_Quantity -= item.PRO_Quantity;
-                //    product.PRO_Sold += item.PRO_Quantity;
-
-                //    if (product.PRO_Quantity == 0)
-                //    {
-                //        product.PRO_Status = ProductStatusEnum.OutOfStock;
-                //    }
-
-                //    if (product.PRO_Quantity < 20)
-                //    {
-                //        product.PRO_Status = ProductStatusEnum.LowStock;
-                //    }
-
-                //    _context.Products.Update(product);
-                //    _context.OrderDetails.Add(orderDetail);
-                //    await _context.SaveChangesAsync();
-                //}
-
-                //// Update payment model
-                ////model. = order.ORD_OrderCode;
-                //model.Amount = intAmount;
-                //model.OrderDescription = $"Thanh toán đơn hàng {order.ORD_OrderCode}";
-
-                //Console.WriteLine($"Payment Model - Amount: {model.Amount}");
-                ////Console.WriteLine($"Payment Model - Order ID: {model.OrderId}");
-                //Console.WriteLine($"Payment Model - Description: {model.OrderDescription}");
-
+                Console.WriteLine($"Creating payment URL with return URL: {model.ReturnUrl}");
                 var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
-
-                // Clear cart and cookies
-                HttpContext.Session.Remove("Cart");
-                Response.Cookies.Delete("CouponTitle");
-                Response.Cookies.Delete("ShippingPrice");
+                Console.WriteLine($"Generated payment URL: {url}");
 
                 return Redirect(url);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CreatePaymentUrlVnpay: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 TempData["ErrorMessage"] = $"Lỗi khi xử lý thanh toán: {ex.Message}";
                 return RedirectToAction("Index", "Cart");
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> PaymentCallbackVnpay()
+        public async Task<IActionResult> PaymentCallbackVnpay([FromQuery] string vnp_ResponseCode, [FromQuery] string vnp_TxnRef)
         {
             try
             {
-                Console.WriteLine("=== Starting PaymentCallback ===");
+                Console.WriteLine($"=== VNPay Callback Started ===");
+                Console.WriteLine($"Response Code: {vnp_ResponseCode}");
+                Console.WriteLine($"Transaction Ref: {vnp_TxnRef}");
 
-                if (!Request.Query.ContainsKey("vnp_SecureHash"))
+                // Kiểm tra response code trước
+                if (vnp_ResponseCode != "00")
                 {
-                    Console.WriteLine("Missing secure hash");
-                    TempData["ErrorMessage"] = "Yêu cầu không hợp lệ";
+                    Console.WriteLine($"Payment failed with response code: {vnp_ResponseCode}");
+                    TempData["ErrorMessage"] = $"Thanh toán thất bại. Mã lỗi: {vnp_ResponseCode}";
                     return RedirectToAction("Index", "Cart");
                 }
 
-                var vnpayResponse = _vnPayService.PaymentExecute(Request.Query);
-                Console.WriteLine($"VNPay Response - Success: {vnpayResponse.Success}, OrderId: {vnpayResponse.OrderId}");
-
-                if (!vnpayResponse.Success)
-                {
-                    Console.WriteLine("Payment validation failed");
-                    TempData["ErrorMessage"] = "Xác thực thanh toán thất bại";
-                    return RedirectToAction("Index", "Cart");
-                }
-
-                // Find and update order
                 var order = await _context.Orders
-                    .FirstOrDefaultAsync(o => o.ORD_OrderCode.Equals(vnpayResponse.OrderId));
-                    
+                    .Include(o => o.Member)
+                    .FirstOrDefaultAsync(o => o.ORD_OrderCode == vnp_TxnRef);
+
                 if (order == null)
                 {
-                    Console.WriteLine($"Order not found: {vnpayResponse.OrderId}");
-                    TempData["ErrorMessage"] = "Không tìm thấy đơn hàng";
+                    Console.WriteLine($"Order not found: {vnp_TxnRef}");
+                    TempData["error"] = "Không tìm thấy thông tin đơn hàng";
                     return RedirectToAction("Index", "Cart");
                 }
 
-                if (vnpayResponse.VnPayResponseCode == "00")
-                {
-                    Console.WriteLine("Payment successful, updating order status");
-                    order.ORD_Status = OrderStatusEnum.Processing;
-                    await _context.SaveChangesAsync();
+                Console.WriteLine($"Order found - ID: {order.ORD_ID}, Status: {order.ORD_Status}");
 
-                    // Clear cart after successful payment
-                    HttpContext.Session.Remove("Cart");
-                    Response.Cookies.Delete("ShippingPrice");
-                    Response.Cookies.Delete("CouponTitle");
+                // Cập nhật trạng thái đơn hàng
+                order.ORD_Status = OrderStatusEnum.Processing;
+                await _context.SaveChangesAsync();
 
-                    TempData["SuccessMessage"] = "Thanh toán thành công";
-                    return RedirectToAction("Success", "Checkout");
-                }
-                else
-                {
-                    Console.WriteLine($"Payment failed with response code: {vnpayResponse.VnPayResponseCode}");
-                    order.ORD_Status = OrderStatusEnum.Failed;
-                    await _context.SaveChangesAsync();
-                    TempData["ErrorMessage"] = $"Thanh toán thất bại. Mã lỗi: {vnpayResponse.VnPayResponseCode}";
-                    return RedirectToAction("Index", "Cart");
-                }
+                // Clear cart and cookies after successful payment
+                HttpContext.Session.Remove("Cart");
+                Response.Cookies.Delete("ShippingPrice");
+
+                // Redirect to success page with order details
+                Console.WriteLine($"Redirecting to Success page with orderId: {order.ORD_ID}");
+                TempData["SuccessMessage"] = "Thanh toán đơn hàng thành công!";
+                return RedirectToAction("Success", "Checkout", new { orderId = order.ORD_ID });
             }
             catch (Exception ex)
             {

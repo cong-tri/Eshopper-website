@@ -127,6 +127,16 @@ namespace Eshopper_website
                 builder.Configuration.GetSection("EmailConfiguration"));
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+            // Force HTTPS in production
+            if (!builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                    options.HttpsPort = 7068;
+                });
+            }
+
             var app = builder.Build();
 
             app.UseCookiePolicy();
@@ -140,8 +150,25 @@ namespace Eshopper_website
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
+                app.UseHsts();
             }
+
+            // Add CSP headers
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add(
+                    "Content-Security-Policy",
+                    "default-src 'self';" +
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net;" +
+                    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" +
+                    "img-src 'self' data: https:;" +
+                    "font-src 'self' https://fonts.gstatic.com;" +
+                    "frame-src 'self' https://sandbox.vnpayment.vn/;" +
+                    "connect-src 'self' https://sandbox.vnpayment.vn/;"
+                );
+                
+                await next();
+            });
 
             app.UseHttpsRedirection();
 

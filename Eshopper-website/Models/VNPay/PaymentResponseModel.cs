@@ -1,14 +1,18 @@
-﻿namespace Eshopper_website.Models.VNPay
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Eshopper_website.Models.VNPay
 {
     public class PaymentResponseModel
     {
-        public required string OrderDescription { get; set; }
-        public required string TransactionId { get; set; }
-        public required string OrderId { get; set; }
-        public required string PaymentMethod { get; set; }
-        public required string PaymentId { get; set; }
         public bool Success { get; set; }
-        public required string Token { get; set; }
-        public required string VnPayResponseCode { get; set; }
+        public string OrderDescription { get; set; } = string.Empty;
+        public string TransactionId { get; set; } = string.Empty;
+        public string OrderId { get; set; } = string.Empty;
+        public string PaymentMethod { get; set; } = string.Empty;
+        public string PaymentId { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+        public string VnPayResponseCode { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
     }
 }
