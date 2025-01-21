@@ -11,19 +11,8 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using Eshopper_website.Areas.Admin.Repository;
-using System.Security.Cryptography;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Azure.Core;
 using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.AspNetCore.Http;
-using static System.Net.WebRequestMethods;
-using System.Security.Principal;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -42,6 +31,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
             //IRecaptchaService recaptchaService
             )
         {
+            _options = options;
             _context = context;
 			_appsettings = options.Value;
             _emailSender = emailSender;

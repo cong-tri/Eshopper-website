@@ -29,8 +29,5 @@ namespace Eshopper_website.Models
 		[Required(ErrorMessage = "Please enter date paid")]
 		[DisplayName("Date Paid")]
 		public required DateTime MOMO_DatePaid { get; set; } = DateTime.Now;
-
-		[ForeignKey("ORD_ID")]
-		public virtual Order? Order { get; set; }
 	}
 }

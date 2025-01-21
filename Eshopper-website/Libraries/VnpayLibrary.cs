@@ -4,7 +4,6 @@ using System.Net;
 using System.Text;
 using System.Security.Cryptography;
 using System.Globalization;
-using Microsoft.Extensions.Primitives;
 
 namespace Eshopper_website.Libraries
 {
@@ -186,6 +185,7 @@ namespace Eshopper_website.Libraries
             if (x == null) return -1;
             if (y == null) return 1;
             var vnpCompare = CompareInfo.GetCompareInfo("en-US");
+
             return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
         }
     }
