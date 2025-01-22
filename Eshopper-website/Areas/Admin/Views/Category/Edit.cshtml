@@ -64,7 +64,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group mb-3">
+                                    @* <div class="form-group mb-3">
                                         <div class="row align-items-center">
                                             <div class="col-sm-3">
                                                 <label asp-for="CAT_Slug" class="control-label"></label>
@@ -74,7 +74,7 @@
                                                 <span asp-validation-for="CAT_Slug" class="text-danger"></span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> *@
                                     <div class="form-group mb-3">
                                         <div class="row align-items-center">
                                             <div class="col-sm-3">
@@ -96,7 +96,7 @@
                                                 <label asp-for="CAT_DisplayOrder" class="control-label"></label>
                                             </div>
                                             <div class="col-sm">
-                                                <input asp-for="CAT_DisplayOrder" class="form-control" />
+                                                <input asp-for="CAT_DisplayOrder" class="form-control" min="1" maxlength="2"/>
                                                 <span asp-validation-for="CAT_DisplayOrder" class="text-danger"></span>
                                             </div>
                                         </div>

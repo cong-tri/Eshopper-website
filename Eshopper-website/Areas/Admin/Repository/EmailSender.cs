@@ -39,21 +39,21 @@ public class EmailSender : IEmailSender
             //throw new ArgumentNullException("EmailConfiguration:Password");
     }
 
-    public async Task<MailResponse> SendEmailAsync(string email, string subject, string body)
+    public async Task SendEmailAsync(string email, string subject, string body)
     {
         try
         {
-            var client = new SmtpClient(_smtpServer, _port)
+            var client = new SmtpClient(EShopperConstant.serverMailHost, EShopperConstant.serverMailPort)
             {
-                Port = _port,
+                Port = EShopperConstant.serverMailPort,
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(_userName, _password)
+                Credentials = new NetworkCredential(EShopperConstant.sendEmail, EShopperConstant.sendAppPassword)
             };
 
             var msg = new MailMessage()
             {
-                From = new MailAddress(_userName, _displayName),
+                From = new MailAddress(EShopperConstant.sendEmail, _displayName),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true,
@@ -62,19 +62,19 @@ public class EmailSender : IEmailSender
 
             await client.SendMailAsync(msg);
 
-            return new MailResponse
-            {
-                Code = 200,
-                Message = "Send Maill Successfully!"
-            };
+            //return new MailResponse
+            //{
+            //    Code = 200,
+            //    Message = "Send Maill Successfully!"
+            //};
         }
         catch (Exception ex)
         {
-            return new MailResponse
-            {
-                Code = 404,
-                Message = $"Failed to send email: {ex.Message}"
-            };
+            //return new MailResponse
+            //{
+            //    Code = 404,
+            //    Message = $"Failed to send email: {ex.Message}"
+            //};
         }
     }
 

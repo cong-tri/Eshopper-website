@@ -33,5 +33,7 @@ namespace Eshopper_website.Models.DataContext
         public DbSet<Statistical> Statisticals { get; set; }
 		public DbSet<Payment> Payments { get; set; }
 		public DbSet<OrderGHN> OrderGHNs { get; set; }
-	}
+		public DbSet<VnInfo> VnInfos { get; set; }
+
+    }
 }

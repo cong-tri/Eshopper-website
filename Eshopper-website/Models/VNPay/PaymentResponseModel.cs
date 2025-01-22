@@ -14,5 +14,6 @@ namespace Eshopper_website.Models.VNPay
         public string VnPayResponseCode { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public decimal Amount { get; set; }
+        public string Email { get; set; }
     }
 }

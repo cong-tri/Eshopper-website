@@ -4,12 +4,9 @@ using Eshopper_website.Services.Momo;
 using Eshopper_website.Services.VNPay;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Eshopper_website.Models;
 using Eshopper_website.Models.DataContext;
 using Eshopper_website.Utils.Extension;
 using Eshopper_website.Utils.Enum.Order;
-using Newtonsoft.Json;
-using Eshopper_website.Utils.Enum;
 
 namespace Eshopper_website.Controllers
 {
@@ -40,68 +37,68 @@ namespace Eshopper_website.Controllers
             return View(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreatePaymentUrlVnpay([FromForm] PaymentInformationModel model)
-        {
-            try
-            {
-                // Validate amount
-                if (model.Amount <= 0)
-                {
-                    TempData["ErrorMessage"] = "Số tiền phải lớn hơn 0";
-                    return RedirectToAction("Index", "Cart");
-                }
+        //[HttpPost]
+        //public async Task<IActionResult> CreatePaymentUrlVnpay([FromForm] PaymentInformationModel model)
+        //{
+        //    try
+        //    {
+        //        // Validate amount
+        //        if (model.Amount <= 0)
+        //        {
+        //            TempData["ErrorMessage"] = "Số tiền phải lớn hơn 0";
+        //            return RedirectToAction("Index", "Cart");
+        //        }
 
-                var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
-                if (userInfo == null)
-                {
-                    TempData["ErrorMessage"] = "Vui lòng đăng nhập để thanh toán";
-                    return RedirectToAction("Login", "Account");
-                }
+        //        var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
+        //        if (userInfo == null)
+        //        {
+        //            TempData["ErrorMessage"] = "Vui lòng đăng nhập để thanh toán";
+        //            return RedirectToAction("Login", "Account");
+        //        }
 
-                // Convert to integer amount for VNPay (no decimals)
-                var intAmount = (long)(model.Amount * 100); // VNPay requires amount * 100
-                Console.WriteLine($"Amount for VNPay: {intAmount}");
+        //        // Convert to integer amount for VNPay (no decimals)
+        //        var intAmount = (long)(model.Amount * 100); // VNPay requires amount * 100
+        //        Console.WriteLine($"Amount for VNPay: {intAmount}");
 
-                var order = new Order()
-                {
-                    MEM_ID = userInfo.MEM_ID,
-                    ORD_OrderCode = DateTime.Now.Ticks.ToString(), // Use ticks for unique order code
-                    ORD_Description = $"Thanh toán đơn hàng QR VNPay",
-                    ORD_Status = OrderStatusEnum.WaitingForPayment,
-                    ORD_PaymentMethod = (int)OrderPaymentMethodEnum.VNPay,
-                    ORD_TotalPrice = model.Amount,
-                    CreatedDate = DateTime.Now,
-                    CreatedBy = userInfo.ACC_Username
-                };
+        //        var order = new Order()
+        //        {
+        //            MEM_ID = userInfo.MEM_ID,
+        //            ORD_OrderCode = DateTime.Now.Ticks.ToString(), // Use ticks for unique order code
+        //            ORD_Description = $"Thanh toán đơn hàng QR VNPay",
+        //            ORD_Status = OrderStatusEnum.WaitingForPayment,
+        //            ORD_PaymentMethod = (int)OrderPaymentMethodEnum.VNPay,
+        //            ORD_TotalPrice = model.Amount,
+        //            CreatedDate = DateTime.Now,
+        //            CreatedBy = userInfo.ACC_Username
+        //        };
 
-                _context.Orders.Add(order);
-                await _context.SaveChangesAsync();
+        //        _context.Orders.Add(order);
+        //        await _context.SaveChangesAsync();
 
-                // Update payment model
-                model.Amount = intAmount;
-                model.OrderDescription = $"Thanh toan don hang: {order.ORD_OrderCode}";
-                model.OrderType = "other";
-                model.Name = userInfo.ACC_DisplayName ?? userInfo.ACC_Username;
+        //        // Update payment model
+        //        model.Amount = intAmount;
+        //        model.OrderDescription = $"Thanh toan don hang: {order.ORD_OrderCode}";
+        //        model.OrderType = "other";
+        //        model.Name = userInfo.ACC_DisplayName ?? userInfo.ACC_Username;
 
-                // Get the base URL of the application
-                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-                // Set the return URL explicitly
-                model.ReturnUrl = $"{baseUrl}/Payment/PaymentCallbackVnpay";
+        //        // Get the base URL of the application
+        //        var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+        //        // Set the return URL explicitly
+        //        model.ReturnUrl = $"{baseUrl}/Payment/PaymentCallbackVnpay";
 
-                Console.WriteLine($"Creating payment URL with return URL: {model.ReturnUrl}");
-                var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
-                Console.WriteLine($"Generated payment URL: {url}");
+        //        Console.WriteLine($"Creating payment URL with return URL: {model.ReturnUrl}");
+        //        var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
+        //        Console.WriteLine($"Generated payment URL: {url}");
 
-                return Redirect(url);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CreatePaymentUrlVnpay: {ex.Message}");
-                TempData["ErrorMessage"] = $"Lỗi khi xử lý thanh toán: {ex.Message}";
-                return RedirectToAction("Index", "Cart");
-            }
-        }
+        //        return Redirect(url);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error in CreatePaymentUrlVnpay: {ex.Message}");
+        //        TempData["ErrorMessage"] = $"Lỗi khi xử lý thanh toán: {ex.Message}";
+        //        return RedirectToAction("Index", "Cart");
+        //    }
+        //}
 
         [HttpGet]
         public async Task<IActionResult> PaymentCallbackVnpay([FromQuery] string vnp_ResponseCode, [FromQuery] string vnp_TxnRef)

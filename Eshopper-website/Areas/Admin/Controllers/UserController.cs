@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace Eshopper_website.Areas.Admin.Controllers
 {
@@ -221,7 +222,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         //}
 
                         HttpContext.Session.Set<UserInfo>("userInfo", user);
-
+                        TempData["success"] = "Login successfully";
                         return RedirectToAction("Index", "Home", new { Area = "" });
                     }
                 }
@@ -309,16 +310,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                 //HttpContext.Session.Set<String>("OTPtoken", otp);
 
-                var response = await _emailSender.SendEmailAsync(newAccount.ACC_Email, 
+                await _emailSender.SendEmailAsync(newAccount.ACC_Email, 
                     "OTP TOKEN TO AUTHORIZE",
                     $@"Token have been sent to your email: {newAccount.ACC_Email}. Your OTP token: {otp}"
                 );
 
-                if (response.Code == 404)
-                {
-                    ViewData["Message"] = response.Message;
-                    return RedirectToAction("Register");
-                }
+                
 
                 ViewData["Message"] = "You must be confirm otp code to finish.";
                 return RedirectToAction("ConfirmOTP");
@@ -545,20 +542,16 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 IsEssential = true
             });
 
-            var response = await _emailSender.SendEmailAsync(email,
-            "OTP TOKEN TO AUTHORIZE",
-            $@"Token have been sent to your email: {email}. Your OTP token: {otp}"
-                );
-
-            if (response.Code == 404)
-            {
-                ViewData["Message"] = response.Message;
-                throw new Exception(response.Message);
-            }
+            await _emailSender.SendEmailAsync(email,
+                "OTP TOKEN TO AUTHORIZE",
+                $@"Token have been sent to your email: {email}. Your OTP token: {otp}"
+            );
 
             return Redirect("ConfirmOTP");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPass([FromForm] string email)
         {
             try
@@ -572,10 +565,12 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 }
                 // Tạo mật khẩu mới ngẫu nhiên
                 var token = GenerateRandomPassword();
+
                 account.ACC_ResetPasswordToken = token;
                 account.ACC_ResetPasswordExpiry = DateTime.Now.AddMinutes(2);
                  _context.Accounts.Update(account);
                 await _context.SaveChangesAsync();
+
                 // Tạo nội dung email
                 var emailBody = $@"
                     <h2>YOUR TOKEN TO CONFIRM</h2>
@@ -586,6 +581,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     <p>Best Regard,</p>
                     <p>EShopper Team</p>";
                 // Gửi email
+
                 await _emailSender.SendEmailAsync(
                     email,
                     "EShopper - Token To Confirm",
@@ -614,6 +610,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewPass([FromForm] NewPassDTO request)
         {
             if (ModelState.IsValid)
@@ -638,7 +635,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     ModelState.AddModelError("Token", "Token not correct or expire date.");
                     return View(request);
                 }
-                account.ACC_Password = request.Password;
+                account.ACC_Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
                 account.ACC_ResetPasswordToken = null;
                 account.ACC_ResetPasswordExpiry = null;
 
@@ -685,6 +682,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfileAdmin([FromForm] ProfileDTO profileDTO)
         {
             try

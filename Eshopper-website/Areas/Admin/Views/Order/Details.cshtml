@@ -14,7 +14,7 @@
         <!--begin::Row-->
         <div class="row">
             <div class="col-sm">
-                <h3 class="mb-0">Quản lý đơn hàng</h3>
+                <h3 class="mb-0">Management Order</h3>
             </div>
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -31,10 +31,10 @@
                 <div class="card card-success card-outline">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-md"><h3 class="card-title">Chi tiết đơn hàng</h3></div>
+                            <div class="col-md"><h3 class="card-title">Order Detail</h3></div>
                             <div class="col-md-auto">
                                 <a asp-action="Index" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                    <i class="fas fa-arrow-left"></i> Comeback
                                 </a>
                             </div>
                         </div>
@@ -44,15 +44,15 @@
                             <table class="table table-hovered table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Mô tả</th>
-                                        <th>Trạng thái</th>
-                                        <th>Phí vận chuyển</th>
-                                        <th>Mã giảm giá</th>
-                                        <th>Phương thức thanh toán</th>
-                                        <th>Khách hàng</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Người tạo</th>
+                                        <th>Order Code</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Shipping Cost</th>
+                                        <th>Coupon Code</th>
+                                        <th>Payment Method</th>
+                                        <th>Member</th>
+                                        <th>CreatedDate</th>
+                                        <th>CreatedBy</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,7 +68,7 @@
                                             </span>
                                         </td>
                                         <td>@Model.ORD_ShippingCost.ToString("C0", culture)</td>
-                                        <td>@(string.IsNullOrEmpty(Model.ORD_CouponCode) ? "Không có" : Model.ORD_CouponCode)</td>
+                                        <td>@(string.IsNullOrEmpty(Model.ORD_CouponCode) ? "Null" : Model.ORD_CouponCode)</td>
                                         <td>@Model.ORD_PaymentMethod</td>
                                         <td>@(Model.Member == null ? "N/A" : $"{Model.Member.MEM_FirstName} {Model.Member.MEM_LastName}")</td>
                                         <td>@Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
@@ -77,7 +77,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="8">Tổng tiền: </td>
+                                        <td colspan="8">Total Price: </td>
                                         <td>@Model.ORD_TotalPrice.ToString("C0", culture)</td>
                                     </tr>
                                     @* @if (Model.ModifiedDate.HasValue)
@@ -90,7 +90,7 @@
                                     <tr>
                                         <td colspan="9">
                                             <div class="form-group">
-                                                <label>Cập nhật trạng thái:</label>
+                                                <label>Update Status:</label>
                                                 <input type="hidden" asp-for="ORD_ID"/>
                                                 @Html.DropDownListFor(
                                                     model => model.ORD_Status, 
@@ -105,19 +105,19 @@
                         </div>
                     </div> <!-- /.card-body -->
                     <div class="card-body">
-                        <h4>Chi tiết sản phẩm</h4>
+                        <h4>Product Details</h4>
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>STT</th> 
-                                        <th>Hình ảnh</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Đơn giá</th>
-                                        <th>Số lượng</th>
-                                        <th>Thành tiền</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Người tạo</th>
+                                        <th>No.</th> 
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Sum</th>
+                                        <th>CreatedDate</th>
+                                        <th>CreatedBy</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,7 +168,7 @@
                     success: function (result) {
                         if (result.success) {
                             Swal.fire({
-                                title: 'Thành công',
+                                title: 'Success',
                                 text: result.message,
                                 icon: 'success'
                             }).then(() => {
@@ -176,7 +176,7 @@
                             });
                         } else {
                             Swal.fire({
-                                title: 'Lỗi',
+                                title: 'Error',
                                 text: result.message,
                                 icon: 'error'
                             });
@@ -184,8 +184,8 @@
                     },
                     error: function () {
                         Swal.fire({
-                            title: 'Lỗi',
-                            text: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng',
+                            title: 'Error',
+                            text: 'Have error when update order.',
                             icon: 'error'
                         });
                     }

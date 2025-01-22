@@ -123,13 +123,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
 
                 var newOrder = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == order.ORD_ID);
 
-                //await _emailSender.SendEmailAsync(
-                //    userInfo?.ACC_Email!,
-                //    "YOUR ORDER STATUS HAVE BEEN UPDATED",
-                //    $@"
-                //        Your order: {newOrder?.ORD_OrderCode} have been {newOrder?.ORD_Status}. </br>
-                //    "
-                //    );
+                await _emailSender.SendEmailAsync(
+                    userInfo?.ACC_Email!,
+                    "YOUR ORDER STATUS HAVE BEEN UPDATED",
+                    $@"
+                        Your order: {newOrder?.ORD_OrderCode} have been {newOrder?.ORD_Status}. </br>
+                    "
+                    );
 
                 return Ok(new { success = true, message = "Order status updated successfully" });
             }
@@ -218,11 +218,11 @@ namespace Eshopper_website.Areas.Admin.Controllers
                         return BadRequest(new { error = response.message });
                     }
 
-                    //orderExisting.ORD_IsGHN = OrderIsGHNEnum.Active;
-                    //_context.Orders.Update(orderExisting);
-                    //await _context.SaveChangesAsync();
+                    orderExisting.ORD_IsGHN = OrderIsGHNEnum.Active;
+                    _context.Orders.Update(orderExisting);
+                    await _context.SaveChangesAsync();
 
-					var newOrderGHN = new OrderGHN()
+                    var newOrderGHN = new OrderGHN()
 					{
 						OrderCode = response.data.order_code,
 						SortCode = response.data.sort_code,
@@ -237,7 +237,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
 					await _context.SaveChangesAsync();
 
                     TempData["success"] = "Order GHN created successfully!";
-					return Ok(response);
+                    return RedirectToAction("Index", "OrderGHN");
                 }
                 catch (Exception ex)
                 {

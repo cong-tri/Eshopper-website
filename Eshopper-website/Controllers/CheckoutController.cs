@@ -77,6 +77,11 @@ namespace Eshopper_website.Controllers
             return View(checkoutView);
         }
 
+        public IActionResult Success()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Checkout([FromForm] CheckoutView request)
         {
@@ -126,7 +131,7 @@ namespace Eshopper_website.Controllers
                 CreatedDate = DateTime.Now,
             };
 
-            _context.Add(orderItem);
+            _context.Orders.Add(orderItem);
             await _context.SaveChangesAsync();
 
             foreach (var item in cartItems)
@@ -174,10 +179,12 @@ namespace Eshopper_website.Controllers
 
             switch (request.PaymentMethod)
             {
-                case 3:
+                case 1:
                     orderItem.ORD_Status = OrderStatusEnum.Processing;
                     _context.Orders.Update(orderItem);
                     await _context.SaveChangesAsync();
+
+                    HttpContext.Session.Remove("Cart");
                     break;
 
                 case 2:
@@ -198,12 +205,20 @@ namespace Eshopper_website.Controllers
 					return Redirect(response.PayUrl!);
 
                 case 3:
+                    orderItem.ORD_Status = OrderStatusEnum.Processing;
+                    _context.Orders.Update(orderItem);
+                    await _context.SaveChangesAsync();
+
+                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
                     var orderVNPay = new PaymentInformationModel()
                     {
                         OrderType = "other",
                         Amount = ((double)orderSend!.ORD_TotalPrice),
                         OrderDescription = orderSend.ORD_Description,
                         Name = request.FullName,
+                        Email = request.Email,
+                        PhoneNumber = request.Phone,
+                        ReturnUrl = $"{baseUrl}/Checkout/PaymentCallbackVnpay"
                     };
                     var url = _vnPayService.CreatePaymentUrl(orderVNPay, HttpContext);
                     return Redirect(url);
@@ -213,29 +228,65 @@ namespace Eshopper_website.Controllers
                     break;
 			}
 
-			HttpContext.Session.Remove("Cart");
+			//HttpContext.Session.Remove("Cart");
 
-            string receiver = userInfo.ACC_Email;
+            string receiver = userInfo.ACC_Email!;
             string subject = "ORDER HAVE BEEN CREATED SUCCESSFULLY!";
+
+            //var responseSendMail = await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderSend));
+
+            //if (responseSendMail.Code == 404)
+            //{
+            //    TempData["error"] = "Cannot create order. Have error when create order!";
+            //    return RedirectToAction("Index", "Checkout");
+            //}
 
             await _emailSender.SendEmailAsync(receiver, subject, EmailTemplates.GetOrderConfirmationEmail(orderSend));
 
             TempData["success"] = "Order has been created successfully! Please wait for the order has been confirmed!";
-            return RedirectToAction("Index", "Cart");
+            return RedirectToAction("Success", "Checkout");
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> PaymentCallbackVnpay()
 		{
 			var response = await Task.FromResult(_vnPayService.PaymentExecute(Request.Query));
+
+            if (response.Success == true)
+            {
+                var newVnInfo = new VnInfo()
+                {
+                    OrderId = response.OrderId,
+                    TransactionId = response.TransactionId,
+                    PaymentId = response.PaymentId,
+                    PaymentMethod = response.PaymentMethod,
+                    OrderDescription = response.OrderDescription,
+                    Amount = response.Amount,
+                    CreatedDate = DateTime.Now,
+                };
+
+                _context.VnInfos.Add(newVnInfo);
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("Cart");
+
+                TempData["success"] = "Payment with vnpay successfully.";
+                //return RedirectToAction("Success", "Checkout");
+
+                return Redirect("/Checkout/Success");
+            }
+            else
+            {
+                TempData["error"] = "Have failed when payment with vnpay.";
+                return RedirectToAction("Index", "Checkout");
+            }
+
 			return Json(response);
 		}
 
 		[HttpGet]
         public async Task<IActionResult> PaymentCallBack(MomoInfo model)
         {
-            var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
-
             var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
             var requestQuery = HttpContext.Request.Query;
 
@@ -253,6 +304,8 @@ namespace Eshopper_website.Controllers
 
                 _context.Momos.Add(newMomo);
                 await _context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("Cart");
 
                 TempData["success"] = "Payment with momo successfully.";
                 return RedirectToAction("Index", "Home");

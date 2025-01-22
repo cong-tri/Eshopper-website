@@ -31,7 +31,7 @@ namespace Eshopper_website.Controllers
             var products = await _context.Products
 				.Include(x => x.Category)
 				.Include(x => x.Brand)
-				.Where(x => x.PRO_Name.Contains(SearchTerm) || x.PRO_Description.Contains(SearchTerm))
+				.Where(x => x.PRO_Name.Contains(SearchTerm!) || x.PRO_Description.Contains(SearchTerm!))
 				.ToListAsync();
 
 			ViewData["searchTerm"] = SearchTerm;

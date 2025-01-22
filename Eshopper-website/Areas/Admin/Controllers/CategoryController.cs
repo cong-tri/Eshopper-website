@@ -84,11 +84,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
                 var username = userInfo != null ? userInfo.ACC_Username : "";
 
+                category.CAT_Slug = category.CAT_Name.ToLower();
                 category.CreatedBy = username;
                 category.CreatedDate = DateTime.Now;
 
                 _context.Add(category);
                 await _context.SaveChangesAsync();
+
                 TempData["success"] = "Added Category successfully !";
                 return RedirectToAction(nameof(Index));
             }
@@ -135,13 +137,13 @@ namespace Eshopper_website.Areas.Admin.Controllers
                     var userInfo = HttpContext.Session.Get<UserInfo>("userInfo");
                     var username = userInfo != null ? userInfo.ACC_Username : "";
 
-                    category.CreatedBy = username;
+                    category.CAT_Slug = category.CAT_Name.ToLower();
                     category.UpdatedBy = username;
                     category.UpdatedDate = DateTime.Now;
 
                     _context.Update(category);
                     await _context.SaveChangesAsync();
-                    TempData["success"] = $"Category '{category.CAT_Name}' has been updated successfully!";
+                    TempData["success"] = "Category has been updated successfully!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -157,7 +159,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            TempData["error"] = "Failed to update category. Please check the input values.";
+            else
+            {
+                TempData["error"] = "Failed to update category. Please check the input values.";
+            }
             return View(category);
         }
 

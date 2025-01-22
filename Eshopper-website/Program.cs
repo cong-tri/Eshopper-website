@@ -154,21 +154,21 @@ namespace Eshopper_website
             }
 
             // Add CSP headers
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add(
-                    "Content-Security-Policy",
-                    "default-src 'self';" +
-                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net;" +
-                    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" +
-                    "img-src 'self' data: https:;" +
-                    "font-src 'self' https://fonts.gstatic.com;" +
-                    "frame-src 'self' https://sandbox.vnpayment.vn/;" +
-                    "connect-src 'self' https://sandbox.vnpayment.vn/;"
-                );
+            //app.Use(async (context, next) =>
+            //{
+            //    context.Response.Headers.Add(
+            //        "Content-Security-Policy",
+            //        "default-src 'self';" +
+            //        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net;" +
+            //        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" +
+            //        "img-src 'self' data: https:;" +
+            //        "font-src 'self' https://fonts.gstatic.com;" +
+            //        "frame-src 'self' https://sandbox.vnpayment.vn/;" +
+            //        "connect-src 'self' https://sandbox.vnpayment.vn/;"
+            //    );
                 
-                await next();
-            });
+            //    await next();
+            //});
 
             app.UseHttpsRedirection();
 

@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Eshopper_website.Models.VnInfo>
+
+@{
+    ViewData["Title"] = "VN Pay Transaction";
+    ViewData["Active"] = "VnInfo";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm">
+                <h3 class="mb-0">VN Pay Transaction</h3>
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md"><h3 class="card-title">List VN Pay Transaction</h3></div>
+                            <div class="col-md-auto">
+                                @* <a class="btn btn-success" asp-action="CreateGHNOrder" asp-controller="Order" asp-area="Admin">Add new GHN order</a> *@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-hovered table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.OrderId)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.TransactionId)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PaymentId)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PaymentMethod)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Amount)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CreatedDate)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.OrderId
+                                            </td>
+                                            <td>
+                                                @item.TransactionId
+                                            </td>
+                                            <td>
+                                                @item.PaymentId
+                                            </td>
+                                            <td>
+                                                @item.PaymentMethod
+                                            </td>
+                                            <td>
+                                                @item.Amount.ToString("C0", culture)
+                                            </td>
+                                            <td>
+                                                @item.CreatedDate
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+            </div>
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div>
+<!--end::App Content-->

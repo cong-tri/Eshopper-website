@@ -116,7 +116,9 @@
                                                 <a class="me-1 text-primary" asp-action="Details" asp-route-id="@item.PRO_ID" title="View Details">
                                                     <i class="fa-regular fa-circle-info"></i>
                                                 </a>
-                                                @if(item?.OrderDetails?.Count == 0){
+                                                @if(item?.OrderDetails?.Count == 0 
+                                                && item?.Wishlists?.Count == 0 &&
+                                                item?.Compares?.Count == 0){
                                                     <a class="me-1 text-danger" asp-action="Delete" asp-route-id="@item.PRO_ID" title="Delete">
                                                         <i class="fa-regular fa-trash-xmark"></i>
                                                     </a>
