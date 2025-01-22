@@ -31,7 +31,10 @@ namespace Eshopper_website.Areas.Admin.Controllers
             List<Product> product = await _context.Products.AsNoTracking()
                 .Include(x => x.OrderDetails)
                 .Include(x => x.Category)
-                .Include(x => x.Brand).ToListAsync();
+                .Include(x => x.Brand)
+                .Include(x => x.Wishlists)
+                .Include(x => x.Compares)
+                .ToListAsync();
 
             const int pageSize = 10;
 

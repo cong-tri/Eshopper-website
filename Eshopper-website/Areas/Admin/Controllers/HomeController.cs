@@ -17,6 +17,14 @@ namespace Eshopper_website.Areas.Admin.Controllers
             ViewBag.CountOrder = await context.Orders.CountAsync();
             ViewBag.CountCategory = await context.Categories.CountAsync();
             ViewBag.CountUser = await context.Accounts.CountAsync();
+
+            ViewData["orders"] = await context.Orders.AsNoTracking()
+                .OrderByDescending(x => x.CreatedDate)
+                .ToListAsync();
+
+                //.Include(x => x.OrderDetails)!
+                //.ThenInclude(x => x.Product)
+
             return View();
         }
 

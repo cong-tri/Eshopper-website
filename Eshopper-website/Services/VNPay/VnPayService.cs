@@ -23,7 +23,7 @@ namespace Eshopper_website.Services.VNPay
             pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
             pay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);
             pay.AddRequestData("vnp_TmnCode", _configuration["Vnpay:TmnCode"]);
-            pay.AddRequestData("vnp_Amount", model.Amount.ToString());
+            pay.AddRequestData("vnp_Amount", ((int)model.Amount * 100).ToString());
             pay.AddRequestData("vnp_CreateDate", timeNow.ToString("yyyyMMddHHmmss"));
             pay.AddRequestData("vnp_CurrCode", _configuration["Vnpay:CurrCode"]);
             pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
@@ -32,6 +32,7 @@ namespace Eshopper_website.Services.VNPay
             pay.AddRequestData("vnp_OrderType", model.OrderType);
             pay.AddRequestData("vnp_ReturnUrl", model.ReturnUrl);
             pay.AddRequestData("vnp_TxnRef", tick);
+            //pay.AddRequestData("vnp_Email", model.Email);
 
             var paymentUrl = pay.CreateRequestUrl(_configuration["Vnpay:BaseUrl"], _configuration["Vnpay:HashSecret"]);
 

@@ -61,7 +61,8 @@ namespace Eshopper_website.Libraries
                 Token = string.Empty,
                 VnPayResponseCode = string.Empty,
                 Message = string.Empty,
-                Amount = 0
+                Amount = 0,
+                Email = string.Empty,
             };
 
             if (collection.Count > 0)

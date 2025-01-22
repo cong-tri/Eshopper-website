@@ -220,6 +220,8 @@
                     icon: "success",
                     text: messageSuccess,
                     draggable: true
+                }).then(() => {
+                    location.reload();
                 });
 
             var messageError = '@TempData["error"]';
@@ -229,6 +231,8 @@
                     icon: "error",
                     text: messageError,
                     draggable: true
+                }).then(() => {
+                    location.reload();
                 });
         });
     </script>

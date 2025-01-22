@@ -179,7 +179,7 @@
 							<a asp-action="Index" class="btn btn-primary" asp-controller="Checkout">Go to checkout</a>
 						}
 					</div>
-					@if (Model?.CartItems?.Count > 0)
+					@* @if (Model?.CartItems?.Count > 0)
 					{
 						<form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" style="display: inline-block">
 							<input type="hidden" name="Name" value="@userInfo?.ACC_Username" />
@@ -196,7 +196,7 @@
 								</button>
 							</div>
 						</form>
-					}
+					} *@
 				</div>
 			</div>
 		</div>

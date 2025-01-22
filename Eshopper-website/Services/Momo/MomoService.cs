@@ -48,7 +48,6 @@ namespace Eshopper_website.Services.Momo
 				orderInfo = model.OrderInformation,
 				requestId = model.OrderId,
 				extraData = "",
-				//fullName = model.FullName,
 				signature = signature
 			};
 			request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
@@ -56,7 +55,7 @@ namespace Eshopper_website.Services.Momo
 
 			if (response != null && response.IsSuccessStatusCode)
 			{
-				return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
+                return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
 			}
             throw new Exception($"Failed to create GHN order. Status: {response?.StatusCode}");
 		}
@@ -65,14 +64,12 @@ namespace Eshopper_website.Services.Momo
 			var amount = collection.First(s => s.Key == "amount").Value;
 			var orderInfo = collection.First(s => s.Key == "orderInfo").Value;
 			var orderId = collection.First(s => s.Key == "orderId").Value;
-			//var fullName = collection.First(s => s.Key == "fullName").Value;
 
 			return new MomoExecuteResponseModel()
 			{
 				Amount = amount,
 				OrderId = orderId,
 				OrderInfo = orderInfo,
-				//FullName = fullName
 			};
 		}
 		private string ComputeHmacSha256(string message, string secretKey)

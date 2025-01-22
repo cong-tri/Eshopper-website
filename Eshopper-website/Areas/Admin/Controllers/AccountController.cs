@@ -26,15 +26,7 @@ namespace Eshopper_website.Areas.Admin.Controllers
         {
             return View(await _context.Accounts.ToListAsync());
         }
-        // GET: Admin/Account/Details/5
-        public async Task<IActionResult> NewPass(string returnUrl)
-        {
-            return View(await _context.Accounts.ToListAsync());
-        }
-        public async Task<IActionResult> FogetPass(string returnUrl)
-        {
-            return View(await _context.Accounts.ToListAsync());
-        }
+
         // GET: Admin/Account/Details/5
         public async Task<IActionResult> Details(int? id)
         {
